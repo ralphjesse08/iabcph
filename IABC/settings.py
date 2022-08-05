@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-+a*pyszpo6#i0auxx_+&3v!*1luy)q&(gb$32zf)dk2tue$yqz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['iabcv73.herokuapp.com']
+ALLOWED_HOSTS = ['iabcph.herokuapp.com']
 
 
 # Application definition
@@ -95,10 +95,10 @@ WSGI_APPLICATION = 'IABC.wsgi.application'
 DATABASES={
    'default':{
       'ENGINE':'django.db.backends.postgresql_psycopg2',
-      'NAME':'d89e418rn7tc7e',
-      'USER':'ayinrcavkrjzua',
-      'PASSWORD':'d0b5c833ba83248a8b663200cf84f69ea66a7c6b9fd1376c874ff58fd88758b5',
-      'HOST':'ec2-52-5-110-35.compute-1.amazonaws.com',
+      'NAME':'d2hisnk404aarc',
+      'USER':'qpgoxtwfqlsbql',
+      'PASSWORD':'c0de4afbc6c6398376bb366d69fddd3ac1308c242c514f85b4c86bdf70b49cef',
+      'HOST':'ec2-100-26-39-41.compute-1.amazonaws.com',
       'PORT':'5432',
    }
 }
