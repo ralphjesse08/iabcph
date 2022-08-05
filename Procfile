@@ -1,1 +1,1 @@
-web: gunicorn IABCv73.wsgi:application --log-file -
+web: gunicorn IABC_WEB.wsgi:application --log-file -
