@@ -1,1 +1,1 @@
-web: gunicorn IABCv73.wsgi:application 
+web: gunicorn IABCv73.wsgi
