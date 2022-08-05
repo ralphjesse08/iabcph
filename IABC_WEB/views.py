@@ -532,7 +532,7 @@ def awardspending_edit2(request, ent_id):
 def awardsform(request):
     if request.user.is_authenticated:
         id = request.user.id
-        info = User.objects.filter(id=id)
+        info = User.objects.get(id=id)
         div = Division.objects.all()
         category = Category.objects.all()
         cert = Certification.objects.all()
@@ -3247,10 +3247,76 @@ def memreport(request):
         try:
             mem=Members.objects.all()
             if request.method == 'POST':
+                filt = request.POST.get('filt')
+                if filt == "Today":
+                    d1 = datetime.date.today()
+                    mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=d1) 
+                    template = get_template('form-non-members.html')
+                    context={
+                         'mem1':mem1,
+                    }
+                    html = template.render(context)
+                    pdf = render_to_pdf('form-non-members.html', context)
+
+                    if pdf:
+                        response = HttpResponse(pdf, content_type='application/pdf')
+                        filename = "Members Report-%s.pdf" %info.lastName
+                        content = "inline; filename=%s" %(filename)
+                        download = request.GET.get("download")
+                        if download:
+                            content = "attachment; filename='%s'" %(filename)
+                        response['Content-Disposition'] = content
+                        return response
+                    return HttpResponse("Not found")
+                elif filt == "Last 7 Days":
+                    d1 = datetime.date.today()
+                    last7 = date.today() - relativedelta(days=7)
+                    mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=last7)
+                    template = get_template('form-non-members.html')
+                    context={
+                         'mem1':mem1,
+                    }
+                    html = template.render(context)
+                    pdf = render_to_pdf('form-non-members.html', context)
+
+                    if pdf:
+                        response = HttpResponse(pdf, content_type='application/pdf')
+                        filename = "Members Report-%s.pdf" %info.lastName
+                        content = "inline; filename=%s" %(filename)
+                        download = request.GET.get("download")
+                        if download:
+                            content = "attachment; filename='%s'" %(filename)
+                        response['Content-Disposition'] = content
+                        return response
+                    return HttpResponse("Not found")
+
+                elif filt == "Last 30 Days":
+                    d1 = datetime.date.today()
+                    last30 = date.today() - relativedelta(days=30)
+                    mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=last30)
+                    template = get_template('form-non-members.html')
+                    context={
+                         'mem1':mem1,
+                    }
+                    html = template.render(context)
+                    pdf = render_to_pdf('form-non-members.html', context)
+
+                    if pdf:
+                        response = HttpResponse(pdf, content_type='application/pdf')
+                        filename = "Members Report-%s.pdf" %info.lastName
+                        content = "inline; filename=%s" %(filename)
+                        download = request.GET.get("download")
+                        if download:
+                            content = "attachment; filename='%s'" %(filename)
+                        response['Content-Disposition'] = content
+                        return response
+                    return HttpResponse("Not found")
                 
-                    
+                else:
+                    return redirect('IABC_WEB:admember')
+
             
-                return render(request, 'user-viewwinners.html', context)
+            #return render(request, 'user-viewwinners.html', context)
         except ObjectDoesNotExist:
             return redirect('IABC_WEB:admember')
             
