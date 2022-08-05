@@ -17,12 +17,11 @@ future==0.18.2
 gunicorn==20.1.0
 
 mysqlclient==2.1.0
-path @ file:///C:/ci/path_1614022440181/work
-pathlib2 @ file:///C:/ci/pathlib2_1607025069150/work
+
 Pillow==9.2.0
-py @ file:///tmp/build/80754af9/py_1607971587848/work
+
 python-bidi==0.4.2
-python-dateutil @ file:///home/ktietz/src/ci/python-dateutil_1611928101742/work
+
 tables==3.6.1
 win-unicode-console==0.5
 wincertstore==0.2
