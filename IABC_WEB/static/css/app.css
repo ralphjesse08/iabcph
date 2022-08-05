@@ -1,0 +1,347 @@
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Josefin Sans';
+    min-height: 100%;
+    font-size: 17px;
+}
+
+.container{
+    max-width: 85%;
+    margin-left: 115px;
+    margin-right: 115px;
+}
+
+.container2{
+    max-width: 85%;
+    margin-left: 110px;
+    margin-right: 110px;
+}
+
+.center p {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    margin-left: 120px;
+    margin-right: 120px;
+}
+
+.shad{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+  
+/* NAVIGATION */
+.navbar{
+    width: 100%;
+    margin: auto;
+}
+
+nav ul {
+    list-style: none;
+    text-align: right;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: rgb(18, 1, 1);
+    font-weight: 700;
+    font-size: 90%;
+    margin: 0 10px;
+}
+
+nav ul li a,
+nav ul li a:after,
+nav ul li a:before {
+    transition: all .5s;
+}
+
+nav ul li a:hover {
+    color: #2a7221;
+}
+  
+  
+/* stroke */
+nav.stroke ul li a,
+nav.fill ul li a {
+    position: relative;
+}
+
+nav.stroke ul li a:after,
+nav.fill ul li a:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 0%;
+    content: '.';
+    color: transparent;
+    background:  #2a7221;
+    height: 1px;
+}
+
+nav.stroke ul li a:hover:after {
+    width: 100%;
+}
+  
+nav.fill ul li a {
+    transition: all 2s;
+}
+  
+nav.fill ul li a:after {
+    text-align: left;
+    content: '.';
+    margin: 0;
+    opacity: 0;
+}
+nav.fill ul li a:hover {
+    color: #fff;
+    z-index: 1;
+}
+nav.fill ul li a:hover:after {
+    z-index: -10;
+    animation: fill 1s forwards;
+    -webkit-animation: fill 1s forwards;
+    -moz-animation: fill 1s forwards;
+    opacity: 1;
+}
+
+/* top */
+.nav{
+    background: #2a7221;
+    padding: 8px;
+}
+
+.nav a{
+    color: #fff;
+    background:  #2a7221;
+    border-radius: 0%;
+    display: block;
+    font-size: 70%;
+}
+
+.nav a:hover {
+    background-color: #fff;
+    color: #2a7221;
+}
+
+.btnsub{
+    background:  #2a7221;
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 90%;
+    text-decoration: none;
+    border-radius: 10px;
+}
+
+.btnsub:hover {
+    background-color: #fff;
+    border: 1px solid #2a7221;
+    color: rgb(42, 114, 33);
+}
+
+.btnsub2{
+    background:  #2a7221;
+    padding-top: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 90%;
+    text-decoration: none;
+    border-radius: 10px;
+}
+
+.btnsub2:hover {
+    background-color: #fff;
+    border: 1px solid #2a7221;
+    color: rgb(42, 114, 33);
+}
+
+.btnsub3{
+    background: transparent;
+    color: #2a7221;
+    font-size: 90%;
+    text-decoration: none;
+    border-color: transparent;
+}
+
+.btnsub3:hover {
+    background-color: transparent;
+    color: rgb(42, 114, 33);
+}
+
+.btn{
+    background:  #2a7221;
+    padding: 13px;
+    border-radius: 20%;
+    font-size: 90%;
+}
+
+.btn:hover {
+    background-color: #fff;
+    color: rgb(42, 114, 33);
+}
+
+.btn2{
+    text-align: center;
+    font-size: 14px;
+    width: 160px;
+    padding-top: 3px;
+    padding-bottom: 1px;
+    background-color: #fff;
+    color: #2a7221;
+    border-color: #2a7221;
+}
+
+.btn2:hover{
+    background-color: #fff;
+    color: #2a7221;
+    border-color: #2a7221;
+}
+
+.btn2:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid  #2a7221;
+    outline-width: 0;
+}
+
+  
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+  
+.dropdown-content {
+    display: none;
+    position: absolute;
+    text-align: left;
+    background-color: #f1f1f1;
+    min-width: 135%;
+    z-index: 2;
+    padding: 16px;
+    font-size: 17px;
+}
+  
+.dropdown-content a {
+    color: black;
+    padding: 10px 1px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.inputs{
+    height: 40px;
+    padding: 9px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #2C3E50;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.inputs:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid  #2a7221;
+    outline-width: 0;
+}
+
+.bill{
+    height: 30px;
+    width: 50px
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #2C3E50;
+    font-size: 12px;
+    text-indent: 5px;
+    letter-spacing: 1px;
+}
+
+.bill:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid  #2a7221;
+    outline-width: 0;
+}
+
+input[type=date]:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid  #2a7221;
+    outline-width: 0;
+}
+
+input[type=date]{
+    color:#6e6e6e;
+}
+
+.accordion-button:hover {
+    background-color: #e9e9e9;
+    color: #2a7221; 
+}
+
+.accordion-button:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid  #2a7221;
+    outline-width: 0;
+}
+
+input[name="check"]{
+    accent-color: #2a7221;
+}
+
+.box{
+    display: none; 
+    padding: 10px;
+    margin-top: 4px;
+}
+
+.select{
+    height: 40px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.select:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid  #2a7221;
+    outline-width: 0;
+}
+
+
+/* for custom scrollbar for webkit browser*/
+  
+::-webkit-scrollbar {
+    width: 6px;
+} 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+} 
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}

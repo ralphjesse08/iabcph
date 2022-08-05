@@ -1,0 +1,445 @@
+{% load static %} 
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+</head>
+<body>
+    <nav class="nav justify-content-end">
+        {% if user.is_authenticated %}
+        {%if info %}
+        <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <div class="dropdown">
+            <a class="nav-link" href="user-myaccount.html">MY ACCOUNT<ion-icon name="caret-down-outline"></ion-icon></a>
+            <!--<ul class="dropdown-content">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Payment Transaction</a></li>
+            </ul>-->
+        </div>
+        {%endif%}
+        {%else%}
+        <a class="nav-link" href="{% url 'members:login' %}">LOGIN</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <a class="nav-link" href="{% url 'register' %}">REGISTER</a>
+        {% endif %}  
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{%url 'members:home' %}">
+                <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+            </a>
+            <nav class="stroke" style="margin-right: 120px;">
+                <ul>
+                    <li><a href="{%url 'members:home' %}">Home</a></li>
+                    <li><a href="{% url 'IABC_WEB:eventsview' %}">Events</a></li>
+                    <li class="dropdown"><a href="#">Membership<ion-icon name="caret-down-outline"></ion-icon></a>
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:whyiabc' %}">Why IABC</a></li>
+                            <li><a href="{% url 'IABC_WEB:membenefits' %}">Membership Benefits</a></li>
+                            {% if mem.received_email == True %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}">Renew Membership</a></li>
+                            {% else %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}" class="nav-link disabled">Renew Membership</a></li>
+                            {%endif%}
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#">PhilQuill<ion-icon name="caret-down-outline"></ion-icon></a>
+                        {% if user.is_authenticated %}
+                        {%if info %}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {%endif%}
+                        {%else%}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}" class="nav-link disabled">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% if user.is_authenticated %}
+                    {%if info %}
+                    <a class="btn btn-success" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a>
+                    {%endif%}
+                    {%else%}
+                    <a class="btn btn-success" href="{% url 'members:login' %}" role="button">JOIN</a>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </nav>
+    
+    <br><br>
+
+    <h1 style="text-align: center;"><b>MEMBERSHIP APPLICATION FORM</b></h1>
+    <center><p style="border-style: solid; height:4px; width: 1000px; color: #2a7221;"></center>
+
+    <br><br>
+
+    <!--<div>
+    <form class="row g3 needs-validation" novalidate>-->
+    <div class="container container-fluid justify-content-center">
+        <form class="row g3 needs-validation" novalidate action="{% url 'IABC_WEB:membersubmit' %}"  method="POST" enctype="multipart/form-data"> {% csrf_token %}
+            <div class="mb-2">
+                <p class="fw-bold">I. MEMBER INFORMATION</p> 
+                 {% if messages %}
+                    {% for message in messages %}
+                    <script>
+                        alert('{{ message }}');
+                    </script>
+                    {% endfor %}
+                {% endif %}
+                
+                
+            </div>
+            {% if info %}
+                    {% for inf in info %}
+            <div class="col-md-4">
+                <label for="validationCustom01" class="form-label mb-0">First Name</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="{{inf.firstName}}" readonly >
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label mb-0">Middle Name</label>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="{{inf.middleName}}" readonly >
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label mb-0">Family Name</label>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="{{inf.lastName}}" readonly>
+            </div>
+            
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom01" class="form-label mb-0">Nickname</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="Juan" name="Nickname"  required>
+            </div>
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom02" class="form-label mb-0">Designation</label>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="Chief Execuive Officer" name="Desig" required>
+            </div>
+            <div class="col-md-4 mt-3"></div>
+
+            <div class="col-md-12 mt-3">
+                <label for="validationCustom03" class="form-label mb-0">Office | Company Name</label>
+                <input type="text" class="form-control" id="validationCustom03" placeholder="International Association of Business Communicators"  name="comp"  required>
+            </div>
+
+            <div class="col-md-12 mt-3">
+                <label for="validationCustom03" class="form-label mb-0">Company Address</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="validationCustom03" placeholder="Floor No." name="flr"  required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="validationCustom03" placeholder="Building No." name="bldg"  required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="validationCustom03" placeholder="Street"  name="strt" required>
+            </div>
+            <div class="col-md-4 mt-1">
+                <input type="text" class="form-control" id="validationCustom03" placeholder="Barangay" name="brgy"  required>
+            </div>
+            <div class="col-md-4 mt-1">
+                <input type="text" class="form-control" id="validationCustom03" placeholder="City" name="city" required>
+            </div>
+            <div class="col-md-4 mt-1">
+                <input type="text" class="form-control" id="validationCustom03" placeholder="Region" name="reg"  required>
+            </div>
+
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom01" class="form-label mb-0">Province/Region</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="NCR" name="city" required>
+            </div>
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom02" class="form-label mb-0">Postal/Zip Code</label>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="####" name="post" required pattern="[0-9]" maxlength="4">
+            </div>
+            <div class="col-md-4 mt-3"></div>
+
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom01" class="form-label mb-0">Telephone No.</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder="####-####" name="tel"  required pattern="[0-9]" maxlength="8">
+            </div>
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom02" class="form-label mb-0">Fax No.</label>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="####-####" name="fax" required pattern="[0-9]" maxlength="8">
+            </div>
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom02" class="form-label mb-0">Mobile No.</label>
+                <input type="text" class="form-control" id="validationCustom02" placeholder="09##-###-####" name="mobile" required pattern="[0-9]" maxlength="11">
+            </div>
+            
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom01" class="form-label mb-0">Email Address</label>
+                <input type="text" class="form-control" id="validationCustom01" placeholder={{inf.email}}  readonly>
+            </div>
+                    {% endfor %}
+            {% endif %} 
+            <div class="col-md-4 mt-3">
+                <label for="validationCustom02" class="form-label mb-0">Birthday</label>
+                <input type="date" class="form-control" id="validationCustom02" name="bday" required>
+            </div>
+            <div class="col-md-4 mt-3"></div>
+        
+            </div>
+            
+            <br>
+            
+            <div style="background-color: #dff2dd;">
+            <div class="container container-fluid justify-content-center" > 
+                <div class="row g3 needs-validation">
+                    <div class="mt-4">
+                        <p class="fw-bold">II. COMMITTEE (Please check the committee/s you wish to join.)</p> 
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Membership" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Membership</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Excel" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">CEO Excel Awards</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Regional" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Regional Conference</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Media" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Media Relations & Publicity</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Digital" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Digital Communication</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Philquill" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Philippine Quill Awards</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Public" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Publications</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Sponsor" name="check" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Sponsorship</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-3"></div><div class="col-md-3 mt-3"></div>
+                </div>
+            </div> <br>
+            </div>    
+
+            <br>
+
+            <div class="container container-fluid justify-content-center">
+                <div class="row g3 needs-validation">
+                    <div class="mt-2">
+                        <p class="fw-bold">III. DEMOGRAPHIC INFORMATION</p> 
+                    </div>
+                    <div class="col-md-10">
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">1. Year began in communication profession.</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" style="margin-bottom: 0; margin-top: 0;" placeholder="Year" name="que1" pattern="[0-9]" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">2. Are you self-employed?</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" style="margin-bottom: 0; margin-top: 0;" placeholder="Yes/No" name="que2">
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">3. Industry <i>(Chart A)</i></label>
+                            <div class="col-sm-4">
+                                
+                                <select class="form-select select" aria-label="Default select example" name="que3">
+                                    <option class="option" selected>Choose Type of Industry</option>
+                                    {% for no in chart_a %}
+                                    <option value="{{no.industry_Name   }}">{{no.industry_Name}}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">4. Type of Business <i>(Chart B)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que4">
+                                    <option class="option" selected>Choose Type of Business</option>
+                                    {% for no in chart_b %}
+                                    <option value="{{no.business_type}}">{{no.business_type}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">5. Current Title <i>(Chart C)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que5">
+                                    <option class="option" selected>Choose Current Title</option>
+                                    {% for no in chart_c %}
+                                    <option value="{{no.current_title }}">{{no.current_title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">6. Key Area of Responsibility <i>(Chart D)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que6">
+                                    <option class="option" selected>Choose Key Area of Responsibility</option>
+                                    {% for no in chart_d %}
+                                    <option value="{{no.key_area }}">{{no.key_area }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">7. Number of Employees in your organization/company <i>(Chart E)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que7">
+                                    <option class="option" selected>Choose Number of Employees in your organization/company</option>
+                                    {% for no in chart_e %}
+                                    <option value="{{no.employee_no}}">{{no.employee_no}}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">8. Greatest amount of experience <i>(Chart F)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que8">
+                                    <option class="option" selected>Choose Greatest amount of experience</option>
+                                    {% for no in chart_f %}
+                                    <option value="{{no.experience}}">{{no.experience}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">9. Interest in learning more <i>(Chart F)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que9">
+                                    <option class="option" selected>Choose Interest in learning more</option>
+                                    {% for no in chart_f %}
+                                    <option value="{{no.experience}}">{{no.experience}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2 row">
+                            <label class="col-sm-7 col-form-label">10. How did you hear about IABC <i>(Chart G)</i></label>
+                            <div class="col-sm-4">
+                                <select class="form-select select" aria-label="Default select example" name="que10">
+                                    <option class="option" selected>How did you hear about IABC</option>
+                                    {% for no in chart_g %}
+                                    <option value="{{no.about}}">{{no.about}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+            
+            <br>
+
+            <div style="background-color: #dff2dd;">
+            <div class="container container-fluid justify-content-center">
+                <div class="row g3 needs-validation">
+                    <div class="mt-4">
+                        <p class="fw-bold">IV. Are you willing to share your contact information to other IABC members?</p> 
+                    </div>
+                    <div class="col-md-2 mb-2 px-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"  id="flexRadioDefault1" name="contact" value="yes" >
+                            <label class="form-check-label" for="flexRadioDefault1">Yes</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"  id="flexRadioDefault1" name="contact" value="no" >
+                            <label class="form-check-label" for="flexRadioDefault1">No</label>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="fw-bold">V.	Are you willing to receive announcements/promotions from fellow IABC member?</p> 
+                    </div>
+                    <div class="col-md-2 mb-2 px-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"  id="flexRadioDefault1" name="announce" value="yes" >
+                            <label class="form-check-label" for="flexRadioDefault1">Yes</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio"  id="flexRadioDefault1" name="announce" value="no" >
+                            <label class="form-check-label" for="flexRadioDefault1">No</label>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="fw-bold">VI. Please attach your profile photo that we may use in IABC announcements and publications.</p> 
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group mb-4 px-4">
+                            <input type="file" class="form-control" id="inputGroupFile02" name="profile">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="container container-fluid justify-content-center">
+                            
+                    <div class="col-md-12 mt-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                            <label class="form-check-label" for="invalidCheck">
+                                Agree to terms and conditions
+                            </label>
+                            <div class="invalid-feedback">
+                                You must agree before submitting.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <button class="btnsub btn-success" href="#" type="submit" role="button">Submit Form</button>
+                    </div>
+            </form>
+            </div>
+    <!--</form>
+    </div>-->
+    <br><br><br>
+    
+
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

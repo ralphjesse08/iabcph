@@ -1,0 +1,269 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="{%static 'css/tracker.css' %}">
+    <script src="#"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+
+    <style>
+        .open{
+        text-decoration: none;
+        color: #2a7221;
+        }
+    
+        .open:hover{
+            color: #2a7221;
+        }
+    
+        .act{
+            width: 820px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            color:#6e6e6e;
+            text-indent: 2px;
+            font-size: 14px;
+        }
+
+        .act:focus {
+            -moz-box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            border: 1px solid  #2a7221;
+            outline-width: 0;
+        }
+    
+        #deletebtn1 {
+        background-color: transparent;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-size: 12px;
+        }
+    
+        #deletebtn1:hover {
+            background-color: transparent;
+            color: red;
+        }
+        
+        .btnback{
+            background-color: transparent;
+            color: #2a7221;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btnback:hover{
+            background-color: transparent;
+            color: black;
+            border: none;
+        }
+    
+        </style>
+</head>
+<body>
+    <nav class="nav justify-content-end">
+        <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+      </nav>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+          <div class="container-fluid">
+              <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
+                  <img src="{%static 'img/logo1.png' %}" height="80" width="300">
+              </a>
+              <nav class="stroke" style="margin-right: 120px;">
+                <ul>
+                  <li><a href="{% url 'IABC_WEB:admember' %}">Members</a></li>
+                <li><a href="{% url 'IABC_WEB:awardspaid' %}">PhilQuill Entries</a></li>
+                <li><a href="{%url 'IABC_WEB:admintransachistory' %}">Transaction History</a></li>
+                <li class="dropdown"><a href="#">Events<ion-icon name="caret-down-outline"></ion-icon></a>
+                    <ul class="dropdown-content"> 
+                      <li><a href="{% url 'IABC_WEB:view_bidders' %}">Bidders</a></li>
+                      <li><a href="{% url 'IABC_WEB:viewproj_track' %}">Project Tracker</a></li>
+                    </ul>
+                </li>
+                  <li class="dropdown"><a href="#"><img src="{%static 'img/gear-solid.svg' %}" height="20" width="20"></a>
+                    <ul class="dropdown-content2" style="right: 0px; width: 200px;">
+                      <li><a href="{% url 'IABC_WEB:act_list' %}">Activity CRUD</a></li>
+                      <li><a href="{% url 'IABC_WEB:awardscrud' %}">Awards CRUD</a></li>
+                      <li><a href="{% url 'IABC_WEB:chartA' %}">Charts CRUD</a></li>
+                      <li><a href="{% url 'IABC_WEB:price' %}">Product Prices CRUD</a></li>
+                      <li><a href="{% url 'bidder_register' %}">Create Bidders Account</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+          </div>
+      </nav>
+    
+    <div class="container-fluid2">
+        <div class="container col-md-12 mb-4">
+            {% if proij %}
+                
+                
+            <h2><strong>{{proij.event_name}}</strong></h2>
+                
+            {% endif %}
+
+            <p style="border-style: solid; width: 100px; color: #2a7221;">
+        </div>
+
+        <div>
+            <a class="btnback px-0 mb-3" href="{% url 'IABC_WEB:viewproj_track' %}"><i class="fa fa-caret-left"></i>&nbsp;&nbsp;Back</a>
+        </div>
+
+        <div class="tablepanel table-responsive-lg">
+            <table class="borderless table">
+                <tr class="tbl-header">
+                    <th id="head3" style="width: 10%;"><b>Date Started</b><span style="color:red"><b>*</b></span></th>
+                    <th id="head3" style="width: 10%;"><b>Deadline</b><span style="color:red"><b>*</b></span></th>
+                    <th id="head3" style="width: 10%;"><b>Assign To:</b><span style="color:red"><b>*</b></span></th>
+                    <th id="head3" style="width: 55%;"><b>Activity</b><span style="color:red"><b>*</b></span></th>
+                    <th id="head3" style="width: 5%;"><b>Add</b></th>
+                </tr>
+                
+                <form action="{% url 'IABC_WEB:addproj' projj %}" method="POST">{%csrf_token%}
+                    <tr class="tabletext2">
+                        <td style="width: 10%; text-align: center;"><input type="date" name="date" required></input></td>
+                        <td style="width: 10%; text-align: center;"><input type="date" name="deadl" required></input></td>
+                            
+                        <td style="width: 10%; text-align: center;"><select name="users" id="remarks"  required>
+                            <option class="option" selected>Users</option>
+                            {% if adm  %}
+                                {% for a in adm %}
+                            <option value="{{a.firstName}}">{{a.firstName}}</option>
+                                {% endfor %}
+                            {% endif %}
+                            {% if bid  %}
+                                {% for b in bid %}
+                            <option value="{{b.firstName}}">{{b.firstName}}</option>
+                                {% endfor %}
+                            {% endif %}
+                            </select></td>
+                            
+                        
+                        <td style="width: 65%; text-align: center;"><select class="act" name="act" required>
+                            <option class="option" selected>Activities</option>
+                            {% if act  %}
+                                {% for a in act %}
+                            <option value="{{a.activity}}">{{a.activity}}</option>
+                                {% endfor %}
+                            {% endif %}
+                            </select></td>
+                        <td style="width: 5%; text-align: center;"><button type=submit id="addbtn"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </form>        
+            </table>
+
+            <table class="borderless table" id="myTable">
+                <tr class="tbl-header">
+                    <th id="head3" style="width: 10%;"><b>Date Added</b></th>
+                    <th id="head3" style="width: 7%;"><b>Date Started</b></th>
+                    <th id="head3" style="width: 7%;"><b>Deadline</b></th>
+                    <th id="head3" style="width: 10%;"><b>Assigned by:</b></th>
+                    <th id="head3" style="width: 10%;"><b>Assigned to:</b></th>
+                    <th id="head3" style="width: 35%;"><b>Activity</b></th>
+                    <th id="head3" style="width: 10%;"><b>Progress</b></th>
+                    <th id="head3" style="width: 10%;"></th>
+                    <th id="head3" style="width: 6%;"><b>Remarks</b></th>
+                    <th id="head3" style="width: 5%;"><b>Remove</b></th>
+                </tr>
+                {% if proj %}
+                    {% for p in proj %}
+                    <tr>
+                    
+                        <td style="width: 10%;"><div class="context">{{p.date_input}}</div></td>
+                        <td style="width: 7%;"><div class="context">{{p.date_dur}}</div></td>
+                        <td style="width: 7%;"><div class="context">{{p.deadline}}</div></td>
+                        <td style="width: 10%;"><div class="context">{{p.assignby}}</div></td>
+                        <td style="width: 10%;"><div class="context">{{p.assign}}</div></td>
+                        <td class="tdwrap" style="width: 35%;"><div class="context">{{p.act_Task}}</div></td>
+                        {% if p.percent %}
+                        <td style="width: 10%;"><div class="context">{{p.percent}}%</div></td>
+                        {% else %}
+                        <td style="width: 10%;"><div class="context">0%</div></td>
+                        {%endif%}
+                        <td style="width: 10%;"><div class="context"><a class="open" href="{% url 'IABC_WEB:checklist' p.id %}" ><i class="fa fa-list-check"></i> Tasks</a></div></td>
+                        <td style="width: 6%; text-align: center;"></td>
+                        <td style="width: 5%; text-align: center;"><a class="open" href="{% url 'IABC_WEB:delproj_trac2' p.id %}" ><button type=submit id="deletebtn" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></a></td>
+                        
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+           
+        {% if proj %}
+            {% for p in proj %} 
+            <form action="{% url 'IABC_WEB:editproj' p.id %}" method="POST">{%csrf_token%}
+                <div class="modal fade" id="staticBackdrop{{p.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel"><b>EDIT</b></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <b>Status: </b>
+                                <select name="stat" id="remarks">
+                                    <option class="option" selected>Remarks</option>
+                                    <option value="On Going">On Going</option>
+                                    <option value="Late">Late</option>
+                                    <option value="Complete">Complete</option>
+                                </select>
+
+                                <br><br>
+                                                        
+                                <!-- <b>Activity Name: </b><br> -->
+                                <!--<input class="mod" type="text" name="actt" placeholder="Remarks"></input> -->
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btnclose" data-bs-dismiss="modal">Close</button>
+                            
+                                <button type="submit" class="btn btnsave">Save Changes</button>
+                           
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endfor %}
+        {% endif  %} 
+        
+        </div>
+        
+
+    </div>
+
+    
+    <script>
+        function deleteRow(r) {
+          var i = r.parentNode.parentNode.rowIndex;
+          document.getElementById("myTable").deleteRow(i);
+        }
+    </script>
+
+<script>
+    function deleteRow(r) {
+      var i = r.parentNode.parentNode.rowIndex;
+      document.getElementById("myList").deleteRow(i);
+    }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

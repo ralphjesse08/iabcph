@@ -1,0 +1,377 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admindata.css' %}">
+    <script src="{% static 'js/admin.css' %}"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+
+    <style>
+        .btnjoin{
+            background:  #2a7221;
+            color: #fff;
+            padding: 13px;
+            border-radius: 20%;
+            font-size: 90%;
+        }
+
+        .btnjoin:hover {
+            background-color: #fff;
+            border-color: #2a7221;
+            color: rgb(42, 114, 33);
+        }
+
+        .dropdown-content {
+            min-width: 135%;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav justify-content-end">
+        {% if user.is_authenticated %}
+        {%if info %}
+        <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <div class="dropdown">
+            <a class="nav-link" href="{% url 'IABC_WEB:my_account' info.id%}">MY ACCOUNT</a>
+        </div>
+        {%endif%}
+        {%else%}
+        <a class="nav-link" href="{% url 'members:login' %}">LOGIN</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <a class="nav-link" href="{% url 'register' %}">REGISTER</a>
+        {% endif %}  
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{%url 'members:home' %}">
+                <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+            </a>
+            <nav class="stroke" style="margin-right: 120px;">
+                <ul>
+                    <li><a href="{%url 'members:home' %}">Home</a></li>
+                    <li><a href="{% url 'IABC_WEB:eventsview' %}">Events</a></li>
+                    <li class="dropdown"><a href="#">Membership<ion-icon name="caret-down-outline"></ion-icon></a>
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:whyiabc' %}">Why IABC</a></li>
+                            <li><a href="{% url 'IABC_WEB:membenefits' %}">Membership Benefits</a></li>
+                            {% if mem.received_email == True %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}">Renew Membership</a></li>
+                            {% else %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}" class="nav-link disabled">Renew Membership</a></li>
+                            {%endif%}
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#">PhilQuill<ion-icon name="caret-down-outline"></ion-icon></a>
+                        {% if user.is_authenticated %}
+                        {%if info %}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {%endif%}
+                        {%else%}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}" class="nav-link disabled">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% if user.is_authenticated %}
+                    {%if info %}
+                    <a class="btn btnjoin" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a>
+                    {%endif%}
+                    {%else%}
+                    <a class="btn btnjoin" href="{% url 'members:login' %}" role="button">JOIN</a>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="container-fluid1 justify-content-end">
+        <div>
+            <h2><strong>Quick Links</strong></h2>
+            <p style="border-style: solid; width: 100px; color: #2a7221;">
+        </div>
+
+        <div class="row home justify-content-between mt-3">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <a class="btn btn-primary mb-3" href="{% url 'IABC_WEB:awardsabout1' %}" role="button"><i class="fa fa-fax"></i>&nbsp;&nbsp;Division 1: Communication Management</a><br>
+                <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardsabout2' %}" role="button"><i class="fa fa-bullhorn"></i>&nbsp;&nbsp;Division 2: Communication Research</a><br>
+                <a class="btn btn1 mb-3 " href="{% url 'IABC_WEB:awardsabout3' %}" role="button"><i class="fa fa-address-card"></i>&nbsp;&nbsp;Division 3: Communication Training and Education</a><br>
+                <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardsabout4' %}" role="button"><i class="fa fa-comments"></i>&nbsp;&nbsp;Division 4: Communication Skills</a><br>
+            </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-8 align-self-end">
+                <div>
+                    <h2><strong><center>DIVISION 1: COMMUNICATION MANAGEMENT</center></strong></h2>
+                    <center>This Division covers projects, programs, and campaigns that are guided by a communication strategy.
+                    <p style="border-style: solid; width: 800; color: #2a7221;"></center>
+                </div>
+                <br>
+                <div class="row justify-content-between">
+                    <section>
+                        <div>
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <strong>Category 1: INTERNAL COMMUNICATION</strong>
+                                    <ul>
+                                        <li>
+                                            Programs or strategies targeted at employee or member audiences
+                                        </li>
+                                        <li>
+                                            Includes programs that create awareness and influence opinion or behavioral change, including those focused on ethics, morale, internal culture, or change management
+                                        </li>
+                                        <li>
+                                            May involve improving employee understanding and alignment with the educational organization’s direction, improving face-to-face communication, preparing internal audiences for change, integration of organizational cultures caused by an acquisition or downsizing, an internal brand ambassador program, or a program to inspire pride in the organization
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>Category 2: EMPLOYEE ENGAGEMENT</strong>
+                                    <ul>
+                                        <li>
+                                            Local, regional, national, or international programs or strategies that profile the role of strategic communication as a driver in improving employee engagement
+                                        </li>
+                                        <li>
+                                            Entries must focus on the communication elements of these programs, which could include contribution to program development and promotion through various communication vehicles and channels
+                                        </li>
+                                        <li>
+                                            May include employee recognition and employee volunteer programs, including programs that benefit charitable or philanthropic causes, or that recognize employees’ organizational contributions or achievements in the organization
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>
+                                        Category 3: HUMAN RESOURCES AND BENEFITS COMMUNICATION
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Programs or strategies targeted at internal audiences that relate to communication of health and welfare, savings and pension, stocks and compensation, or recruitment and retention initiatives
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>
+                                        Category 4: CHANGE COMMUNICATION
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Communication strategies that support organizational change
+                                            May be directed at internal or external audiences, or both
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>
+                                        Category 5: SAFETY COMMUNICATION
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Programs or strategies that focus on improving awareness, understanding, and behaviors related to safety issues within an organization
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>
+                                        Category 6: LEADERSHIP COMMUNICATION
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Programs or strategies that help leaders become more effective communicators, improve the quality of leadership communication within an organization, or improve leader knowledge and the ability to use communication as a business driver
+                                        </li>
+                                        <li>
+                                            Tactics may include tool kits with speaking notes, games or other tools that help leaders communicate a specific topic, and special publications with information and support for leadership communication
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>
+                                        Category 7: MARKETING, ADVERTISING AND BRAND COMMUNICATION
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            May include various activities designed to sell products, services, destinations, organizations, or ideas to external audiences, and is generally delivered through a variety of communication vehicles and channels
+                                        <li>
+                                            Strategies for new brands and the repositioning of existing brands in relation to internal and external audiences
+                                        </li>
+                                        <li>
+                                            May include brand characteristics and attributes, changes to corporate identities and design solutions that address the challenges of brand communication (must be more than a logo redesign)
+                                        </li>
+                                        <li>
+                                            Strategic advertising campaigns designed to build brand awareness, influence opinion, motivate audience behaviors, or sell products and services
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>
+                                        Category 8: CUSTOMER RELATIONS
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Strategies or ongoing programs targeted at customer audiences that educate, inform, engage, or otherwise connect the organization and its employees to the customer
+                                        <li>
+                                            Programs may influence reputation, brand awareness and loyalty, and market position
+                                        </li>
+                                        <li>
+                                            May include relationship management, experience standards or appreciation programs, but must be focused on communication and marketing elements
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>Category 9: MEDIA RELATIONS</strong>
+                                    <ul>
+                                        <li>
+                                            Strategies or ongoing programs that use the news media as the primary channel to reach target audiences and seek to influence awareness, understanding, and opinion or motivate action
+                                        </li>
+                                        <li>
+                                            Should demonstrate the quality of media coverage and its impact on the organization—quantity of media stories alone is not considered a valid measurement in this category
+                                        </li>
+                                    </ul>
+                                </tr>
+
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>Category 10: COMMUNITY RELATIONS</strong>
+                                    <ul>
+                                        <li>
+                                            A one-time or an ongoing program that enhances stakeholder understanding of issues affecting business operations within the community served
+                                        </li>
+                                        <li>
+                                            Seeks to build trust and credibility with stakeholder groups generally through consultation and other communication-based activities
+                                        </li>
+                                        <li>
+                                            Tactics and supporting strategies may include formal and informal meetings, town hall discussions, workshops, presentations, open houses, and electronic or printed materials
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>  Category 11: GOVERNMENT RELATIONS AND PUBLIC AFFAIRS</strong>
+                                    <ul>
+                                        <li>
+                                            Short- or long-term programs that influence the opinion or actions of government bodies or agencies
+                                        </li>
+                                        <li>
+                                            May seek to create awareness, or influence the attitudes and behaviors of decision-makers toward the organization or industry
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong> Category 12: GOVERNMENTAL COMMUNICATIONS</strong>
+                                    <ul>
+                                        <li>
+                                            Programs and strategies specific to government organizations at the municipal, state, provincial, regional, federal, national or international level
+                                        </li>
+                                        <li>
+                                            May be targeted to one or more audiences, and include internal, external or integrated communication strategies or programs
+                                        </li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>Category 13: FINANCIAL COMMUNICATION AND INVESTOR RELATIONS</strong>
+                                    <ul>
+                                        <li>
+                                            Entails strategies, tactics, and tools used to share financial data and recommendations with investors and other interested parties
+                                        </li>
+                                        <li>Includes investor relations functions that integrate finance, communication, and marketing and securities laws compliance to enable effective two-way communication between a company, the financial community, and stakeholders</li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>Category 14: ISSUES MANAGEMENT AND CRISIS COMMUNICATION</strong>
+                                    <ul>
+                                        <li>Programs targeted at external and/or internal audiences that address trends, issues or attitudes that have a significant impact on an organization, such as labor relations, crises, mergers, acquisitions, public policy or environmental concerns</li>
+                                        <li>Programs may demonstrate proactive planning and preventive action during an extraordinary event, or show the actions taken to address trends, issues and interest group attitudes that have a major impact on an organization</li>
+                                        <li>May be directed at internal or external audiences, or both</li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong> Category 15: CORPORATE SOCIAL RESPONSIBILITY</strong>
+                                    <ul>
+                                        <li>
+                                            Programs or strategies that communicate social responsibility and encourage positive actions while building awareness and reputation and positioning the organization as a good corporate citizen
+                                        </li>
+                                        <li>
+                                            May be targeted to multiple audiences and influence share price and customer loyalty, retention and recruitment, operational efficiency and increased sales
+                                        </li>
+                                        <li>
+                                            Generally long-term and focused on enhancing the well-being of communities and populations through causes such as the environment, energy sustainability, food safety, economic stability, employment, poverty reduction, literacy, education, health, cultural preservation, and indigenous and heritage protection, among others
+                                        </li>
+                                        <li>May be directed at internal or external audiences, or both</li>
+                                    </ul>
+                                </tr>
+                                <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong>Category 16: NONPROFIT CAMPAIGNS</strong>
+                                    <ul>
+                                        <li>Programs recognizing the particular challenges of the nonprofit sector</li>
+                                        <li>May be an integrated campaign, or specifically targeting either internal or external stakeholders</li>
+                                        <li>Promotes nonprofit organizations or causes</li>
+                                        <li>
+                                            May be paid projects or pro-bono projects donated to the client by an organization, agency or consultancy; entries will generally have a small budget or none at all
+                                        </li>
+                                    </ul>
+                                    <p style="border-style: solid; width: 100%; color: #2a7221;">
+                                <tr>
+                                    <strong> Category 17: DIVERSITY AND INCLUSION</strong>
+                                    <ul>
+                                        <li>
+                                            Campaigns or programs of work aimed at building a culture of inclusion for an organization, with internal or external stakeholders or both.
+                                        </li>
+                                        <li>
+                                            Entries must focus on the communication elements of D&I programs, which could include specific topic-based initiatives, special events or wider organizational strategies to advance D&I aims.
+                                        </li>
+                                    </ul>
+                                </tr>
+
+
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function deleteRow(r) {
+            var i = r.parentNode.parentNode.rowIndex;
+            document.getElementById("myTable").deleteRow(i);
+        }
+    </script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

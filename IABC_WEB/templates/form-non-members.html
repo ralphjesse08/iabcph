@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Membership</title>
+</head>
+<style>
+@page{
+		size: 11.7in 8.31in ;
+		margin: 5mm 5mm 5mm 5mm;
+}
+body {
+  font-size: 130%;
+}
+
+.tbl-header{
+	background-color: #2a7221;
+	border: none;
+	color: #fff;
+	width: 1200px;
+}
+
+.tdwrap{
+	border: none;
+    word-break:break-all;
+}
+
+#customers {
+	border-collapse: collapse;
+	width: 100%;
+}
+  
+#customers td, #customers th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+  
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+  
+#customers th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #2a7221;
+	color: white;
+}
+
+</style>
+<body>
+{% block content %}
+<table align="center"> 
+
+</table>
+
+
+  
+<table id="customers">
+	<tr>
+		<th width="10%">Membership ID.</th>
+		<th width="30%">Name</th>
+		<th width="20%">Application Date</th>
+		<th width="20%">Designation</th>
+		<th width="20%">Company Name</th>
+	</tr>
+	{%if mem1%}
+	{%for m in mem1%}
+	<tr>
+		<td style="text-align: center;">{{m.id}}</td>
+		<td class="tdwrap">{{m.nick_name}}</td>
+		<td class="tdwrap">{{m.join_date}}</td>
+		<td class="tdwrap">{{m.designation}}</td>
+		<td class="tdwrap">{{m.company_name}}</td>
+	</tr>
+	{%endfor%}
+	{%endif%}
+</table>
+{% endblock %}
+</body>
+</html>

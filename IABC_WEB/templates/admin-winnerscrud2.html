@@ -1,0 +1,131 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{%static 'css/admindata.css' %}">
+    <script src="{%static 'js/admin.js' %}"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{%static 'img/logo.png' %}" type = "image/x-icon">
+</head>
+<body>
+  <nav class="nav justify-content-end">
+    <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+  </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+      <div class="container-fluid">
+          <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
+              <img src="{%static 'img/logo1.png' %}" height="80" width="300">
+          </a>
+          <nav class="stroke" style="margin-right: 120px;">
+            <ul>
+              <li><a href="{% url 'IABC_WEB:admember' %}">Members</a></li>
+            <li><a href="{% url 'IABC_WEB:awardspaid' %}">PhilQuill Entries</a></li>
+            <li><a href="{%url 'IABC_WEB:admintransachistory' %}">Transaction History</a></li>
+            <li class="dropdown"><a href="#">Events<ion-icon name="caret-down-outline"></ion-icon></a>
+                <ul class="dropdown-content"> 
+                  <li><a href="{% url 'IABC_WEB:view_bidders' %}">Bidders</a></li>
+                  <li><a href="{% url 'IABC_WEB:viewproj_track' %}">Project Tracker</a></li>
+                </ul>
+            </li>
+              <li class="dropdown"><a href="#"><img src="{%static 'img/gear-solid.svg' %}" height="20" width="20"></a>
+                <ul class="dropdown-content2" style="right: 0px; width: 200px;">
+                  <li><a href="{% url 'IABC_WEB:act_list' %}">Activity CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:awardscrud' %}">Awards CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:chartA' %}">Charts CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:price' %}">Product Prices CRUD</a></li>
+                  <li><a href="{% url 'bidder_register' %}">Create Bidders Account</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+      </div>
+  </nav>
+    
+    <div class="container-fluid1 justify-content-end">
+        <div>
+            <h2><strong>AWARDS ENTRIES</strong></h2>
+            <p style="border-style: solid; width: 100px; color: #2a7221;">
+        </div>
+        
+        <div class="row home justify-content-between mt-5">
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardspaid' %}" role="button"><i class="fa fa-user-check"></i>&nbsp;&nbsp;Paid Entries</a><br>
+            <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardspending' %}" role="button"><i class="fa fa-user-clock"></i>&nbsp;&nbsp;Pending Entries</a><br>
+            <a class="btn btn-primary mb-3" href="{% url 'IABC_WEB:winners' %}" role="button"><i class="fa fa-trophy"></i>&nbsp;&nbsp;Winners</a><br>
+          </div>
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <div>
+                  <button class="btnback px-0 mb-3" onclick="history.back()"><i class="fa fa-caret-left"></i>&nbsp;&nbsp;Back</button>
+                </div>
+                
+                <div class="tablepanel table-responsive-lg">
+                  <table class="borderless table">
+                      <form action="" method="POST">
+                          <tr class="tabletext2">
+                              <td style="width: 46%; text-align: center;">
+                                <select class="select form-select justify-content-end" id="remarks">
+                                  <option selected value="None">Category</option>
+                                  <option value="1">Category 1</option>
+                                </select></td>
+                              <td style="width: 46%; text-align: center;"> 
+                                <select class="select form-select justify-content-end" id="remarks">
+                                  <option selected value="None">Entry Name/Title</option>
+                                  <option value="1">Entry Name 1</option>
+                                  <option value="2">Entry Name 2</option>
+                                </select></td>
+                              <td style="width: 8%; text-align: center;"><button type=submit id="addbtn"><i class="fa fa-plus"></i></button></td>
+                          </tr>
+                      </form>        
+                  </table>
+      
+                  <table class="borderless table" id="myTable">
+                      <tr class="tbl-header">
+                          <th id="head3" style="width: 8%;"><b>Entry No.</b></th>
+                          <th id="head3" style="width: 22%;"><b>Entry Name</b></th>
+                          <th id="head3" style="width: 21%;"><b>Category</b></th>
+                          <th id="head3" style="width: 20%;"><b>Entrants Name</b></th>
+                          <th id="head3" style="width: 22%;"><b>Company</b></th>
+                          <th id="head3" style="width: 7%;"><b></b></th>
+                      </tr>
+      
+                      <tr>
+                        {%if win%}
+                        {%for w in win%}
+                          <td style="width: 8%;"><div class="context">{{w.entryNo}}</div></td>
+                          <td style="width: 43%;"><div class="context"><b>{{w.entryName}}</b></div></td>
+                          <td style="width: 15%;"><div class="context">{{w.entryCat}} </div></td>
+                          <td style="width: 15%;"><div class="context">{{w.entrantName}}</div></td>
+                          <td style="width: 12%;"><div class="context">{{w.entryComp}}</div></td>
+                          <td style="width: 7%; text-align: center;"><button type=submit id="deletebtn1" onclick="deleteRow(this)"><i class="fa fa-trash"></i></button></td>
+                        {%endfor%}
+                        {%endif%}
+                      </tr>
+                    </table>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <script>
+    function deleteRow(r) {
+      var i = r.parentNode.parentNode.rowIndex;
+      document.getElementById("myTable").deleteRow(i);
+    }
+    </script>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+{% load static %} 
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reg.css' %}">
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="img/logo.png" type = "image/x-icon">
+</head>
+<body>
+    <div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
+        <div class="card card0 border-0">
+            <div class="row d-flex">
+                <div class="col-lg-6">
+                    <div class="card1 pb-5">
+                        <div class="row">
+                            <a href="index.html"><img src="{%static 'img/logo1.png' %}" class="logo"></a>
+                        </div>
+                        <div class="card2 card border-0 px-5 py-5">
+                            <div class="row px-1 mt-2 mb-2">
+                                <h4 style="color: #2a7221"><b>Create an Account</b></h4>
+                                <p>Please enter the information needed below.</p>
+                            </div>
+                            <form method="post">
+                                {%csrf_token%}
+                                <div class="row px-3">
+                                    <label class="mb-1 px-0"><h6 class="mb-0 text-sm">Last Name</h6></label>
+                                    <div class="input-icons px-0">
+                                        <i class="fa fa-user icon"></i>
+                                        <input class="mb-4" type="text" name="lastName" placeholder="Enter Last Name">
+                                    </div>
+                                </div>
+                                <div class="row px-3">
+                                    <label class="mb-1 px-0"><h6 class="mb-0 text-sm">First Name</h6></label>
+                                    <div class="input-icons px-0">
+                                        <i class="fa fa-user icon"></i>
+                                        <input class="mb-4" type="text" name="firstName" placeholder="Enter First Name">
+                                    </div>
+                                </div>
+                                <div class="row px-3">
+                                    <label class="mb-1 px-0"><h6 class="mb-0 text-sm">Middle Name</h6></label>
+                                    <div class="input-icons px-0">
+                                        <i class="fa fa-user icon"></i>
+                                        <input class="mb-4" type="text" name="middleName" placeholder="Enter Last Name">
+                                    </div>
+                                </div>
+                                <div class="row px-3">
+                                    <label class="mb-0 px-0"><h6 class="mb-0 text-sm">Email Address</h6></label>
+                                    <div class="input-icons px-0">
+                                        <i class="fa fa-envelope icon"></i>
+                                        <input type="text" name="email" placeholder="Enter a valid email address">
+                                    </div>
+                                </div>
+                                <div class="row px-3">
+                                    <label class="mb-0 px-0"><h6 class="mb-0 text-sm">Bidder Account</h6></label>
+                                    <div class="input-icons px-0">
+                                        <i class="fa fa-envelope icon"></i>
+                                        <input type="radio" name="is_bidder" checked>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5">
+                    <div class="card2 card border-0 px-5 py-5">
+                        <div class="row px-1 mt-5 mb-2">
+                            <h4 style="color: #ffffff">&nbsp;</h4>
+                            <br><br><br>
+                        </div>
+                        
+                            <div class="row px-3 mt-3">
+                                <label class="mb-1 px-0"><h6 class="mb-0 text-sm">Password</h6></label>
+                                <div class="input-icons px-0">
+                                    <i class="fa fa-lock icon"></i>
+                                    <input class="mb-4" type="password" name="password1" id="id_password" required="true" placeholder="Enter Password">
+                                    <i class="far fa-eye" id="togglePassword" style="margin-left: -45px; margin-top: 22px; cursor: pointer;"></i>
+                                </div>
+                            </div>
+                            <div class="row px-3">
+                                <label class="mb-1 px-0"><h6 class="mb-0 text-sm">Confirm Password</h6></label>
+                                <div class="input-icons px-0">
+                                    <i class="fa fa-lock icon"></i>
+                                    <input class="mb-4" type="password" name="password2" id="id_conpassword" required="true" placeholder="Confirm Password">
+                                    <i class="far fa-eye" id="toggleConPassword" style="margin-left: -45px; margin-top: 22px; cursor: pointer;"></i>
+                                </div>
+                            </div>
+
+                            {% for field in registration_form %}
+                            <p>{% for error in field.errors %}
+                            <p>{{error}}</p>
+                            {%endfor%}
+                            </p>
+                            {%endfor%}
+                            {% if registration_form.non_field_errors %}
+                            <p>{{registration_form.non_field_errors}}</p>
+                            {%endif%}
+                            <div class="row mb-3 px-3">
+                                <button type="submit" class="btn btn-blue text-center" onclick="document.location='#html'">Register</button>
+                            </div>
+                            <div class="row px-3">
+                                Already have an account?&nbsp;<a class="text-danger" href="login.html"><b>Log-in</b></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-blue py-4">
+                <div class="row px-4">
+                    <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2022 | Interntional Association of Business Communicators Philippines</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#id_password');
+ 
+        togglePassword.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+
+        const toggleConPassword = document.querySelector('#toggleConPassword');
+        const conpassword = document.querySelector('#id_conpassword');
+ 
+        toggleConPassword.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = conpassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        conpassword.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

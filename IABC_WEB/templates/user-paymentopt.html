@@ -1,0 +1,450 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/users.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+
+    <style>
+        .btnopt{
+            background:  #eeeeee;
+            font-size: 17px;
+            text-decoration: none;
+            font-weight: bolder;
+            color:#2a7221;
+            border-radius: 15px;
+            text-align: center;
+            width: 250px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border-color: #eeeeee;
+        }
+
+        .btnopt:hover {
+            background-color: #e2e2e2;
+            border: 1px solid #e2e2e2;
+            color: #2a7221;
+            font-weight: bold;
+        }
+
+        .btnopt:focus {
+            -moz-box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            border: 1px solid  #e2e2e2;
+            outline-width: 0;
+        }
+
+        .dropdown-content {
+            min-width: 135%;
+        }
+
+        .box{
+            display: none; 
+            padding: 10px;
+            margin-top: 4px;
+        }
+
+        input[name="check"]{
+            accent-color: #2a7221;
+        }
+
+        @media screen and (min-width: 400px) {
+            #paypal-button-container {
+                width: 250px;
+            }
+            }
+    </style>
+
+</head>
+<body>
+
+
+    <nav class="nav justify-content-end">
+        {% if user.is_authenticated %}
+        {%if info %}
+        <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <div class="dropdown">
+            <a class="nav-link" href="user-myaccount.html">MY ACCOUNT<ion-icon name="caret-down-outline"></ion-icon></a>
+            <!--<ul class="dropdown-content">
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Payment Transaction</a></li>
+            </ul>-->
+        </div>
+        {%endif%}
+        {%else%}
+        <a class="nav-link" href="{% url 'members:login' %}">LOGIN</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <a class="nav-link" href="{% url 'register' %}">REGISTER</a>
+        {% endif %}  
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{%url 'members:home' %}">
+                <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+            </a>
+            <nav class="stroke" style="margin-right: 120px;">
+                <ul>
+                    <li><a href="{%url 'members:home' %}">Home</a></li>
+                    <li><a href="{% url 'IABC_WEB:eventsview' %}">Events</a></li>
+                    <li class="dropdown"><a href="#">Membership<ion-icon name="caret-down-outline"></ion-icon></a>
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:whyiabc' %}">Why IABC</a></li>
+                            <li><a href="{% url 'IABC_WEB:membenefits' %}">Membership Benefits</a></li>
+                            {% if mem.received_email == True %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}">Renew Membership</a></li>
+                            {% else %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}" class="nav-link disabled">Renew Membership</a></li>
+                            {%endif%}
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#">PhilQuill<ion-icon name="caret-down-outline"></ion-icon></a>
+                        {% if user.is_authenticated %}
+                        {%if info %}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {%endif%}
+                        {%else%}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}" class="nav-link disabled">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% if user.is_authenticated %}
+                    {%if info %}
+                    <a class="btn btn-success" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a>
+                    {%endif%}
+                    {%else%}
+                    <a class="btn btn-success" href="{% url 'members:login' %}" role="button">JOIN</a>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </nav>
+    
+    <br><br>
+
+    <h1 style="text-align: center;"><b>PAYMENT OPTION</b></h1>
+    <center><p style="border-style: solid; height:4px; width: 200px; color: #2a7221;"></center>
+
+    <br><br>
+
+    <div class="row container container-fluid justify-content-center" style="padding-left: 270px;">
+        
+        <!-- <div class="col-md-4">
+            <a class="btn btnopt" style="border-radius: 5%;" href="{% url 'IABC_WEB:onlinepay' %}" role="button" name="onlinepayment" value="onlinepayment"> Online Payment </a>
+        </div> -->
+
+       <div class="col-md-4" style="text-align: center;">
+            <div>
+                <img src="{% static 'img/4.png' %}" width="150" height="150">
+            </div>
+            <br>
+            <center><div id="paypal-button-container"></div></center>
+        </div>
+        
+        <div class="col-md-4" style="text-align: center;">
+            <div>
+                <img src="{% static 'img/5.png' %}" width="150" height="150">
+            </div>
+            <br>
+            <button class="btn btnopt" style="border-radius: 23px;" type="button" data-bs-toggle="modal" data-bs-target="#overthecounter" aria-expanded="false" aria-controls="overthecounter">
+                Over-the-Counter
+            </button>
+        </div>
+
+        <div class="col-md-4" style="text-align: center;">
+            <div>
+                <img src="{% static 'img/6.png' %}" width="150" height="150">
+            </div>
+            <br>
+            <button class="btn btnopt" style="border-radius: 23px;" type="button" data-bs-toggle="modal" data-bs-target="#check" aria-expanded="false" aria-controls="check" >
+                Check
+            </button>
+        </div>
+
+        <div class="modal fade" id="overthecounter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="overthecounterLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="overthecounterLabel"><b>Bank Details</b></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="text-align: left;">
+                        <b>Account Name:</b> IABC Philippines, Inc.
+                        <br><b>Account Number:</b> 102-005-5460
+                        <br><b>Bank Name:</b> CTBC Bank (China Trust Banking Corporation)
+                        <br><b>Bank Address:</b> G/F Burgundy Tower, 252 Sen. Gil J. Puyat Ave, Makati, 1200 Metro Manila
+                        <br><b>Bank Swift Code:</b> CTCBPHMM
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btnsub" style="border-radius: 30px; width: 100px; padding-top: 10px; padding-bottom: 10px;" role="button"  aria-expanded="false" aria-controls="overthecounter" href="{% url 'IABC_WEB:overtc' %}">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="check" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="checkLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="checkLabel"><b>Cheque</b></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="text-align: left;">
+                        <div class="row" style="text-align: center;">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4"><label><input type="radio" name="check" value="pickup">Pick-up</label></div>
+                            <div class="col-md-4"><label><input type="radio" name="check" value="delivery">Delivery</label></div>
+                            <div class="col-md-2"></div>
+                        </div>
+                            
+                        <form action="{% url 'IABC_WEB:check' %}"  method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <div class="box pickup">
+                            <b>For pick-up, fill up the following:</b><br><br>
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: left;">
+                                    <input type="text" class="form-control" style="width: 210px;" placeholder="Contact Person" required name="cperson">
+                                </div>
+                                <div class="col-md-6" style="text-align: left;">
+                                    <input type="text" class="form-control" style="width: 210px;" placeholder="Contact Number" required name="cnum" pattern="[0-9]" maxlength="11">
+                                </div>
+                                
+                                <div class="col-md-12" style="text-align: left;">
+                                    <label class="form-label mt-3 mb-0"><i>Please enter pick-up location.</i></label>
+                                    <input type="text" class="form-control" style="width: 445px;" placeholder="Address" required name="address">
+                                </div>
+                            </div>
+                            <br>
+                            <div style="text-align: right;">
+                                <button class="btn btnsub" style="border-radius: 30px; padding-top: 10px; padding-bottom: 10px;"  type="submit"> Submit </button>
+                            </div>
+                        </div>
+                        </form>
+    
+                        <div class="box delivery">
+                            <b>For delivery, below are the delivery details.</b><br>
+                            <b>Company:</b> International Association of Business Communicators Philippines INC. (IABC)<br>
+                            <b>Address:</b> Unit 201, 2/F Great Wall Building 136, Yakal, Makati, 1203 Metro Manila<br>
+                            <b>Contact Person:</b> Sharlyn Beltran <br>
+                            <b>Contact Number:</b> 09123456789
+                            <br>
+                            <div style="text-align: right;">
+                                <a class="btn btnsub" style="border-radius: 30px; width: 80px; padding-top: 10px; padding-bottom: 10px;" role="button"  aria-expanded="false" aria-controls="overthecounter" href="{% url 'IABC_WEB:overtc' %}">
+                                    OK
+                                </a>
+                            </div>
+                        </div>     
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+                    
+                    
+    </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('input[type="radio"]').click(function(){
+                var inputValue = $(this).attr("value")
+                var targetBox =$("."+inputValue);
+                $(".box").not(targetBox).hide();
+                $(targetBox).show();
+    });
+    });
+    </script>
+                                       
+                        
+    {%if checker%}    
+        {%if price%}
+    <script src="https://www.paypal.com/sdk/js?client-id=ASDj6F3Pwr1n4VEJ5PpREEJnOK4jky0pwnWrk6jP5QxUrilHYcqYwheBRGqLkbAY0Ua_5Zsg0OrOSWXN&currency=PHP&disable-funding=card"></script>
+
+    <script>
+        var presyo = '{{price.priceVal}}'
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            style:{
+                color:'silver',
+                shape:'pill',
+                size:'responsive',
+                height: 50,
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(presyo).toFixed(2)
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+                    //alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                    //actions.redirect('IABC_WEB/onlinepay/');
+                    window.location.href="{%url 'IABC_WEB:onlinepay' %}"
+                    // Replace the above to show a success message within this page, e.g.
+                    // const element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+        {%endif%}
+    {%elif info%}
+        {%if price%}
+    <script src="https://www.paypal.com/sdk/js?client-id=ASDj6F3Pwr1n4VEJ5PpREEJnOK4jky0pwnWrk6jP5QxUrilHYcqYwheBRGqLkbAY0Ua_5Zsg0OrOSWXN&currency=PHP&disable-funding=card"></script>
+
+    <script>
+        var presyo = '{{price.priceVal}}'
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            style:{
+                color:'silver',
+                shape:'pill',
+                size:'responsive',
+                height: 50,
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(presyo).toFixed(2)
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+                    //alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                    //actions.redirect('IABC_WEB/onlinepay/');
+                    window.location.href="{%url 'IABC_WEB:onlinepay' %}"
+                    // Replace the above to show a success message within this page, e.g.
+                    // const element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+        {%endif%}
+    {%else%}
+        {%if price%}
+    <script src="https://www.paypal.com/sdk/js?client-id=ASDj6F3Pwr1n4VEJ5PpREEJnOK4jky0pwnWrk6jP5QxUrilHYcqYwheBRGqLkbAY0Ua_5Zsg0OrOSWXN&currency=PHP&disable-funding=card"></script>
+    <script>
+        var presyo = '{{price.priceVal}}'
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            style:{
+                color:'silver',
+                shape:'pill',
+                size:'responsive',
+                height: 50,
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(presyo).toFixed(2)
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+                    //alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                    //actions.redirect('IABC_WEB/onlinepay/');
+                    window.location.href="{%url 'IABC_WEB:onlinepay' %}"
+                    // Replace the above to show a success message within this page, e.g.
+                    // const element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+        {%endif%}
+    {%endif%}
+
+
+    <script>
+        function test() {
+            
+        }
+    </script>
+
+
+
+
+
+    
+
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

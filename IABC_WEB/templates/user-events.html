@@ -1,0 +1,187 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/users.css' %}">
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+
+    <style>
+        .container{
+    margin-left: 105px;
+    margin-right: 105px;
+    text-align: center;
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.container-fluid2{
+    padding-top: 20px;
+    padding-right: 950px;
+    padding-left: 950px;
+}
+
+.search {
+    width: 100%;
+    position: relative;
+    display: flex;
+    margin-left: 0px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+  
+.searchTerm {
+    width: 200%;
+    border: 1px solid #2a7221;
+    border-right: none;
+    padding: 15px;
+    height: 32px;
+    border-radius: 10px 0 0 10px;
+    outline: none;
+    color: #9DBFAF;
+}
+  
+.searchTerm:focus{
+    color: #2a7221;
+}
+  
+.searchButton {
+    width: 40px;
+    height: 32px;
+    border: 1px solid #2a7221;
+    background: #2a7221;
+    text-align: center;
+    color: #fff;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.wrap{
+	float: right;
+}
+
+.upcoming{
+    background-color: #a9c2b1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+    </style>
+</head>
+<body>
+    <nav class="nav justify-content-end">
+        {% if user.is_authenticated %}
+        {%if info %}
+        <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <div class="dropdown">
+            <a class="nav-link" href="{% url 'IABC_WEB:my_account' info.id%}">MY ACCOUNT</a>
+        </div>
+        {%endif%}
+        {%else%}
+        <a class="nav-link" href="{% url 'members:login' %}">LOGIN</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <a class="nav-link" href="{% url 'register' %}">REGISTER</a>
+        {% endif %}  
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{%url 'members:home' %}">
+                <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+            </a>
+            <nav class="stroke" style="margin-right: 120px;">
+                <ul>
+                    <li><a href="{%url 'members:home' %}">Home</a></li>
+                    <li><a href="{% url 'IABC_WEB:eventsview' %}">Events</a></li>
+                    <li class="dropdown"><a href="#">Membership<ion-icon name="caret-down-outline"></ion-icon></a>
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:whyiabc' %}">Why IABC</a></li>
+                            <li><a href="{% url 'IABC_WEB:membenefits' %}">Membership Benefits</a></li>
+                            {% if mem.received_email == True %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}">Renew Membership</a></li>
+                            {% else %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}" class="nav-link disabled">Renew Membership</a></li>
+                            {%endif%}
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#">PhilQuill<ion-icon name="caret-down-outline"></ion-icon></a>
+                        {% if user.is_authenticated %}
+                        {%if info %}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {%endif%}
+                        {%else%}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}" class="nav-link disabled">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% if user.is_authenticated %}
+                    {%if info %}
+                    <a class="btn btn-success" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a>
+                    {%endif%}
+                    {%else%}
+                    <a class="btn btn-success" href="{% url 'members:login' %}" role="button">JOIN</a>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </nav>
+    <br><br>
+
+
+    <h1 style="text-align: center;"><b>EVENTS</b></h1>
+    <center><p style="border-style: solid; height:4px; width: 1000px; color: #2a7221;"></center>
+        <br>
+
+    <div class="container-fluid2" style="padding-left:250px; padding-right:250px;">
+        <div class="upcoming" style="text-align:center; border: 1px solid #a9c2b1;">There are no upcoming events.</div>
+
+        <br><br>
+        
+        <div class="card mb-3" style="max-width: 1000px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{% static 'img/event.jpg' %}" style="height:230px; width:960px; "class="img-fluid rounded-start" alt="...">
+                </div>
+
+                    <div class="col-md-8">
+                       <div class="card-body">
+                            <h5 class="card-title"text-align="justify">MOVE: The 19th Philippine Quill Awards Roster of Winners</h5>
+                            <p class="card-text" style="text-align: left; margin-left: 0px;">Every year for the past almost two decades, the Philippine Quill and the Philippine Student Quill Awards have honored the best communication programs, tools, and research projects across various industries.</p>
+                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+<br><br>
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

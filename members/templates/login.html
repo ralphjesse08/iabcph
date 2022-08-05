@@ -1,0 +1,98 @@
+{% load static %} 
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+</head>
+<body>
+    <div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
+        <div class="card card0 border-0">
+            <div class="row d-flex">
+                <div class="col-lg-6">
+                    <div class="card1 pb-5">
+                        <div class="row">
+                            <a href="{% url 'members:home' %}"><img src="{% static 'img/logo1.png' %}" class="logo"></a>
+                        </div>
+                        <br>
+                        <div class="row px-3 justify-content-center mt-4 mb-2 border-line">
+                            <img src="{% static 'img/log3.png' %}" class="image">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5">
+                    <div class="card2 card border-0 px-0 py-5">
+                        {% if messages %}
+                        {% for message in messages %}
+                        {{ message }}
+                        {% endfor %}
+                        {% endif %}
+                        <div class="row px-1 mt-5 mb-2">
+                            <h4 style="color: #2a7221"><b>Log-in</b></h4>
+                        </div>
+                        <form method=POST>
+                        {%csrf_token%}
+                            <div class="row px-3">
+                                <label class="mb-1 px-0"><h6 class="mb-0 text-sm">Email Address</h6></label>
+                                <div class="input-icons px-0">
+                                    <i class="fa fa-user icon"></i>
+                                    <input class="mb-4" type="text" name="email" placeholder="Enter a valid email address">
+                                </div>
+                            </div>
+                            <div class="row px-3">
+                                <label class="mb-1 px-0"><h6 class="mb-0 text-sm">Password</h6></label>
+                                <div class="input-icons px-0">
+                                    <i class="fa fa-lock icon"></i>
+                                    <input type="password" name="password" id="id_password" required="true" placeholder="Enter password">
+                                    <i class="far fa-eye" id="togglePassword" style="margin-left: -45px; margin-top: 22px; cursor: pointer;"></i>
+                                </div>
+                            </div>
+                            <div class="row px-3 mb-4">
+                                
+                            </div>
+                            <div class="row mb-3 px-3">
+                                <button type="submit" class="btn btn-blue text-center" onclick="document.location='#html'">Login</button>
+                            </div>
+                            <div class="row mb-4 px-3">
+                                Don't have an account yet?&nbsp;<a class="text-danger" href="{% url 'register' %}"><b>Register</b></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-blue py-4">
+                <div class="row px-4">
+                    <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2022 | Interntional Association of Business Communicators Philippines</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#id_password');
+ 
+        togglePassword.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admindata.css' %}">
+    <script src="{% static 'js/admin.css' %}"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+    
+    <style>
+        .btnjoin{
+            background:  #2a7221;
+            color: #fff;
+            padding: 13px;
+            border-radius: 20%;
+            font-size: 90%;
+        }
+
+        .btnjoin:hover {
+            background-color: #fff;
+            border-color: #2a7221;
+            color: rgb(42, 114, 33);
+        }
+
+        .dropdown-content {
+            min-width: 135%;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav justify-content-end">
+        {% if user.is_authenticated %}
+        {%if info %}
+        <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <div class="dropdown">
+            <a class="nav-link" href="{% url 'IABC_WEB:my_account' info.id%}">MY ACCOUNT</a>
+        </div>
+        {%endif%}
+        {%else%}
+        <a class="nav-link" href="{% url 'members:login' %}">LOGIN</a>
+        <font color="white">&nbsp;|&nbsp;</font>
+        <a class="nav-link" href="{% url 'register' %}">REGISTER</a>
+        {% endif %}  
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{%url 'members:home' %}">
+                <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+            </a>
+            <nav class="stroke" style="margin-right: 120px;">
+                <ul>
+                    <li><a href="{%url 'members:home' %}">Home</a></li>
+                    <li><a href="{% url 'IABC_WEB:eventsview' %}">Events</a></li>
+                    <li class="dropdown"><a href="#">Membership<ion-icon name="caret-down-outline"></ion-icon></a>
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:whyiabc' %}">Why IABC</a></li>
+                            <li><a href="{% url 'IABC_WEB:membenefits' %}">Membership Benefits</a></li>
+                            {% if mem.received_email == True %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}">Renew Membership</a></li>
+                            {% else %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}" class="nav-link disabled">Renew Membership</a></li>
+                            {%endif%}
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#">PhilQuill<ion-icon name="caret-down-outline"></ion-icon></a>
+                        {% if user.is_authenticated %}
+                        {%if info %}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {%endif%}
+                        {%else%}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}" class="nav-link disabled">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% if user.is_authenticated %}
+                    {%if info %}
+                    <a class="btn btnjoin" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a>
+                    {%endif%}
+                    {%else%}
+                    <a class="btn btnjoin" href="{% url 'members:login' %}" role="button">JOIN</a>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="container-fluid1 justify-content-end">
+        <div>
+            <h2><strong>Quick Links</strong></h2>
+            <p style="border-style: solid; width: 100px; color: #2a7221;">
+        </div>
+        <div class="row home justify-content-between mt-3">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardsabout1' %}" role="button"><i class="fa fa-fax"></i>&nbsp;&nbsp;Division 1: Communication Management</a><br>
+                <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardsabout2' %}" role="button"><i class="fa fa-bullhorn"></i>&nbsp;&nbsp;Division 2: Communication Research</a><br>
+                <a class="btn btn-primary mb-3 " href="{% url 'IABC_WEB:awardsabout3' %}" role="button"><i class="fa fa-address-card"></i>&nbsp;&nbsp;Division 3: Communication Training and Education</a><br>
+                <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardsabout4' %}" role="button"><i class="fa fa-comments"></i>&nbsp;&nbsp;Division 4: Communication Skills</a><br>
+            </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-8 align-self-end">
+                <div>
+                    <h2><strong><center>DIVISION 3: COMMUNICATION TRAINING AND EDUCATION</center></strong></h2>
+                    <center>This Division recognizes the mentorship and education role of consultants and senior communicators 
+                        in developing and delivering workshops, classes, seminars, or training that educates an audience about 
+                        any aspect of the communication profession. This division includes all communication disciplines and 
+                        professional competencies. Entries in this division must demonstrate: ? Alignment of learning outcomes 
+                        to goals and objectives ? Alignment of assessments to specific learning outcomes? Theories and practices 
+                        of educational excellence ? Impact outside the classroom
+                    <p style="border-style: solid; width: 800; color: #2a7221;"></center>
+                </div>
+                <br>
+                <div>
+                    <tr>
+                        <strong>Category 19: COMMUNICATION TRAINING AND EDUCATION</strong>
+                        <ul>
+                            <li>
+                                Training or educational programs delivered to an internal or external audience that help to improve their communication competencies
+                            </li>
+                            <li>
+                                For internal audiences, this may include supervisor/manager/leader training in communication skills, presentation skills and employee ambassador development, in addition to media training, speaker’s bureau training, and other communication disciplines
+                            </li>
+                            <li>
+                                For external audiences, this may include presentations for conferences, university classes, seminars or workshops, as well as media and executive coaching
+                            </li>
+
+                        </ul>
+                    </tr>
+                        </table>
+                        <br>
+                </div>
+                </section>
+
+
+                <script>
+                    function deleteRow(r) {
+                        var i = r.parentNode.parentNode.rowIndex;
+                        document.getElementById("myTable").deleteRow(i);
+                    }
+                </script>
+
+
+
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+                <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+                <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

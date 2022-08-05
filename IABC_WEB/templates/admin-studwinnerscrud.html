@@ -1,0 +1,224 @@
+{%load static%}
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="{%static 'css/admindata.css' %}">
+    <script src="{%static 'js/admin.js' %}"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{%static 'img/logo.png' %}" type = "image/x-icon">
+    <style>
+      #head3 {
+          letter-spacing: 1px;
+          font-size: 12px;
+          color: #ffffff;
+      }
+      #remarks {
+          width: 730px;
+          height: 30px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          color:#6e6e6e;
+          text-indent: 2px;
+          font-size: 14px;
+      }
+
+      #remarks:focus {
+          -moz-box-shadow: none !important;
+          -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+          border: 1px solid  #2a7221;
+          outline-width: 0;
+      }
+      #addbtn {
+          background-color: #2a7221;
+          color: #ffffff;
+          border: #2a7221;
+          border-radius: 10px;
+          padding-left: 15px;
+          padding-right: 15px;
+          padding-top: 5px;
+          height: 30px;
+          cursor: pointer;
+          font-size: 14px;
+      }
+      #addbtn:hover{
+          background-color: transparent;
+          color: #2a7221;
+          border: 1px solid;
+          border-color: #2a7221;
+      }
+      #remarks2 {
+          width: 120px;
+          height: 30px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          color:#6e6e6e;
+          text-indent: 2px;
+          font-size: 14px;
+      }
+
+      #remarks2:focus {
+          -moz-box-shadow: none !important;
+          -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+          border: 1px solid  #2a7221;
+          outline-width: 0;
+      }
+
+      .gen {
+          width: 40px;
+          height: 30px;
+          border: 1px solid #2a7221;
+          background: #2a7221;
+          text-align: center;
+          color: #fff;
+          border-radius: 10px;
+          cursor: pointer;
+          font-size: 13px;
+      }
+    </style>
+</head>
+<body>
+  <nav class="nav justify-content-end">
+    <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+  </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+      <div class="container-fluid">
+          <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
+              <img src="{%static 'img/logo1.png' %}" height="80" width="300">
+          </a>
+          <nav class="stroke" style="margin-right: 120px;">
+            <ul>
+              <li><a href="{% url 'IABC_WEB:admember' %}">Members</a></li>
+            <li><a href="{% url 'IABC_WEB:awardspaid' %}">PhilQuill Entries</a></li>
+            <li><a href="{%url 'IABC_WEB:admintransachistory' %}">Transaction History</a></li>
+            <li class="dropdown"><a href="#">Events<ion-icon name="caret-down-outline"></ion-icon></a>
+                <ul class="dropdown-content"> 
+                  <li><a href="{% url 'IABC_WEB:view_bidders' %}">Bidders</a></li>
+                  <li><a href="{% url 'IABC_WEB:viewproj_track' %}">Project Tracker</a></li>
+                </ul>
+            </li>
+              <li class="dropdown"><a href="#"><img src="{%static 'img/gear-solid.svg' %}" height="20" width="20"></a>
+                <ul class="dropdown-content2" style="right: 0px; width: 200px;">
+                  <li><a href="{% url 'IABC_WEB:act_list' %}">Activity CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:awardscrud' %}">Awards CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:chartA' %}">Charts CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:price' %}">Product Prices CRUD</a></li>
+                  <li><a href="{% url 'bidder_register' %}">Create Bidders Account</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+      </div>
+  </nav>
+    
+    <div class="container-fluid1 justify-content-end">
+        <div>
+            <h2><strong>AWARDS ENTRIES</strong></h2>
+            <p style="border-style: solid; width: 100px; color: #2a7221;">
+        </div>
+        
+        <div class="row home justify-content-between mt-5">
+          <div class="col-sm-12 col-md-3 col-lg-3">
+            <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardspaid' %}" role="button"><i class="fa fa-user-check"></i>&nbsp;&nbsp;Paid Entries</a><br>
+            <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:awardspending' %}" role="button"><i class="fa fa-user-clock"></i>&nbsp;&nbsp;Pending Entries</a><br>
+            <a class="btn btn1 mb-3" href="{%url 'IABC_WEB:winnersCat2' %}" role="button"><i class="fa fa-trophy"></i>&nbsp;&nbsp;Professional Winners</a><br>
+            <a class="btn btn-primary mb-3" href="{% url 'IABC_WEB:winnersCat' %}" role="button"><i class="fa fa-trophy"></i>&nbsp;&nbsp;Student Winners</a><br>
+          </div>
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <div>
+                  <form method="POST" action="{% url 'IABC_WEB:winnersstudgen' %}">{%csrf_token%}
+                    <select id="remarks2" name="prop" >
+                      <option value="All">All</option>
+                      <option value="Today">Today</option>
+                      <option value="Last 7 Days">Last 7 Days</option>
+                      <option value="Last 30 Days">Last 30 Days</option>
+                    </select>
+                    <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Entry NO." name="checkk" id="flexCheckDefault"  >
+                      <label class="form-check-label" for="flexCheckDefault">Entry NO.</label></td>
+                  <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                    <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Name" name="checkk" id="flexCheckDefault"  >
+                    <label class="form-check-label" for="flexCheckDefault">Entry Name</label></td>
+                  <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                    <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Division" name="checkk" id="flexCheckDefault"  >
+                    <label class="form-check-label" for="flexCheckDefault">Division</label></td>
+                  <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                    <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Category" name="checkk" id="flexCheckDefault"  >
+                      <label class="form-check-label" for="flexCheckDefault">Category</label></td>
+                    <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                      <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Entry Date" name="checkk" id="flexCheckDefault"  >
+                        <label class="form-check-label" for="flexCheckDefault">Entry Date</label></td>
+                      <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                        <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Win Date" name="checkk" id="flexCheckDefault"  >
+                          <label class="form-check-label" for="flexCheckDefault">Win Date</label></td>
+                        <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                        <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Comp" name="checkk" id="flexCheckDefault"  >
+                          <label class="form-check-label" for="flexCheckDefault">Company Name</label></td>
+                        <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                          <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="Entry Type" name="checkk" id="flexCheckDefault"  >
+                            <label class="form-check-label" for="flexCheckDefault">Entry Type</label></td>
+                          <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+                            <td style="width: 2%; font-size: 12px; text-align: center;"><input class="form-check-input"  type="checkbox" value="If Member" name="checkk" id="flexCheckDefault"  >
+                              <label class="form-check-label" for="flexCheckDefault">If Member</label></td>
+                            <td style="width: 12%; font-size: 12px; text-align: center; word-break:break-all;">
+      
+                            <button type="submit" class="gen">
+                              <i class="fa fa-file-lines"></i>
+                            </button>
+                          </form>
+                </div><br>
+                {%if messages %}
+                {%for message in messages%}
+                  {{message}}
+                {%endfor%}
+                {%endif%}
+                <div class="tablepanel table-responsive-lg">
+                  <table class="borderless table">
+                      <form action="{%url 'IABC_WEB:winnersCat' %}" method="POST">{%csrf_token%}
+                          <tr class="tbl-header">
+                            <th id="head3" style="width: 92%;"><b>Choose a Category: </b></th>
+                            <th style="width: 8%;"></th>
+                          </tr>
+                          <tr class="tabletext2">
+                            <td style="width: 92%; text-align: center;"> 
+                              <select class="select form-select justify-content-end" id="remarks" name="categ">
+                                <option selected value="None">Category</option>
+                                {%if cat%}
+                                {%for c in cat%}
+                                <option value="{{c.category}}">{{c.category}}</option>
+                                {%endfor%}
+                                {%endif%}
+                              </select></td>
+                            <td style="width: 8%; text-align: center;"><button type=submit id="addbtn"><i class="fa fa-angle-right"></i></button></td>
+                        </tr>
+                      </form>        
+                  </table>
+                  </div>
+            </div>
+        </div>
+    </div>
+    
+    <br>
+
+    <script>
+    function deleteRow(r) {
+      var i = r.parentNode.parentNode.rowIndex;
+      document.getElementById("myTable").deleteRow(i);
+    }
+    </script>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

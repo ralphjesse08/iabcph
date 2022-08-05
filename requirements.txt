@@ -1,0 +1,31 @@
+
+
+APScheduler==3.9.1
+
+
+dj-database-url==1.0.0
+Django==4.0
+django-appconf==1.0.5
+django-apscheduler==0.6.2
+
+django-cryptography==1.1
+django-heroku==0.3.1
+entrypoints==0.3
+et-xmlfile==1.0.1
+fastcache==1.1.0
+future==0.18.2
+gunicorn==20.1.0
+
+mysqlclient==2.1.0
+path @ file:///C:/ci/path_1614022440181/work
+pathlib2 @ file:///C:/ci/pathlib2_1607025069150/work
+Pillow==9.2.0
+py @ file:///tmp/build/80754af9/py_1607971587848/work
+python-bidi==0.4.2
+python-dateutil @ file:///home/ktietz/src/ci/python-dateutil_1611928101742/work
+tables==3.6.1
+win-unicode-console==0.5
+wincertstore==0.2
+wrapt==1.12.1
+xhtml2pdf==0.2.8
+

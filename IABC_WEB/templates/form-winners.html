@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Winners of PhilQuill Awards</title>
+</head>
+<style>
+@page{
+		size: 11.7in 8.31in ;
+		margin: 5mm 5mm 5mm 5mm;
+}
+body {
+  font-size: 130%;
+}
+
+.tbl-header{
+	background-color: #2a7221;
+	border: none;
+	color: #fff;
+	width: 1200px;
+}
+
+.tdwrap{
+	border: none;
+    word-break:break-all;
+}
+
+#customers {
+	border-collapse: collapse;
+	width: 100%;
+}
+  
+#customers td, #customers th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+  
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+  
+#customers th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #2a7221;
+	color: white;
+}
+
+</style>
+<body>
+{% block content %}
+<table align="center"> 
+
+</table>
+
+
+  
+<table id="customers">
+	<tr>
+		<th width="10%">Entry No.</th>
+		<th width="30%">Entry Name</th>
+		<th width="20%">Category</th>
+		<th width="20%">Entrants Name</th>
+		<th width="20%">School</th>
+	</tr>
+	{%if text%}
+	{%for t in text%}
+	<tr>
+		<td style="text-align: center;">{{t.id}}</td>
+		<td class="tdwrap">{{t.entryName}}</td>
+		<td class="tdwrap">{{t.entryCat}}</td>
+		<td class="tdwrap">{{t.entrantName}}</td>
+		<td class="tdwrap">{{t.entryComp}}</td>
+	</tr>
+	{%endfor%}
+	{%endif%}
+</table>
+{% endblock %}
+</body>
+</html>

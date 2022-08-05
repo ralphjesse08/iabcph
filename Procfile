@@ -1,0 +1,1 @@
+web gunicorn iabcv73.wsgi:application --log-file -

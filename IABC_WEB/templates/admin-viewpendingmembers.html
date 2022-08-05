@@ -1,0 +1,192 @@
+{% load static %} 
+<!doctype html>
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admindata.css' %}">
+    <script src="{% static 'js/admin.js' %}"></script>
+
+    <title>IABC PHILIPPINES</title>
+    <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+</head>
+<body>
+  <nav class="nav justify-content-end">
+    <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
+  </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+      <div class="container-fluid">
+          <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
+              <img src="{%static 'img/logo1.png' %}" height="80" width="300">
+          </a>
+          <nav class="stroke" style="margin-right: 120px;">
+            <ul>
+              <li><a href="{% url 'IABC_WEB:admember' %}">Members</a></li>
+            <li><a href="{% url 'IABC_WEB:awardspaid' %}">PhilQuill Entries</a></li>
+            <li><a href="{%url 'IABC_WEB:admintransachistory' %}">Transaction History</a></li>
+            <li class="dropdown"><a href="#">Events<ion-icon name="caret-down-outline"></ion-icon></a>
+                <ul class="dropdown-content"> 
+                  <li><a href="{% url 'IABC_WEB:view_bidders' %}">Bidders</a></li>
+                  <li><a href="{% url 'IABC_WEB:viewproj_track' %}">Project Tracker</a></li>
+                </ul>
+            </li>
+              <li class="dropdown"><a href="#"><img src="{%static 'img/gear-solid.svg' %}" height="20" width="20"></a>
+                <ul class="dropdown-content2" style="right: 0px; width: 200px;">
+                  <li><a href="{% url 'IABC_WEB:act_list' %}">Activity CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:awardscrud' %}">Awards CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:chartA' %}">Charts CRUD</a></li>
+                  <li><a href="{% url 'IABC_WEB:price' %}">Product Prices CRUD</a></li>
+                  <li><a href="{% url 'bidder_register' %}">Create Bidders Account</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+      </div>
+  </nav>
+    
+    <div class="container-fluid1 justify-content-end">
+      <div>
+        <h2><strong>PENDING MEMBER'S DATABASE</strong></h2>
+        <p style="border-style: solid; width: 100px; color: #2a7221;">
+      </div>
+
+      <div class="row home justify-content-between mt-5">
+        <div class="col-sm-12 col-md-3 col-lg-3">
+            <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:admember' %}" role="button"><i class="fa fa-user-check"></i>&nbsp;&nbsp;Members</a><br>
+            <a class="btn btn-primary mb-3" href="{% url 'IABC_WEB:pendmember' %}" role="button"><i class="fa fa-user-clock"></i>&nbsp;&nbsp;Pending Members</a><br>
+            <a class="btn btn1 mb-3" href="{% url 'IABC_WEB:nonmember' %}" role="button"><i class="fa fa-user-minus"></i>&nbsp;&nbsp;Non-Members</a><br>
+            <a class="btn btn1" href="admin-renewal.html" role="button"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;Renewal</a>
+        </div>
+      
+        <div class="col-sm-12 col-md-8 col-lg-8 align-self-start">
+            <div>
+              <a href="{% url 'IABC_WEB:pendmember'  %}" class="btnback px-0 mb-3" ><i class="fa fa-caret-left"></i>&nbsp;&nbsp;Back</a>
+            </div>
+            {% if viewpendmember %}
+              <div class="row scroll">
+                  <div class="col-md-1 px-0">
+                      <img src="{% static 'img/circle-user.svg' %}" height="50px" width="50px">
+                  </div>
+                  <div class="col-md-7 px-o">
+                      <b>{{ viewpendmember.user_id.firstName }} {{ viewpendmember.user_id.lastName }} {{ viewpendmember.user_id.middleName }}</b><br>
+                      {{ viewpendmember.user_id.email }}<br>
+                      <div class="mb-3" style="font-size: 14px;">
+                      Membership Expiry:<b> {{ viewpendmember.expiry_date }}</b>
+                      </div> 
+                  </div>
+                  
+                  
+                    <hr>
+                    <form  action="{% url 'IABC_WEB:editpendmember' viewpendmember.id %}"  method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    <div class="px-0 mb-3" style="font-size: 15px;">
+                      <select class="select form-select justify-content-end" name="remarks">
+                        <option selected value="None">Remarks</option>
+                        <option value="1">Paid</option>
+                        <option value="2">Pending</option>
+                      </select>
+                    </div>
+                    <div class=" row col-md-4 px-o mb-4" style="font-size: 14px;">
+                      <div class="mb-3" style="text-align:end;">
+                        <button class="btn btn2" type="submit">Submit</button>
+                      </div>
+                    </div>
+                </form>
+              <div style="font-size: 15px;">
+                {% if viewpendmember.file %}
+                <b>Proof of Payment: </b> <a href="{{viewpendmember.file.url}}" target="_blank">Proof</a>
+                {%endif%}
+              </div>
+
+              <div class="mt-2" style="font-size: 15px;">
+                <b>I. Members Information</b><br>
+                  &nbsp;&nbsp;&nbsp;<b>Nickname: </b>{{ viewpendmember.nick_name }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Designation: </b>{{ viewpendmember.designation }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Company Name: </b>{{ viewpendmember.company_name }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Company Address: </b>{{ viewpendmember.floor_no }} {{ viewpendmember.building_no }} {{ viewpendmember.street }} {{ viewpendmember.baranggay }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Province: </b>{{ viewpendmember.city }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>ZIP Code: </b>{{ viewpendmember.postal_zip }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Mobile No.: </b>{{ viewpendmember.mobile_no }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Telephone No.: </b>{{ viewpendmember.telephone_no }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Fax No.: </b>{{ viewpendmember.fax_no }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Birthday: </b>{{ viewpendmember.birthday }}<br>
+
+                  <br>
+
+                  <b>II. Committee</b><br>
+                  &nbsp;&nbsp;&nbsp;- {% if viewpendmember.membership == True %} 
+                  Membership,
+                  {% endif %}
+                 {% if viewpendmember.ceo_excel == True %} 
+                 Ceo Excel, 
+                 {% endif %}
+                 {% if viewpendmember.regional_conf == True %} 
+                 Regional Conference, 
+                 {% endif %}                 
+                 {% if viewpendmember.media_relations == True %} 
+                 Media Relations & Publicity,
+                 {% endif %}
+                 {% if viewpendmember.digital_comm == True %} 
+                 Digital Communications,
+                 {% endif %}
+                 {% if viewpendmember.phil_quill == True %} 
+                 Philippine Quill Awards, 
+                 {% endif %}
+                 {% if viewpendmember.publication == True %} 
+                 Publications,
+                 {% endif %}
+                 {% if viewpendmember.sponsorship == True %} 
+                 Sponsorship
+                {% endif %}
+
+                  <br><br>
+
+                  <b>III. Demographic Information</b><br>
+                  &nbsp;&nbsp;&nbsp;<b>Year began in communication profession: </b>{{viewpendmember.question_1 }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Self-employed? </b>{{viewpendmember.question_2 }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Industry: </b>{{viewpendmember.industry_Name.industry_Name }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Type of Business: </b>{{viewpendmember.business_type.business_type }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Current Title: </b>{{viewpendmember.current_title.current_title }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Key Area of Responsibility: </b>{{viewpendmember.key_area.key_area}}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Number of Employees in your organization/company: </b>{{viewpendmember.employee_no.employee_no }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Greatest amount of experience: </b>{{viewpendmember.experience.experience}}<br>
+                  &nbsp;&nbsp;&nbsp;<b>Interest in learning more: </b>{{viewpendmember.interest }}<br>
+                  &nbsp;&nbsp;&nbsp;<b>How did you hear about IABC: </b>{{viewpendmember.about.about }}<br>
+                  
+                  <br>
+
+                  <b>IV. Willing to share your contact information to other IABC members? </b>{% if viewpendmember.share_contact == True %} Yes 
+                  {% elif viewpendmember.share_contact == False %} No
+                  {% endif %}
+                  <br><br>
+                  <b>V. Willing to receive announcements/promotions from fellow IABC member? </b>{% if viewpendmember.receive_announce == True %} Yes 
+                  {% elif viewpendmember.receive_announce == False %} No
+                  {% endif %}
+                  <br><br>
+                  <b>VI. Attached profile photo. </b><br>
+                  {% if viewpendmember.profile_photo %}
+                  <img src ="{{viewpendmember.profile_photo.url}}" height='50px' width='120px'>
+                  {% else %}
+                
+                    <b class="fst-italic">No Profile Picture</b>
+                  {% endif %}
+                </div>
+            </div>
+         
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
