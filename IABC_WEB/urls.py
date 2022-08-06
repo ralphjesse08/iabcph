@@ -76,7 +76,7 @@ urlpatterns = [
     path('user_del/<user_id>$/', views.user_del, name='user_del' ),
     path('adrenewal/', views.adrenewal, name='adrenewal' ),
     path('adminrenewalproof/<mem_id>$/', views.adminrenewalproof, name='adminrenewalproof' ),
-
+    path('membcom/', views.membcom, name='membcom' ),
 
 
     path('renewform/', views.renewform, name='renewform' ),

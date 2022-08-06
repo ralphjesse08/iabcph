@@ -7,7 +7,7 @@ from members.models import User
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy, reverse
-from IABC_WEB.models import Members
+from IABC_WEB.models import MemberComments, Members
 
 
 
@@ -19,20 +19,33 @@ def home(request):
         return redirect('IABC_WEB:bidder_app')
     elif request.user.is_authenticated and type_obj.is_nonmember:
         info = User.objects.get(pk=request.user.id)
-        return render(request, 'index.html', {'info':info})
+        com = MemberComments.objects.all()
+        context = {
+            'info':info,
+            'com':com 
+        }
+        return render(request, 'index.html', context)
     elif request.user.is_authenticated and type_obj.is_member:
         info = User.objects.get(pk=request.user.id)
         mem = Members.objects.get(user_id=request.user.id)
+        com = MemberComments.objects.all()
         context = {
             'mem':mem,
-            'info':info 
+            'info':info,
+            'com':com 
         }
         return render(request, 'index.html', context)
     elif request.user.is_authenticated and type_obj.is_pending:
         info = User.objects.get(pk=request.user.id)
-        return render(request, 'index.html', {'info':info})
+        com = MemberComments.objects.all()
+        context = {
+            'info':info,
+            'com':com
+        }
+        return render(request, 'index.html', context)
     else:
-        return render(request, 'index.html')
+        com = MemberComments.objects.all()
+        return render(request, 'index.html', {'com':com})
 
 
 def login_user(request):

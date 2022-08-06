@@ -3750,3 +3750,16 @@ def transacgen(request):
         context={"text":text,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
         #return HttpResponse(text)
         return render (request, "admin-studwinnerscrud2gen.html" ,context)
+
+
+def membcom(request):
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        mem = Members.objects.get(user_id=info)
+        if request.method == 'POST':
+            chc = request.POST.get("memcom")
+            if info.is_member == True:
+                comment = MemberComments.objects.create(mem_id=mem, comments=chc)
+                comment.save()
+                return redirect('members:home')

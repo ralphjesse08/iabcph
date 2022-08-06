@@ -374,13 +374,17 @@
 
         <div class="row mt-5" style="margin: auto; width: 800px;">
             <div>   
-                <form>
+                <form action="{% url 'IABC_WEB:membcom' %}"  method="POST" enctype="multipart/form-data"> {% csrf_token %}
                     <div class="row mb-2">
                         <div class="col-md-6" style="text-align: left; font-size: 18px;"> 
                             New Comment
                         </div>
                         <div class="col-md-6" style="text-align: right;">
+                            {% if mem.is_paid == True %}
                             <button type="submit" class="btn3">Submit</button>
+                            {% else %}
+                            
+                            {% endif %}
                         </div>
                     </div>  
                     <div class="row">
@@ -388,7 +392,11 @@
                             <img class="img-responsive" src="{% static 'img/userpp.png' %}" style="width: 105px; height: 100px;">
                         </div>
                         <div class="col-md-10">
-                            <textarea class="form-control" id="message" placeholder="Your message" required=""></textarea>
+                            {% if mem.is_paid == True %}
+                            <textarea class="form-control" id="message" placeholder="Your message" name="memcom" required=""></textarea>
+                            {% else %}
+                            <textarea disabled class="form-control" id="message" placeholder="Your message" required=""></textarea>
+                            {% endif %}
                         </div>
                     </div>
                 </form>
@@ -398,20 +406,21 @@
                 </div> 
 
                 <!-- COMMENT 1 - START -->
+                {% if com %}
+                    {% for c in com %}
                 <div class="media row">
                     <div class="col-md-2"> 
                         <img class="media-object" src="{% static 'img/userpp.png' %}" style="width: 105px; height: 100px;">
                     </div>
                     <div class="col-md-10">
-                        <h5><b>{First Name Last Name}</b></h5>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur 
-                        adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, 
-                        consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum 
-                        dolor sit amet, consectetur adipiscing elit.
+                        <h5><b>{{c.mem_id.user_id.firstName}} {{c.mem_id.user_id.lastName}}</b></h5>
+                        {{c.comments}}
 
                         <br><br>
                         <div style="color: #808080; font-size: 15px;"><i class="fa fa-calendar"></i> 27/02/2014</li></div>
                     </div>
+                    {% endfor%}
+                {% endif %}
                 </div>
                 <!-- COMMENT 1 - END -->    
             </div>
