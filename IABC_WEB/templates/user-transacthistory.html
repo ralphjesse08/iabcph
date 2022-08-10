@@ -412,9 +412,11 @@
                           <table cellpadding="0" cellspacing="0" border="0">
                             <thead>
                                 <tr>
-                                    <th width="15%" class="thheading">Date</th>
-                                    <th width="30%" class="thheading">Product Type</th>
-                                    <th width="10%">Payment Type</th>
+                                <th width="16%" class="thheading">Payment Date</th>
+                                  <th width="16%" class="thheading">Transaction Date</th>
+                                  <th width="16%" class="thheading">Approval Date</th>
+                                  <th width="16%" class="thheading">Product Type</th>
+                                  <th width="16%" class="thheading">Payment Type</td>
                                 </tr>
                             </thead>
                           </table>
@@ -426,9 +428,19 @@
                                     {%if info%}
                                     {%for i in info%}
                                     <tr>
-                                        <td width="15%">{{i.date}}</td>
-                                        <td width="30%">{{i.typeProduct}}</td>
-                                        <td width="10%">Online Payment</td>
+                                        <td width="16%">{{i.date}}</td>
+                                        {%if i.PaymentType == "Online Payment" %}
+                                        <td width="16%">Online Payment</td>
+                                        {% else %}
+                                        <td width="16%">{{i.transaction_date}}</td>
+                                        {%endif%}
+                                        {%if i.PaymentType == "Online Payment" %}
+                                        <td width="16%">Online Payment</td>
+                                        {% else %}
+                                        <td width="16%">{{i.approval_date}}</td>
+                                        {%endif%}
+                                        <td width="16%">{{i.typeProduct}}</td>
+                                        <td width="16%">{{i.PaymentType}}</i></button></td>
                                     </tr>
                                     {%endfor%}
                                     {%endif%}
@@ -456,6 +468,8 @@
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script src="https://apps.elfsight.com/p/platform.js" defer></script>
+<div class="elfsight-app-d19ecec0-e3fa-46df-b013-af4d45660f41"></div>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

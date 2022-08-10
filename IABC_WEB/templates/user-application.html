@@ -272,14 +272,14 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">2. Are you self-employed?</label>
                             <div class="col-sm-2">
-                                <input type="text" class="form-control" style="margin-bottom: 0; margin-top: 0;" placeholder="Yes/No" name="que2">
+                                <input type="text" class="form-control" style="margin-bottom: 0; margin-top: 0;" placeholder="Yes/No" name="que2" maxlength = "4">
                             </div>
                         </div>
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">3. Industry <i>(Chart A)</i></label>
                             <div class="col-sm-4">
                                 
-                                <select class="form-select select" aria-label="Default select example" name="que3">
+                                <select class="form-select select" aria-label="Default select example" name="que3" required>
                                     <option class="option" selected>Choose Type of Industry</option>
                                     {% for no in chart_a %}
                                     <option value="{{no.industry_Name   }}">{{no.industry_Name}}</option>
@@ -291,7 +291,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">4. Type of Business <i>(Chart B)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que4">
+                                <select class="form-select select" aria-label="Default select example" name="que4" required>
                                     <option class="option" selected>Choose Type of Business</option>
                                     {% for no in chart_b %}
                                     <option value="{{no.business_type}}">{{no.business_type}}</option>
@@ -302,7 +302,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">5. Current Title <i>(Chart C)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que5">
+                                <select class="form-select select" aria-label="Default select example" name="que5" required>
                                     <option class="option" selected>Choose Current Title</option>
                                     {% for no in chart_c %}
                                     <option value="{{no.current_title }}">{{no.current_title }}</option>
@@ -313,7 +313,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">6. Key Area of Responsibility <i>(Chart D)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que6">
+                                <select class="form-select select" aria-label="Default select example" name="que6" required>
                                     <option class="option" selected>Choose Key Area of Responsibility</option>
                                     {% for no in chart_d %}
                                     <option value="{{no.key_area }}">{{no.key_area }}</option>
@@ -324,7 +324,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">7. Number of Employees in your organization/company <i>(Chart E)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que7">
+                                <select class="form-select select" aria-label="Default select example" name="que7" required>
                                     <option class="option" selected>Choose Number of Employees in your organization/company</option>
                                     {% for no in chart_e %}
                                     <option value="{{no.employee_no}}">{{no.employee_no}}}</option>
@@ -335,7 +335,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">8. Greatest amount of experience <i>(Chart F)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que8">
+                                <select class="form-select select" aria-label="Default select example" name="que8" required>
                                     <option class="option" selected>Choose Greatest amount of experience</option>
                                     {% for no in chart_f %}
                                     <option value="{{no.experience}}">{{no.experience}}</option>
@@ -346,7 +346,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">9. Interest in learning more <i>(Chart F)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que9">
+                                <select class="form-select select" aria-label="Default select example" name="que9" required>
                                     <option class="option" selected>Choose Interest in learning more</option>
                                     {% for no in chart_f %}
                                     <option value="{{no.experience}}">{{no.experience}}</option>
@@ -357,7 +357,7 @@
                         <div class="mb-2 row">
                             <label class="col-sm-7 col-form-label">10. How did you hear about IABC <i>(Chart G)</i></label>
                             <div class="col-sm-4">
-                                <select class="form-select select" aria-label="Default select example" name="que10">
+                                <select class="form-select select" aria-label="Default select example" name="que10" required>
                                     <option class="option" selected>How did you hear about IABC</option>
                                     {% for no in chart_g %}
                                     <option value="{{no.about}}">{{no.about}}</option>
@@ -472,6 +472,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script src="https://apps.elfsight.com/p/platform.js" defer></script>
+<div class="elfsight-app-d19ecec0-e3fa-46df-b013-af4d45660f41"></div>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

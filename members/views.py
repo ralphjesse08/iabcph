@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from members.forms import RegistrationForm, BidderRegistrationForm
+from members.forms import RegistrationForm, BidderRegistrationForm, StaffRegistrationForm
 from django.http import HttpResponse
 from members.models import User
 from django.contrib.auth.views import PasswordChangeView
@@ -17,6 +17,8 @@ def home(request):
         return redirect('IABC_WEB:admember')
     elif request.user.is_authenticated and type_obj.is_bidder:
         return redirect('IABC_WEB:bidder_app')
+    elif request.user.is_authenticated and type_obj.is_staff:
+        return redirect('IABC_WEB:viewproj_track')
     elif request.user.is_authenticated and type_obj.is_nonmember:
         info = User.objects.get(pk=request.user.id)
         com = MemberComments.objects.all()
@@ -46,6 +48,7 @@ def home(request):
     else:
         com = MemberComments.objects.all()
         return render(request, 'index.html', {'com':com})
+    
 
 
 def login_user(request):
@@ -120,6 +123,19 @@ def bidder_register_view(request, *args, **kwargs):
     return render(request, 'admin-registration.html', context)
 
 
+def staff_register_view(request, *args, **kwargs):
+    user = request.user
+    context= {}
 
+    if request.POST:
+        form = StaffRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfuly Created!")
+            return redirect("members:home")
+        else:
+            context['registration_form'] = form   
+
+    return render(request, 'admin-staffregistration.html', context)
 
 

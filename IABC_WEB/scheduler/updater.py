@@ -27,8 +27,8 @@ def schedule_api():
                             mem.received_email = True
                             mem.save()
                             email=EmailMessage(
-                                'Test Email',
-                                'Expiry date mo ngayon',
+                                'IABC Membership Renewal ',
+                                F"Hello, Mr./Ms.{mem.user_id.lastName} your Membership is 3 months away from expiring. Please renew immediately. To renew go to iabcph website then go to Membership -> Renew Membership  ",
                                 settings.EMAIL_HOST_USER,
                                 [mail_id]
                             )
@@ -37,6 +37,6 @@ def schedule_api():
                         else:
                             continue
         except TypeError:
-                print("no expiry yet")   
+                print("no expiry yeet")   
     except ObjectDoesNotExist:
         print("object Does Not exist yet")

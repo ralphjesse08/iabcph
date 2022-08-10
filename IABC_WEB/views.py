@@ -137,6 +137,7 @@ def userawards_proofupload(request, acc_id):
                 online = PaymentHistory.objects.get(stud_id=acc_id)
                 d1=datetime.datetime.today()
                 online.transaction_date=d1
+                online.date=d1
                 online.save()
                 info.save()
                 messages.success(request, "Succesfully Attached!")
@@ -159,6 +160,7 @@ def userawards_proofupload2(request, acc_id):
                 online = PaymentHistory.objects.get(prof_id=acc_id)
                 d1=datetime.datetime.today()
                 online.transaction_date=d1
+                online.date=d1
                 online.save()
                 info.save()
                 messages.success(request, "Succesfully Attached!")
@@ -400,7 +402,7 @@ def awardspaid(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff  == True:
             awardsstudentpaid = Awards_student.objects.filter(is_paid=True)
             awardsprofpaid = Awards_prof.objects.filter(is_paid=True)
             return render(request, 'admin-awardspaid.html', {'awardsprofpaid':awardsprofpaid,'awardsstudentpaid':awardsstudentpaid})
@@ -414,7 +416,7 @@ def awardspaid_details(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_student.objects.get(pk=ent_id)
                 return render(request, 'admin-viewawardspaid.html', {'award':award})
@@ -430,7 +432,7 @@ def awardspaid_details2(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff  == True:
             try:
                 award = Awards_prof.objects.get(pk=ent_id)
                 return render(request, 'admin-viewawardspaid.html', {'award':award})
@@ -469,7 +471,7 @@ def awardspending(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             awardsstudentpending = Awards_student.objects.filter(is_paid=False)
             awardsprofpending = Awards_prof.objects.filter(is_paid=False)
             return render(request, 'admin-awardspending.html', {'awardsprofpending':awardsprofpending, 'awardsstudentpending':awardsstudentpending})
@@ -483,7 +485,7 @@ def awardspending_details(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_student.objects.get(pk=ent_id)
                 return render(request, 'admin-viewawardspending.html', {'award':award})
@@ -499,7 +501,7 @@ def awardspending_details2(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_prof.objects.get(pk=ent_id)
                 return render(request, 'admin-viewawardspending2.html', {'award':award})
@@ -515,7 +517,7 @@ def awardspending_edit(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_student.objects.get(pk=ent_id)
                 stat = request.POST.get('remarks')
@@ -552,7 +554,7 @@ def awardspending_edit2(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_prof.objects.get(pk=ent_id)
                 stat = request.POST.get('remarks')
@@ -2832,7 +2834,7 @@ def viewproj_track(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff == True:
             if request.method == 'GET':
                 try:
                     proj = ProjectTrackerName.objects.all()
@@ -2901,14 +2903,15 @@ def viewproj_track2(request, proje_id):
         info = User.objects.get(id=id)
         adm = User.objects.filter(is_admin=True)
         bid = User.objects.filter(is_bidder=True)
+        stf = User.objects.filter(is_staff=True).filter(is_admin=False)
         projj = proje_id
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff  == True:
             if request.method == "GET":
                 try:            
                     proj = ProjectTracker.objects.filter(proj_id=proje_id)
                     proij = ProjectTrackerName.objects.get(id=proje_id)
                     act = Activity.objects.all()
-                    context = {'proj':proj, 'info':info, 'projj':projj, 'proij':proij, 'adm':adm, 'bid':bid, 'act':act}
+                    context = {'proj':proj, 'info':info, 'projj':projj, 'proij':proij, 'adm':adm, 'stf':stf, 'bid':bid, 'act':act}
                     #return HttpResponse(d1)
                     return render(request, 'generalprojecttracker2.html', context)
 
@@ -2924,7 +2927,7 @@ def addproj(request, proje_id):
         id = request.user.id
         info = User.objects.get(id=id)
         proj = ProjectTrackerName.objects.get(id=proje_id)
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff  == True:
             if request.method == "POST":
                 date = request.POST.get('date')
                 deadline = request.POST.get('deadl')
@@ -2973,7 +2976,7 @@ def editproj(request, proje_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff == True:
             if request.method == "POST":
                 track=ProjectTracker.objects.get(id=proje_id)
                 prot=ProjectTracker.objects.filter(id=proje_id).values_list('proj_id', flat=True)
@@ -2995,7 +2998,7 @@ def proj_remarks(request, proje_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff == True:
             if request.method == "POST":
                 track=ProjectTracker.objects.get(id=proje_id)
                 prot=ProjectTracker.objects.filter(id=proje_id).values_list('proj_id', flat=True)
@@ -3017,7 +3020,7 @@ def checklist(request, proje_id):
         id = request.user.id
         info = User.objects.get(id=id)
         proj = ProjectTracker.objects.get(id=proje_id)
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff == True:
             if request.method == "GET":
                 try:
                     proj = ProjectTracker.objects.get(id=proje_id)
@@ -3099,7 +3102,7 @@ def act_list(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin | info.is_bidder == True:
+        if info.is_admin | info.is_bidder | info.is_staff == True:
             if request.method == 'GET':
                 try:
                     act = Activity.objects.all()
@@ -3383,7 +3386,7 @@ def chartA(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             info = Chart_A.objects.all()
             return render(request, 'admin-chartA.html', {'info':info})
         else:
@@ -3395,7 +3398,7 @@ def chartB(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             info = Chart_B.objects.all()
             return render(request, 'admin-chartB.html', {'info':info})
         else:
@@ -3407,7 +3410,7 @@ def chartC(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             info = Chart_C.objects.all()
             return render(request, 'admin-chartC.html', {'info':info})
         else:
@@ -3419,7 +3422,7 @@ def chartD(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             info = Chart_D.objects.all()
             return render(request, 'admin-chartD.html', {'info':info})
         else:
@@ -3443,7 +3446,7 @@ def chartF(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin  | info.is_staff == True:
             info = Chart_F.objects.all()
             return render(request, 'admin-chartF.html', {'info':info})
         else:
@@ -3455,7 +3458,7 @@ def chartG(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             info = Chart_G.objects.all()
             return render(request, 'admin-chartG.html', {'info':info})
         else:
@@ -3467,7 +3470,7 @@ def chart_Add(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
                 return render(request, 'admin-chartcrud.html')
             elif request.method == "POST":
@@ -3562,7 +3565,7 @@ def awardscrud(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
                 return render(request, 'admin-awardscrud.html')
             elif request.method == "POST":
@@ -3598,7 +3601,7 @@ def category(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             categ = Category.objects.all()
             return render(request, 'admin-awardscategory.html', {'categ':categ})
         else:
@@ -3610,7 +3613,7 @@ def certification(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             cert = Certification.objects.all()
             return render(request, 'admin-awardscertificate.html', {'cert':cert})
         else:
@@ -3622,7 +3625,7 @@ def division(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             div = Division.objects.all()
             return render(request, 'admin-awardsdivision.html', {'div':div})
         else:
@@ -3631,20 +3634,28 @@ def division(request):
             return redirect('members:home')
 
 def div_del(request, cht_id):
-    div=Division.objects.get(pk=cht_id)
-    div.delete()
-    return redirect('IABC_WEB:division')
+    if request.user.is_authenticated:
+        div=Division.objects.get(pk=cht_id)
+        div.delete()
+        return redirect('IABC_WEB:division')
+    else:
+            return redirect('members:home')
 
 def categ_del(request, cht_id):
-    categ=Category.objects.get(pk=cht_id)
-    categ.delete()
-    return redirect('IABC_WEB:category')
+    if request.user.is_authenticated:
+        categ=Category.objects.get(pk=cht_id)
+        categ.delete()
+        return redirect('IABC_WEB:category')
+    else:
+            return redirect('members:home')
 
 def cert_del(request, cht_id):
-    cert=Certification.objects.get(pk=cht_id)
-    cert.delete()
-    return redirect('IABC_WEB:certification')
-
+    if request.user.is_authenticated:
+        cert=Certification.objects.get(pk=cht_id)
+        cert.delete()
+        return redirect('IABC_WEB:certification')
+    else:
+            return redirect('members:home')
 
 
 
@@ -3654,7 +3665,7 @@ def winnersCat(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin| info.is_staff  == True:
             if request.method == 'GET':
                 cat = Category.objects.all()
                 context = {'cat':cat}
@@ -3677,7 +3688,7 @@ def winners(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
                 data = request.session.get('_category_data')
                 checks = data['categ']
@@ -3710,6 +3721,8 @@ def winnersdel(request, del_id):
         win = Winners.objects.get(pk=del_id)
         win.delete()
         return redirect('IABC_WEB:winners')
+    else:
+        return redirect('members:home')
 
 
 #winners table 2
@@ -3717,7 +3730,7 @@ def winnersCat2(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
                 cat = Category.objects.all()
                 context = {'cat':cat}
@@ -3739,7 +3752,7 @@ def winners2(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
                 data = request.session.get('_category2_data')
                 checks = data['categ']
@@ -3776,6 +3789,8 @@ def winnersdel2(request, del_id):
         win = Winners2.objects.get(pk=del_id)
         win.delete()
         return redirect('IABC_WEB:winners2')
+    else:
+        return redirect('members:home')
 
 
 
@@ -3814,6 +3829,7 @@ def awardspaid_pdf(request):
     if request.user.is_authenticated:
         id = request.user.id
         info=User.objects.get(pk=id)
+    try:
         checker = request.POST.get('filt')
         if checker == "All":
             text = Awards_student.objects.filter(is_paid=True) 
@@ -3846,6 +3862,9 @@ def awardspaid_pdf(request):
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not found")
+    except:
+        
+            return redirect('IABC_WEB:awardspaid')
 
 
 def awardspending_pdf(request):
@@ -3853,37 +3872,41 @@ def awardspending_pdf(request):
         id = request.user.id
         info=User.objects.get(pk=id)
         checker = request.POST.get('filt')
-        if checker == "All":
-            text = Awards_student.objects.filter(is_paid=False) 
-            text2 = Awards_prof.objects.filter(is_paid=False) 
-        elif checker == "Today":
-                    d1 = datetime.date.today()
-                    text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=d1)
-                    text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=d1)
-        elif checker == "Last 7 Days":
-                    seven = date.today() - relativedelta(days=7)
-                    text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=seven)
-                    text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=seven)
-        elif checker == "Last 30 Days":
-                    thirty = date.today() - relativedelta(days=30)
-                    text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=thirty)
-                    text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=thirty)
-        template = get_template('form-awardspending.html')
-        context = {'text':text, 'text2':text2}
+        try:
+            if checker == "All":
+                text = Awards_student.objects.filter(is_paid=False) 
+                text2 = Awards_prof.objects.filter(is_paid=False) 
+            elif checker == "Today":
+                        d1 = datetime.date.today()
+                        text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=d1)
+                        text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=d1)
+            elif checker == "Last 7 Days":
+                        seven = date.today() - relativedelta(days=7)
+                        text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=seven)
+                        text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=seven)
+            elif checker == "Last 30 Days":
+                        thirty = date.today() - relativedelta(days=30)
+                        text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=thirty)
+                        text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=thirty)
+            template = get_template('form-awardspending.html')
+            context = {'text':text, 'text2':text2}
 
-        html = template.render(context)
-        pdf = render_to_pdf('form-awardspending.html', context)
+            html = template.render(context)
+            pdf = render_to_pdf('form-awardspending.html', context)
 
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Pending Awards-%s.pdf" %info.lastName
-            content = "inline; filename=%s" %(filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename='%s'" %(filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not found")
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "Pending Awards-%s.pdf" %info.lastName
+                content = "inline; filename=%s" %(filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+        except:
+            awardspending
+            return redirect('IABC_WEB:awardspending')
 
 
 def studwinners_pdf(request):
@@ -3891,32 +3914,35 @@ def studwinners_pdf(request):
         id = request.user.id
         info=User.objects.get(pk=id)
         checker = request.POST.get('filter')
-        if checker == "All":
-            text = Winners.objects.all() 
-        elif checker == "Today":
-            text = Winners.objects.filter(windate=date.today())
-        elif checker == "7":
-            seven = date.today() - relativedelta(days=7)
-            text = Winners.objects.filter(windate__gte=seven)
-        elif checker == "30":
-            thirty = date.today() - relativedelta(days=30)
-            text = Winners.objects.filter(windate__gte=thirty)
-        template = get_template('form-winners.html')
-        context = {'text':text}
+        try :
+            if checker == "All":
+                text = Winners.objects.all() 
+            elif checker == "Today":
+                text = Winners.objects.filter(windate=date.today())
+            elif checker == "7":
+                seven = date.today() - relativedelta(days=7)
+                text = Winners.objects.filter(windate__gte=seven)
+            elif checker == "30":
+                thirty = date.today() - relativedelta(days=30)
+                text = Winners.objects.filter(windate__gte=thirty)
+            template = get_template('form-winners.html')
+            context = {'text':text}
 
-        html = template.render(context)
-        pdf = render_to_pdf('form-winners.html', context)
+            html = template.render(context)
+            pdf = render_to_pdf('form-winners.html', context)
 
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Student_Winners-%s.pdf" %info.lastName
-            content = "inline; filename=%s" %(filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename='%s'" %(filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not found")
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "Student_Winners-%s.pdf" %info.lastName
+                content = "inline; filename=%s" %(filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+        except:
+            return redirect('IABC_WEB:winnersCat')
 
 
 
@@ -3926,32 +3952,36 @@ def profwinners_pdf(request):
         id = request.user.id
         info=User.objects.get(pk=id)
         checker = request.POST.get('filter')
-        if checker == "All":
-            text = Winners2.objects.all() 
-        elif checker == "Today":
-            text = Winners2.objects.filter(windate=date.today())
-        elif checker == "7":
-            seven = date.today() - relativedelta(days=7)
-            text = Winners2.objects.filter(windate__gte=seven)
-        elif checker == "30":
-            thirty = date.today() - relativedelta(days=30)
-            text = Winners2.objects.filter(windate__gte=thirty)
-        template = get_template('form-winners.html')
-        context = {'text':text}
+        try :
+            if checker == "All":
+                text = Winners2.objects.all() 
+            elif checker == "Today":
+                text = Winners2.objects.filter(windate=date.today())
+            elif checker == "7":
+                seven = date.today() - relativedelta(days=7)
+                text = Winners2.objects.filter(windate__gte=seven)
+            elif checker == "30":
+                thirty = date.today() - relativedelta(days=30)
+                text = Winners2.objects.filter(windate__gte=thirty)
+            template = get_template('form-winners.html')
+            context = {'text':text}
 
-        html = template.render(context)
-        pdf = render_to_pdf('form-winners.html', context)
+            html = template.render(context)
+            pdf = render_to_pdf('form-winners.html', context)
 
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Professional_Winners-%s.pdf" %info.lastName
-            content = "inline; filename=%s" %(filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename='%s'" %(filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not found")
+            if pdf:
+                response = HttpResponse(pdf, content_type='application/pdf')
+                filename = "Professional_Winners-%s.pdf" %info.lastName
+                content = "inline; filename=%s" %(filename)
+                download = request.GET.get("download")
+                if download:
+                    content = "attachment; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+
+        except:
+            return redirect('IABC_WEB:winnersCat2')
 
 
 def memreport(request):
@@ -4065,96 +4095,108 @@ def pendmemreport(request):
             if request.method == 'POST':
                 filt = request.POST.get('filt')
                 if filt == "All":
-                    mem1=Members.objects.filter(is_paid=False) 
-                    template = get_template('form-non-members.html')
-                    context={
-                         'mem1':mem1,
-                    }
-                    html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    try:
+                        mem1=Members.objects.filter(is_paid=False) 
+                        template = get_template('form-non-members.html')
+                        context={
+                            'mem1':mem1,
+                        }
+                        html = template.render(context)
+                        pdf = render_to_pdf('form-non-members.html', context)
 
-                    if pdf:
-                        response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Pending Members Report-%s.pdf" %info.lastName
-                        content = "inline; filename=%s" %(filename)
-                        download = request.GET.get("download")
-                        if download:
-                            content = "attachment; filename='%s'" %(filename)
-                        response['Content-Disposition'] = content
-                        return response
-                    return HttpResponse("Not found")
+                        if pdf:
+                            response = HttpResponse(pdf, content_type='application/pdf')
+                            filename = "Pending Members Report-%s.pdf" %info.lastName
+                            content = "inline; filename=%s" %(filename)
+                            download = request.GET.get("download")
+                            if download:
+                                content = "attachment; filename='%s'" %(filename)
+                            response['Content-Disposition'] = content
+                            return response
+                        return HttpResponse("Not found")
+                    except :
+                        return redirect('IABC_WEB:pendmember') 
                 elif filt == "Today":
-                    d1 = datetime.date.today()
-                    mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=d1) 
-                    template = get_template('form-non-members.html')
-                    context={
-                         'mem1':mem1,
-                    }
-                    html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    try:
+                        d1 = datetime.date.today()
+                        mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=d1) 
+                        template = get_template('form-non-members.html')
+                        context={
+                            'mem1':mem1,
+                        }
+                        html = template.render(context)
+                        pdf = render_to_pdf('form-non-members.html', context)
 
-                    if pdf:
-                        response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Pending Members Report-%s.pdf" %info.lastName
-                        content = "inline; filename=%s" %(filename)
-                        download = request.GET.get("download")
-                        if download:
-                            content = "attachment; filename='%s'" %(filename)
-                        response['Content-Disposition'] = content
-                        return response
-                    return HttpResponse("Not found")
+                        if pdf:
+                            response = HttpResponse(pdf, content_type='application/pdf')
+                            filename = "Pending Members Report-%s.pdf" %info.lastName
+                            content = "inline; filename=%s" %(filename)
+                            download = request.GET.get("download")
+                            if download:
+                                content = "attachment; filename='%s'" %(filename)
+                            response['Content-Disposition'] = content
+                            return response
+                        return HttpResponse("Not found")
+                    except :
+                        return redirect('IABC_WEB:pendmember') 
                 elif filt == "Last 7 Days":
-                    d1 = datetime.date.today()
-                    last7 = date.today() - relativedelta(days=7)
-                    mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=last7)
-                    template = get_template('form-non-members.html')
-                    context={
-                         'mem1':mem1,
-                    }
-                    html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    try:
+                        d1 = datetime.date.today()
+                        last7 = date.today() - relativedelta(days=7)
+                        mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=last7)
+                        template = get_template('form-non-members.html')
+                        context={
+                            'mem1':mem1,
+                        }
+                        html = template.render(context)
+                        pdf = render_to_pdf('form-non-members.html', context)
 
-                    if pdf:
-                        response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Pending Members Report-%s.pdf" %info.lastName
-                        content = "inline; filename=%s" %(filename)
-                        download = request.GET.get("download")
-                        if download:
-                            content = "attachment; filename='%s'" %(filename)
-                        response['Content-Disposition'] = content
-                        return response
-                    return HttpResponse("Not found")
+                        if pdf:
+                            response = HttpResponse(pdf, content_type='application/pdf')
+                            filename = "Pending Members Report-%s.pdf" %info.lastName
+                            content = "inline; filename=%s" %(filename)
+                            download = request.GET.get("download")
+                            if download:
+                                content = "attachment; filename='%s'" %(filename)
+                            response['Content-Disposition'] = content
+                            return response
+                        return HttpResponse("Not found")
+                    except :
+                        return redirect('IABC_WEB:pendmember') 
 
                 elif filt == "Last 30 Days":
-                    d1 = datetime.date.today()
-                    last30 = date.today() - relativedelta(days=30)
-                    mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=last30)
-                    template = get_template('form-non-members.html')
-                    context={
-                         'mem1':mem1,
-                    }
-                    html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    try:
+                        d1 = datetime.date.today()
+                        last30 = date.today() - relativedelta(days=30)
+                        mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=last30)
+                        template = get_template('form-non-members.html')
+                        context={
+                            'mem1':mem1,
+                        }
+                        html = template.render(context)
+                        pdf = render_to_pdf('form-non-members.html', context)
 
-                    if pdf:
-                        response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Pending Members Report-%s.pdf" %info.lastName
-                        content = "inline; filename=%s" %(filename)
-                        download = request.GET.get("download")
-                        if download:
-                            content = "attachment; filename='%s'" %(filename)
-                        response['Content-Disposition'] = content
-                        return response
-                    return HttpResponse("Not found")
+                        if pdf:
+                            response = HttpResponse(pdf, content_type='application/pdf')
+                            filename = "Pending Members Report-%s.pdf" %info.lastName
+                            content = "inline; filename=%s" %(filename)
+                            download = request.GET.get("download")
+                            if download:
+                                content = "attachment; filename='%s'" %(filename)
+                            response['Content-Disposition'] = content
+                            return response
+                        return HttpResponse("Not found")
+                    except :
+                        return redirect('IABC_WEB:pendmember') 
                 
                 else:
-                    return redirect('IABC_WEB:admember')
+                    return redirect('IABC_WEB:pendmember')
 
             
             #return render(request, 'user-viewwinners.html', context)
         except ObjectDoesNotExist:
-            return redirect('IABC_WEB:admember')
-            
+            return redirect('IABC_WEB:pendmember')
+       
     else:
         return redirect('members:home')
 

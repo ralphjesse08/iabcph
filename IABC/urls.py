@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from members.views import register_view, bidder_register_view
+from members.views import register_view, bidder_register_view, staff_register_view
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('IABC_WEB/', include('IABC_WEB.urls')),
     path('register/', register_view, name="register"),
     path('bidder_register/', bidder_register_view, name="bidder_register"),
+    path('staff_register/', staff_register_view, name="staff_register"),
 ]

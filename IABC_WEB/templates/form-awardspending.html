@@ -57,20 +57,24 @@ body {
 <table id="customers">
 	<tr>
 		<th width="10%">Entry No.</th>
-		<th width="30%">Entry Name</th>
-		<th width="20%">Category</th>
+		<th width="10%">Entry Date</th>
+		<th width="20%">Entry Name</th>
+		<th width="10%">Category</th>
+		<th width="10%">Division</th>
 		<th width="20%">Entrants Name</th>
-		<th width="20%">School</th>
+		<th width="20%">School/Company</th>
 	</tr>
-	{% if text or text2 %}
+{% if text or text2 %}
 	{%if text%}
 	{%for t in text%}
 	<tr>
 		<td style="text-align: center;">{{t.id}}</td>
-		<td class="tdwrap">{{t.entryName}}</td>
-		<td class="tdwrap">{{t.entryCat}}</td>
-		<td class="tdwrap">{{t.entrantName}}</td>
-		<td class="tdwrap">{{t.entryComp}}</td>
+		<td class="tdwrap">{{t.entry_date}}</td>
+		<td class="tdwrap">{{t.entry_title}}</td>
+		<td class="tdwrap">{{t.category}}</td>
+		<td class="tdwrap">{{t.division}}</td>
+		<td class="tdwrap">{{t.entrant_name}}</td>
+		<td class="tdwrap">{{t.entrant_school}}</td>
 	</tr>
 	{%endfor%}
 	{%endif%}
@@ -78,10 +82,12 @@ body {
 	{%for t in text2%}
 	<tr>
 		<td style="text-align: center;">{{t.id}}</td>
-		<td class="tdwrap">{{t.entryName}}</td>
-		<td class="tdwrap">{{t.entryCat}}</td>
-		<td class="tdwrap">{{t.entrantName}}</td>
-		<td class="tdwrap">{{t.entryComp}}</td>
+		<td class="tdwrap">{{t.entry_date}}</td>
+		<td class="tdwrap">{{t.entry_title}}</td>
+		<td class="tdwrap">{{t.category}}</td>
+		<td class="tdwrap">{{t.division}}</td>
+		<td class="tdwrap">{{t.entrant_name}}</td>
+		<td class="tdwrap">{{t.entrant_org}}</td>
 	</tr>
 	{%endfor%}
 	{%endif%}
