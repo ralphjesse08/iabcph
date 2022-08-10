@@ -57,15 +57,21 @@ def my_account(request, acc_id):
         info = User.objects.get(pk=acc_id)
         return render(request, 'user-myaccount.html', {'info':info})
     else:
-        return redirect('members:home')
+        return redirect('members:login')
 
 
 def view_profile(request, acc_id):
     if request.user.is_authenticated:
-        info = User.objects.get(pk=acc_id)
-        return render(request, 'user-viewprofile.html', {'info':info})
+        try:
+            mem=Members.objects.get(user_id=acc_id)
+            info = User.objects.get(pk=acc_id)
+            context = {'info':info, 'mem':mem}
+            return render(request, 'user-viewprofile.html', context)
+        except ObjectDoesNotExist:
+            info = User.objects.get(pk=acc_id)
+            return render(request, 'user-viewprofile.html', {'info':info})
     else:
-       return redirect('members:home')
+       return redirect('members:login')
     
 def edit_profile(request, acc_id):
     if request.user.is_authenticated:
@@ -107,52 +113,60 @@ def edit_profile(request, acc_id):
     
 #Awards proof of payment for users
 def userawards_proof(request, acc_id):
-    try:
-        id = request.user.id
-        info = Awards_student.objects.filter(user_id=id).filter(is_paid=False)
-        info2 = Awards_prof.objects.filter(user_id=id).filter(is_paid=False)
-        info3 = User.objects.get(pk=acc_id)
-        context = {'info':info, 'info2':info2, 'info3':info3}
-        return render(request, 'user-proofofpaymentawards.html', context)
-    except:
-        return render(request, 'user-proofofpaymentawards.html')
+    if request.user.is_authenticated:
+        try:
+            id = request.user.id
+            info = Awards_student.objects.filter(user_id=id).filter(is_paid=False)
+            info2 = Awards_prof.objects.filter(user_id=id).filter(is_paid=False)
+            info3 = User.objects.get(pk=acc_id)
+            context = {'info':info, 'info2':info2, 'info3':info3}
+            return render(request, 'user-proofofpaymentawards.html', context)
+        except:
+            return render(request, 'user-proofofpaymentawards.html')
+    else:
+        return redirect('members:login')
 
 def userawards_proofupload(request, acc_id):
-    if request.method == 'POST':
-        id = request.user.id
-        file = request.FILES.get('proof')
-        try:
-            info = Awards_student.objects.get(pk=acc_id)
-            info.file = file
-            online = PaymentHistory.objects.get(stud_id=acc_id)
-            d1=datetime.datetime.today()
-            online.transaction_date=d1
-            online.save()
-            info.save()
-            messages.success(request, "Succesfully Attached!")
-            return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
-        except:
-            
-            return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
-
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            id = request.user.id
+            file = request.FILES.get('proof')
+            try:
+                info = Awards_student.objects.get(pk=acc_id)
+                info.file = file
+                online = PaymentHistory.objects.get(stud_id=acc_id)
+                d1=datetime.datetime.today()
+                online.transaction_date=d1
+                online.save()
+                info.save()
+                messages.success(request, "Succesfully Attached!")
+                return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
+            except:
+                
+                return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
+    else:
+        return redirect('members:login')
 
 def userawards_proofupload2(request, acc_id):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
         id = request.user.id
-        file = request.FILES.get('proof1')
-        try:
-            info = Awards_prof.objects.get(pk=acc_id)
-            info.file = file
-            online = PaymentHistory.objects.get(prof_id=acc_id)
-            d1=datetime.datetime.today()
-            online.transaction_date=d1
-            online.save()
-            info.save()
-            messages.success(request, "Succesfully Attached!")
-            return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
-        except:
-            return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
-
+        if request.method == 'POST':
+            id = request.user.id
+            file = request.FILES.get('proof1')
+            try:
+                info = Awards_prof.objects.get(pk=acc_id)
+                info.file = file
+                online = PaymentHistory.objects.get(prof_id=acc_id)
+                d1=datetime.datetime.today()
+                online.transaction_date=d1
+                online.save()
+                info.save()
+                messages.success(request, "Succesfully Attached!")
+                return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
+            except:
+                return HttpResponseRedirect(reverse('IABC_WEB:userawards_proof', args=(id,)))
+    else:
+        return redirect('members:login')
 
 
 def userawards_proofdel(request, acc_id):
@@ -181,41 +195,45 @@ def userawards_proofdel2(request, acc_id):
 
 #membership proof of payment for users
 def usermembers_proof(request, acc_id):
-    id = request.user.id
-    info3 = User.objects.get(pk=id)
-    try:
+    if request.user.is_authenticated:
         id = request.user.id
-        info = Members.objects.get(user_id=id)
         info3 = User.objects.get(pk=id)
-        if info.is_paid==False:
-            context = {'info':info, 'info3':info3}
-            return render(request, 'user-proofofpaymentmembership.html', context)
-        else:
+        try:
+            id = request.user.id
+            info = Members.objects.get(user_id=id)
+            info3 = User.objects.get(pk=id)
+            if info.is_paid==False:
+                context = {'info':info, 'info3':info3}
+                return render(request, 'user-proofofpaymentmembership.html', context)
+            else:
+                context = {'info3':info3}
+                return render(request, 'user-proofofpaymentmembership.html', context)
+        except:
             context = {'info3':info3}
             return render(request, 'user-proofofpaymentmembership.html', context)
-    except:
-        context = {'info3':info3}
-        return render(request, 'user-proofofpaymentmembership.html', context)
-
+    else:
+        return redirect('members:login')
 
 def usermembers_proofupload(request, acc_id):
-    if request.method == 'POST':
-        id = request.user.id
-        file = request.FILES.get('proof')
-        try:
-            info = Members.objects.get(pk=acc_id)
-            online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Membership")
-            d1=datetime.datetime.today()
-            online.transaction_date=d1
-            online.save()
-            info.file = file
-            info.save()
-            messages.success(request, "Succesfully Attached!")
-            return HttpResponseRedirect(reverse('IABC_WEB:usermembers_proof', args=(id,)))
-        except:
-            
-            return HttpResponseRedirect(reverse('IABC_WEB:usermembers_proof', args=(id,)))
-
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            id = request.user.id
+            file = request.FILES.get('proof')
+            try:
+                info = Members.objects.get(pk=acc_id)
+                online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Membership")
+                d1=datetime.datetime.today()
+                online.transaction_date=d1
+                online.save()
+                info.file = file
+                info.save()
+                messages.success(request, "Succesfully Attached!")
+                return HttpResponseRedirect(reverse('IABC_WEB:usermembers_proof', args=(id,)))
+            except:
+                
+                return HttpResponseRedirect(reverse('IABC_WEB:usermembers_proof', args=(id,)))
+    else:
+        return redirect('members:login')
 
 def usermembers_proofdel(request, acc_id):
     if request.method == 'POST':
@@ -231,51 +249,59 @@ def usermembers_proofdel(request, acc_id):
 
 
 def usertransachistory(request, acc_id):
-    try:
-        id = request.user.id
-        info = PaymentHistory.objects.filter(user_id=id)
-        info3 = User.objects.get(pk=id)
-        context = {'info':info, 'info3':info3}
-        return render(request, 'user-transacthistory.html', context)
-    except:
-        return render(request, 'user-transacthistory.html')
-
+    if request.user.is_authenticated:
+        try:
+            id = request.user.id
+            info = PaymentHistory.objects.filter(user_id=id)
+            info3 = User.objects.get(pk=id)
+            context = {'info':info, 'info3':info3}
+            return render(request, 'user-transacthistory.html', context)
+        except:
+            return render(request, 'user-transacthistory.html')
+    else:
+        return redirect('members:login')
 
 def renewalproof(request, acc_id):
-    id = request.user.id
-    info3 = User.objects.get(pk=id)
-    try:
+    if request.user.is_authenticated:
         id = request.user.id
-        info = Members.objects.get(user_id=id)
         info3 = User.objects.get(pk=id)
-        if info.for_renewal==True:
-            context = {'info':info, 'info3':info3,}
-            return render(request, 'user-proofofpaymentrenewal.html', context)
-        else:
+        try:
+            id = request.user.id
+            info = Members.objects.get(user_id=id)
+            info3 = User.objects.get(pk=id)
+            if info.for_renewal==True:
+                context = {'info':info, 'info3':info3,}
+                return render(request, 'user-proofofpaymentrenewal.html', context)
+            else:
+                context = {'info3':info3,}
+                return render(request, 'user-proofofpaymentrenewal.html', context)
+        except:
             context = {'info3':info3,}
             return render(request, 'user-proofofpaymentrenewal.html', context)
-    except:
-        context = {'info3':info3,}
-        return render(request, 'user-proofofpaymentrenewal.html', context)
-
+    else:
+        return redirect('members:login')
 
 def renewalproofupload(request, acc_id):
-    if request.method == 'POST':
-        id = request.user.id
-        file = request.FILES.get('proof')
-        try:
-            info = Members.objects.get(pk=acc_id)
-            info.renewalfile = file
-            online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Renewal")
-            d1=datetime.datetime.today()
-            online.transaction_date=d1
-            online.save()
-            info.save()
-            messages.success(request, "Succesfully Attached!")
-            return HttpResponseRedirect(reverse('IABC_WEB:renewalproof', args=(id,)))
-        except:
-            
-            return HttpResponseRedirect(reverse('IABC_WEB:renewalproof', args=(id,)))
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            id = request.user.id
+            file = request.FILES.get('proof')
+            try:
+                info = Members.objects.get(pk=acc_id)
+                info.renewalfile = file
+                online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Renewal")
+                d1=datetime.datetime.today()
+                online.transaction_date=d1
+                online.save()
+                info.save()
+                messages.success(request, "Succesfully Attached!")
+                return HttpResponseRedirect(reverse('IABC_WEB:renewalproof', args=(id,)))
+            except:
+                
+                return HttpResponseRedirect(reverse('IABC_WEB:renewalproof', args=(id,)))
+
+    else:
+        return redirect('members:login')
 
 def renewalproofdelete(request, acc_id):
     if request.method == 'POST':
@@ -319,18 +345,25 @@ def adrenewal(request):
 
 def adminrenewalproof(request, mem_id):
     if request.user.is_authenticated:
-        mem = Members.objects.get(pk=mem_id)
-        mem.for_renewal = False
-        mem.received_email = False
-        online = PaymentHistory.objects.filter(user_id__in=mem).filter(typeProduct="Renewal")
-        d1=datetime.datetime.today()
-        online.approval_date=d1
-        online.save()
-        mer = datetime.datetime.strptime(mem.expiry_date, "%Y-%m-%d").date()
-        newexpiry = mer + relativedelta(years=1)
-        mem.expiry_date = newexpiry
-        mem.save()
-        return redirect('IABC_WEB:adrenewal')
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            mem = Members.objects.get(pk=mem_id)
+            mem.for_renewal = False
+            mem.received_email = False
+            online = PaymentHistory.objects.filter(user_id__in=mem).filter(typeProduct="Renewal")
+            d1=datetime.datetime.today()
+            online.approval_date=d1
+            online.save()
+            mer = datetime.datetime.strptime(mem.expiry_date, "%Y-%m-%d").date()
+            newexpiry = mer + relativedelta(years=1)
+            mem.expiry_date = newexpiry
+            mem.save()
+            return redirect('IABC_WEB:adrenewal')
+        else:
+            return redirect('members:home')
+    else:
+            return redirect('members:home')
 
 
 
@@ -381,11 +414,14 @@ def awardspaid_details(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            award = Awards_student.objects.get(pk=ent_id)
-            return render(request, 'admin-viewawardspaid.html', {'award':award})
-        except:
-            return render(request, 'admin-viewawardspaid.html')
+        if info.is_admin == True:
+            try:
+                award = Awards_student.objects.get(pk=ent_id)
+                return render(request, 'admin-viewawardspaid.html', {'award':award})
+            except:
+                return render(request, 'admin-viewawardspaid.html')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
@@ -394,11 +430,14 @@ def awardspaid_details2(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            award = Awards_prof.objects.get(pk=ent_id)
-            return render(request, 'admin-viewawardspaid.html', {'award':award})
-        except:
-            return render(request, 'admin-viewawardspaid.html')
+        if info.is_admin == True:
+            try:
+                award = Awards_prof.objects.get(pk=ent_id)
+                return render(request, 'admin-viewawardspaid.html', {'award':award})
+            except:
+                return render(request, 'admin-viewawardspaid.html')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
@@ -444,11 +483,14 @@ def awardspending_details(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            award = Awards_student.objects.get(pk=ent_id)
-            return render(request, 'admin-viewawardspending.html', {'award':award})
-        except:
-            return render(request, 'admin-viewawardspending.html')
+        if info.is_admin == True:
+            try:
+                award = Awards_student.objects.get(pk=ent_id)
+                return render(request, 'admin-viewawardspending.html', {'award':award})
+            except:
+                return render(request, 'admin-viewawardspending.html')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
@@ -457,65 +499,92 @@ def awardspending_details2(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            award = Awards_prof.objects.get(pk=ent_id)
-            return render(request, 'admin-viewawardspending2.html', {'award':award})
-        except:
-            return render(request, 'admin-viewawardspending2.html')
+        if info.is_admin == True:
+            try:
+                award = Awards_prof.objects.get(pk=ent_id)
+                return render(request, 'admin-viewawardspending2.html', {'award':award})
+            except:
+                return render(request, 'admin-viewawardspending2.html')
+        else:
+            return redirect('members:home')
     else:
-        return redirect('members:home')
+        return redirect('members:login')
 
 
 def awardspending_edit(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            award = Awards_student.objects.get(pk=ent_id)
-            stat = request.POST.get('remarks')
-            if request.method == 'POST':
-                if stat == "True":
-                    award.is_paid = True
-                    online = PaymentHistory.objects.get(stud_id=award)
-                    d1=datetime.datetime.today()
-                    online.approval_date=d1
-                    online.save()
-                    award.save()
-                    return redirect('IABC_WEB:awardspending')
-                else:
-                    award.is_paid = False
-                    award.save()
-                    return redirect('IABC_WEB:awardspending')
-        except:
-            return redirect('IABC_WEB:awardspending')
+        if info.is_admin == True:
+            try:
+                award = Awards_student.objects.get(pk=ent_id)
+                stat = request.POST.get('remarks')
+                if request.method == 'POST':
+                    if stat == "True":
+                        award.is_paid = True
+                        online = PaymentHistory.objects.get(stud_id=award)
+                        d1=datetime.datetime.today()
+                        online.approval_date=d1
+                        mail_id=award.user_id.email
+                        email=EmailMessage(
+                        'IABC Awards Approval Notification',
+                        "Your application for PhilQuill Student Awards has been approved. Goodluck!",
+                        settings.EMAIL_HOST_USER,
+                        [mail_id]
+                        )
+                        email.fail_silently = True
+                        email.send()
+                        online.save()
+                        award.save()
+                        return redirect('IABC_WEB:awardspending')
+                    else:
+                        award.is_paid = False
+                        award.save()
+                        return redirect('IABC_WEB:awardspending')
+            except:
+                return redirect('IABC_WEB:awardspending')
+        else:
+            return redirect('members:members')
     else:
-        return redirect('members:home')
+        return redirect('members:login')
 
 def awardspending_edit2(request, ent_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            award = Awards_prof.objects.get(pk=ent_id)
-            stat = request.POST.get('remarks')
-            if request.method == 'POST':
-                if stat == "True":
-                    award.is_paid = True
-                    online = PaymentHistory.objects.get(prof_id=award)
-                    d1=datetime.datetime.today()
-                    online.approval_date=d1
-                    online.save()
-                    award.save()
-                    #return HttpResponse("save")
-                    return redirect('IABC_WEB:awardspending')
-                else:
-                    award.is_paid = False
-                    award.save()
-                    #return HttpResponse("false")
-                    return redirect('IABC_WEB:awardspending')
-        except:
-            #return HttpResponse(stat)
-            return redirect('IABC_WEB:awardspending')
+        if info.is_admin == True:
+            try:
+                award = Awards_prof.objects.get(pk=ent_id)
+                stat = request.POST.get('remarks')
+                if request.method == 'POST':
+                    if stat == "True":
+                        award.is_paid = True
+                        online = PaymentHistory.objects.get(prof_id=award)
+                        d1=datetime.datetime.today()
+                        online.approval_date=d1
+                        mail_id=award.user_id.email
+                        email=EmailMessage(
+                        'IABC Awards Approval Notification',
+                        "Your application for PhilQuill Professional Awards has been approved. Goodluck!",
+                        settings.EMAIL_HOST_USER,
+                        [mail_id]
+                        )
+                        email.fail_silently = True
+                        email.send()
+                        online.save()
+                        award.save()
+                        #return HttpResponse("save")
+                        return redirect('IABC_WEB:awardspending')
+                    else:
+                        award.is_paid = False
+                        award.save()
+                        #return HttpResponse("false")
+                        return redirect('IABC_WEB:awardspending')
+            except:
+                #return HttpResponse(stat)
+                return redirect('IABC_WEB:awardspending')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
@@ -538,7 +607,7 @@ def awardsform(request):
         cert = Certification.objects.all()
         return render(request, 'user-awardsform.html', {'info':info, 'div':div, 'category': category, 'cert':cert})
     else: 
-        return HttpResponse('Login ka muna boi')
+        return redirect('members:login')
 
 
 def awardsform2(request):
@@ -546,19 +615,23 @@ def awardsform2(request):
         id = request.user.id
         info = User.objects.filter(id=id)
         return render(request, 'user-awardsform2.html', {'info':info})
-
+    else: 
+        return redirect('members:login')
 
 def attach(request):
-    if request.method == 'POST':
-        if request.POST.get("attachh"):
-            request.session['_ebill_data'] = request.POST
-            data = request.session.get('_ebill_data')
-            messages.success(request, 'Succesfully Attached!')  
-            return redirect('IABC_WEB:awardsform2')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            if request.POST.get("attachh"):
+                request.session['_ebill_data'] = request.POST
+                data = request.session.get('_ebill_data')
+                messages.success(request, 'Succesfully Attached!')  
+                return redirect('IABC_WEB:awardsform2')
+            else:
+                return HttpResponse(data['tin'])
         else:
-            return HttpResponse(data['tin'])
-    else:
-        return HttpResponse(data['comp'])
+            return HttpResponse(data['comp'])
+    else: 
+        return redirect('members:login')
     # messages.success(request, 'Something went wrong!')  
     # return redirect('IABC_WEB:awardsform2')
 
@@ -649,6 +722,8 @@ def aebill_pdf(request):
                     response['Content-Disposition'] = content
                     return response
                 return HttpResponse("Not found")
+    else: 
+        return redirect('members:login')
 
 def awardssubmit(request):
     if request.user.is_authenticated:
@@ -744,7 +819,8 @@ def awardssubmit(request):
                     info.save()
                     prof.save()
                     return redirect('IABC_WEB:awardsform2')
-
+    else: 
+        return redirect('members:login')
 
 
 
@@ -764,7 +840,7 @@ def memberapp(request):
 
         return render(request, 'user-application.html', context)
     else: 
-        return redirect('members:home')
+        return redirect('members:login')
 
 def paymentopt(request):
     if request.user.is_authenticated:
@@ -772,37 +848,61 @@ def paymentopt(request):
         info = User.objects.get(pk=id)
         data = request.session.get('_submit_data')
         checks = data['Awards']
-        if info.is_member == True:
-            checker = True
-            if checks == "student":
-                info = True
-                price=Prices.objects.get(priceName="Awards Student")
-                context={'info':info, 'price':price}
-                return render(request, 'user-paymentopt.html', context)
-            elif checks == "profesh":
-                price=Prices.objects.get(priceName="Awards Member")
-                context={'checker':checker, 'price':price, 'info':info,}
-                return render(request, 'user-paymentopt.html', context)
-        elif info.is_member == False:
-            if checks == "student":
-                info = True
-                price=Prices.objects.get(priceName="Awards Student")
-                context={'info':info, 'price':price}
-                return render(request, 'user-paymentopt.html',  context)
-            elif checks == "profesh":
-                price=Prices.objects.get(priceName="Awards Non-Member")
-                context={'price':price, 'info':info}
-                return render(request, 'user-paymentopt.html', context)
-
+        try: 
+            mem= Members.objects.get(user_id=info)
+            if info.is_member and mem.is_paid == True:
+                checker = True
+                if checks == "student":
+                    info = True
+                    price=Prices.objects.get(priceName="Awards Student")
+                    context={'info':info, 'price':price}
+                    return render(request, 'user-paymentopt.html', context)
+                elif checks == "profesh":
+                    price=Prices.objects.get(priceName="Awards Member")
+                    context={'checker':checker, 'price':price, 'info':info,}
+                    return render(request, 'user-paymentopt.html', context)
+            elif info.is_member == True and mem.is_paid == False:
+                if checks == "student":
+                    info = True
+                    price=Prices.objects.get(priceName="Awards Student")
+                    context={'info':info, 'price':price}
+                    return render(request, 'user-paymentopt.html',  context)
+                elif checks == "profesh":
+                    price=Prices.objects.get(priceName="Awards Non-Member")
+                    context={'price':price, 'info':info}
+                    return render(request, 'user-paymentopt.html', context)
+            elif info.is_member == False:
+                if checks == "student":
+                    info = True
+                    price=Prices.objects.get(priceName="Awards Student")
+                    context={'info':info, 'price':price}
+                    return render(request, 'user-paymentopt.html',  context)
+                elif checks == "profesh":
+                    price=Prices.objects.get(priceName="Awards Non-Member")
+                    context={'price':price, 'info':info}
+                    return render(request, 'user-paymentopt.html', context)
+        except ObjectDoesNotExist:
+                if checks == "student":
+                    info = True
+                    price=Prices.objects.get(priceName="Awards Student")
+                    context={'info':info, 'price':price}
+                    return render(request, 'user-paymentopt.html',  context)
+                elif checks == "profesh":
+                    price=Prices.objects.get(priceName="Awards Non-Member")
+                    context={'price':price, 'info':info}
+                    return render(request, 'user-paymentopt.html', context)
+    else: 
+        return redirect('members:login')
 
 def paymentoptmember(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(pk=id)
-       
         price=Prices.objects.get(priceName="Membership")
         context={'price':price, 'info':info}
         return render(request, 'user-paymentoptmem.html', context)
+    else: 
+        return redirect('members:login')
 
 def paymentoptrenew(request):
     if request.user.is_authenticated:
@@ -812,7 +912,8 @@ def paymentoptrenew(request):
         price=Prices.objects.get(priceName="Membership")
         context={'price':price, 'info':info}
         return render(request, 'user-paymentoptrenew.html', context)
-
+    else: 
+        return redirect('members:login')
 
 
 def onlinepay(request):
@@ -820,13 +921,13 @@ def onlinepay(request):
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
-            #priceawastud = Prices.objects.get(priceName="Awards Student")
-            #priceawaprofmem = Prices.objects.get(priceName="Awards Member")
-            #priceawaprofnon = Prices.objects.get(priceName="Awards Non-Member")
-            #pricemem = Prices.objects.get(priceName="Membership")
+            priceawastud = Prices.objects.get(priceName="Awards Student")
+            priceawaprofmem = Prices.objects.get(priceName="Awards Member")
+            priceawaprofnon = Prices.objects.get(priceName="Awards Non-Member")
+            pricemem = Prices.objects.get(priceName="Membership")
             try :
                 mem = Members.objects.get(user_id=id)
-                if info.is_member == True:
+                if info.is_member and mem.is_paid == True:
                     
                     data = request.session.get('_submit_data')
                 
@@ -844,10 +945,10 @@ def onlinepay(request):
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
-                                        'IABC Payment Notification',
-                                        'Your paypal account has been deducted P500',
-                                        settings.EMAIL_HOST_USER,
-                                        [mail_id]
+                                    'IABC Payment Notification',
+                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
                                     )
                                     email.fail_silently = True
                                     email.send()
@@ -868,10 +969,10 @@ def onlinepay(request):
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
-                                        'IABC Payment Notification',
-                                        'Your paypal account has been deducted P500',
-                                        settings.EMAIL_HOST_USER,
-                                        [mail_id]
+                                    'IABC Payment Notification',
+                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
                                     )
                                     email.fail_silently = True
                                     email.send()
@@ -892,10 +993,10 @@ def onlinepay(request):
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
-                                            'IABC Payment Notification',
-                                            'Your paypal account has been deducted P6000',
-                                            settings.EMAIL_HOST_USER,
-                                            [mail_id]
+                                        'IABC Payment Notification',
+                                        F"Your paypal account has been deducted PHP{priceawaprofmem.priceVal}",
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
                                         )
                                         email.fail_silently = True
                                         email.send()
@@ -915,10 +1016,10 @@ def onlinepay(request):
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
-                                            'IABC Payment Notification',
-                                            'Your paypal account has been deducted P6000',
-                                            settings.EMAIL_HOST_USER,
-                                            [mail_id]
+                                        'IABC Payment Notification',
+                                        F"Your paypal account has been deducted PHP{priceawaprofmem.priceVal}",
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
                                         )
                                         email.fail_silently = True
                                         email.send()
@@ -926,105 +1027,108 @@ def onlinepay(request):
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form2')
 
-                elif info.is_member == False:
+                if info.is_member == True and mem.is_paid == False:
+                    
                     data = request.session.get('_submit_data')
-                    try: 
-                        checks = data['Awards']
-                        checks1 = data['Awards']
-                    
-                        if checks == "student":
-                                if Awards_student is None:
-                                        awards = Awards_student.objects.get(user_id=id)
-                                        awards.is_paid = True
-                                        awards.save()
+                
+                
+                    checks = data['Awards']
+                    checks1 = data['Awards']
+                
+                    if checks == "student":
+                            if Awards_student is None:
+                                    awards = Awards_student.objects.get(user_id=id)
+                                    awards.is_paid = True
+                                    awards.save()
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",date=d1,PaymentType="Online Payment", user_id=info)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    del request.session['_submit_data']
+                                    return redirect('members:home')
+                                    #return HttpResponse('Student Awards form1')
+                                    
+                            elif Awards_student is not None:
+                                    awards = Awards_student.objects.filter(user_id=id)
+                                    awardss = Awards_student.objects.filter(user_id=id).values_list('id', flat=True)
+                                    for awa in awardss:
+                                        awa=awa+1
+                                    awardss1 = Awards_student.objects.get(id=awa-1)
+                                    awardss1.is_paid = True
+                                    awardss1.save()
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",date=d1,PaymentType="Online Payment", user_id=info)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    F"Your paypal account has been deducted  PHP{priceawastud.priceVal}",
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    del request.session['_submit_data']
+                                    return redirect('members:home')
+                                    #return HttpResponse('Student Awards form2')
+                                    
+                
+                        
+                    elif checks1 == "profesh" :     
+                                        
+                            if Awards_prof is None:
+                                        awards2 = Awards_prof.objects.get(user_id=id)
+                                        awards2.is_paid = True
+                                        awards2.save()
                                         d1=datetime.datetime.today()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",date=d1,PaymentType="Online Payment", user_id=info)
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",date=d1,PaymentType="Online Payment", user_id=info)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
-                                            'IABC Payment Notification',
-                                            'Your paypal account has been deducted P500',
-                                            settings.EMAIL_HOST_USER,
-                                            [mail_id]
+                                        'IABC Payment Notification',
+                                        F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
                                         )
                                         email.fail_silently = True
                                         email.send()
                                         del request.session['_submit_data']
                                         return redirect('members:home')
-                                        #return HttpResponse('Student Awards form1')
-                                        
-                                elif Awards_student is not None:
-                                        awards = Awards_student.objects.filter(user_id=id)
-                                        awardss = Awards_student.objects.filter(user_id=id).values_list('id', flat=True)
-                                        for awa in awardss:
-                                            awa=awa+1
-                                        awardss1 = Awards_student.objects.get(id=awa-1)
-                                        awardss1.is_paid = True
-                                        awardss1.save()
+                                        #return HttpResponse('Prof Awards form1')
+                            elif Awards_prof is not None:
+                                        awards2 = Awards_prof.objects.filter(user_id=id)
+                                        awardss2 = Awards_prof.objects.filter(user_id=id).values_list('id', flat=True)
+                                        for awa1 in awardss2:
+                                            awa1=awa1+1
+                                        awardss3 = Awards_prof.objects.get(id=awa1-1)
+                                        awardss3.is_paid = True
+                                        awardss3.save()
                                         d1=datetime.datetime.today()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",date=d1,PaymentType="Online Payment", user_id=info)
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",date=d1,PaymentType="Online Payment", user_id=info)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
-                                            'IABC Payment Notification',
-                                            'Your paypal account has been deducted P500',
-                                            settings.EMAIL_HOST_USER,
-                                            [mail_id]
+                                        'IABC Payment Notification',
+                                        F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
                                         )
                                         email.fail_silently = True
                                         email.send()
                                         del request.session['_submit_data']
                                         return redirect('members:home')
-                                        #return HttpResponse('Student Awards form2')
+                                        #return HttpResponse('Prof Awards form2')
+
                                         
-                    
-                            
-                        elif checks1 == "profesh" :     
-                                            
-                                if Awards_prof is None:
-                                            awards2 = Awards_prof.objects.get(user_id=id)
-                                            awards2.is_paid = True
-                                            awards2.save()
-                                            d1=datetime.datetime.today()
-                                            d1=datetime.datetime.today()
-                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional",date=d1,PaymentType="Online Payment", user_id=info)
-                                            history.save()
-                                            mail_id=info.email
-                                            email=EmailMessage(
-                                                'IABC Payment Notification',
-                                                'Your paypal account has been deducted P8000',
-                                                settings.EMAIL_HOST_USER,
-                                                [mail_id]
-                                            )
-                                            email.fail_silently = True
-                                            email.send()
-                                            del request.session['_submit_data']
-                                            return redirect('members:home')
-                                            #return HttpResponse('Prof Awards form1')
-                                elif Awards_prof is not None:
-                                            awards2 = Awards_prof.objects.filter(user_id=id)
-                                            awardss2 = Awards_prof.objects.filter(user_id=id).values_list('id', flat=True)
-                                            for awa1 in awardss2:
-                                                awa1=awa1+1
-                                            awardss3 = Awards_prof.objects.get(id=awa1-1)
-                                            awardss3.is_paid = True
-                                            awardss3.save()
-                                            d1=datetime.datetime.today()
-                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional",date=d1,PaymentType="Online Payment", user_id=info)
-                                            history.save()
-                                            mail_id=info.email
-                                            email=EmailMessage(
-                                                'IABC Payment Notification',
-                                                'Your paypal account has been deducted P8000',
-                                                settings.EMAIL_HOST_USER,
-                                                [mail_id]
-                                            )
-                                            email.fail_silently = True
-                                            email.send()
-                                            del request.session['_submit_data']
-                                            return redirect('members:home')
-                                            #return HttpResponse('Prof Awards form2')
-                    except TypeError:
+                elif info.is_member == False:
                         mem.is_paid = True
                         info.is_member = True
                         info.is_nonmember = False
@@ -1035,10 +1139,10 @@ def onlinepay(request):
                         history.save()
                         mail_id=info.email
                         email=EmailMessage(
-                            'IABC Payment Notification',
-                            'Your paypal account has been deducted P18,000',
-                            settings.EMAIL_HOST_USER,
-                            [mail_id]
+                        'IABC Payment Notification',
+                        F"Your paypal account has been deducted PHP{pricemem.priceVal}",
+                        settings.EMAIL_HOST_USER,
+                        [mail_id]
                         )
                         email.fail_silently = True
                         email.send()
@@ -1046,9 +1150,7 @@ def onlinepay(request):
                         #return HttpResponse('Good Job!')                
                                 
             except ObjectDoesNotExist:
-                data = request.session.get('_submit_data')
-                
-                
+                data = request.session.get('_submit_data')   
                 checks = data['Awards']
                 checks1 = data['Awards']
                
@@ -1063,10 +1165,10 @@ def onlinepay(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'Your paypal account has been deducted P500',
+                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
-                                )
+                                    )
                                 email.fail_silently = True
                                 email.send()
                                 del request.session['_submit_data']
@@ -1087,10 +1189,10 @@ def onlinepay(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'Your paypal account has been deducted P500',
+                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
-                                )
+                                    )
                                 email.fail_silently = True
                                 email.send()
                                 del request.session['_submit_data']
@@ -1110,11 +1212,11 @@ def onlinepay(request):
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
-                                        'IABC Payment Notification',
-                                        'Your paypal account has been deducted P8000',
-                                        settings.EMAIL_HOST_USER,
-                                        [mail_id]
-                                    )
+                                            'IABC Payment Notification',
+                                            F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                            settings.EMAIL_HOST_USER,
+                                            [mail_id]
+                                            )
                                     email.fail_silently = True
                                     email.send()
                                     del request.session['_submit_data']
@@ -1133,18 +1235,19 @@ def onlinepay(request):
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
-                                        'IABC Payment Notification',
-                                        'Your paypal account has been deducted P8000',
-                                        settings.EMAIL_HOST_USER,
-                                        [mail_id]
-                                    )
+                                            'IABC Payment Notification',
+                                            F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                            settings.EMAIL_HOST_USER,
+                                            [mail_id]
+                                            )
                                     email.fail_silently = True
                                     email.send()
                                     del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Prof Awards form2')
                                 
-                
+        else: 
+            return redirect('members:login')        
                         
                     
                 
@@ -1158,7 +1261,7 @@ def overtc(request):
             info = User.objects.get(id=id)
             try :
                 mem = Members.objects.get(user_id=id)
-                if info.is_member == True:
+                if info.is_member and mem.is_paid == True:
                     
                     data = request.session.get('_submit_data')
                 
@@ -1255,14 +1358,13 @@ def overtc(request):
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form2')
 
-                elif info.is_member == False:
+                elif info.is_member == True and mem.is_paid == False:
                     data = request.session.get('_submit_data')
-                    try:
-                        checks = data['Awards']
-                        checks1 = data['Awards']
+                    checks = data['Awards']
+                    checks1 = data['Awards']
                     
-                        if checks == "student":
-                                if Awards_student is None:
+                    if checks == "student":
+                            if Awards_student is None:
                                         awards = Awards_student.objects.get(user_id=id)
                                         awards.is_paid = False
                                         awards.save()
@@ -1281,7 +1383,7 @@ def overtc(request):
                                         return redirect('members:home')
                                         #return HttpResponse('Student Awards form1')
                                         
-                                elif Awards_student is not None:
+                            elif Awards_student is not None:
                                         awards = Awards_student.objects.filter(user_id=id)
                                         awardss = Awards_student.objects.filter(user_id=id).values_list('id', flat=True)
                                         for awa in awardss:
@@ -1306,7 +1408,7 @@ def overtc(request):
                                         
                     
                             
-                        elif checks1 == "profesh" :     
+                    elif checks1 == "profesh" :     
                                             
                                 if Awards_prof is None:
                                             awards2 = Awards_prof.objects.get(user_id=id)
@@ -1348,7 +1450,9 @@ def overtc(request):
                                             del request.session['_submit_data']
                                             return redirect('members:home')
                                             #return HttpResponse('Prof Awards form2'
-                    except TypeError:
+                    
+
+                elif info.is_member == False:
                         mem.is_paid = False
                         info.is_member = True
                         info.is_nonmember = False
@@ -1431,7 +1535,8 @@ def overtc(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',                                        settings.EMAIL_HOST_USER,
+                                    'You have chosen over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',                                        
+                                    settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
                                     email.fail_silently = True
@@ -1452,7 +1557,7 @@ def overtc(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',                                        settings.EMAIL_HOST_USER,
+                                    'You have chosen over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',                                        settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
                                     email.fail_silently = True
@@ -1460,7 +1565,8 @@ def overtc(request):
                                     del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Prof Awards form2')
-
+        else: 
+            return redirect('members:login')
 
 def check(request):
     if request.method == 'GET':
@@ -1469,7 +1575,7 @@ def check(request):
             info = User.objects.get(id=id)
             try :
                 mem = Members.objects.get(user_id=id)
-                if info.is_member == True:
+                if info.is_member and mem.is_paid == True:
                     
                     data = request.session.get('_submit_data')
                 
@@ -1482,6 +1588,18 @@ def check(request):
                                     awards = Awards_student.objects.get(user_id=id)
                                     awards.is_paid = False
                                     awards.save()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awards,user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Student Awards form1')
                                     
@@ -1493,6 +1611,18 @@ def check(request):
                                     awardss1 = Awards_student.objects.get(id=awa-1)
                                     awardss1.is_paid = False
                                     awardss1.save()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Student Awards form2')
                                     
@@ -1504,6 +1634,18 @@ def check(request):
                                         awards2 = Awards_prof.objects.get(user_id=id)
                                         awards2.is_paid = False
                                         awards2.save()
+                                        del request.session['_submit_data']
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check",prof_id=awards2, user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form1')
                             elif Awards_prof is not None:
@@ -1514,24 +1656,47 @@ def check(request):
                                         awardss3 = Awards_prof.objects.get(id=awa1-1)
                                         awardss3.is_paid = False
                                         awardss3.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3, user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form2')
 
-                elif info.is_member == False:
+                elif info.is_member == True and mem.is_paid == False:
                     data = request.session.get('_submit_data')
-                    try:
-                        checks = data['Awards']
-                        checks1 = data['Awards']
+                    checks = data['Awards']
+                    checks1 = data['Awards']
                     
-                        if checks == "student":
-                                if Awards_student is None:
+                    if checks == "student":
+                            if Awards_student is None:
                                         awards = Awards_student.objects.get(user_id=id)
                                         awards.is_paid = False
                                         awards.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awards, user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Student Awards form1')
                                         
-                                elif Awards_student is not None:
+                            elif Awards_student is not None:
                                         awards = Awards_student.objects.filter(user_id=id)
                                         awardss = Awards_student.objects.filter(user_id=id).values_list('id', flat=True)
                                         for awa in awardss:
@@ -1539,17 +1704,41 @@ def check(request):
                                         awardss1 = Awards_student.objects.get(id=awa-1)
                                         awardss1.is_paid = False
                                         awardss1.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Student Awards form2')
                                         
                     
                             
-                        elif checks1 == "profesh" :     
+                    elif checks1 == "profesh" :     
                                             
                                 if Awards_prof is None:
                                             awards2 = Awards_prof.objects.get(user_id=id)
                                             awards2.is_paid = False
                                             awards2.save()
+                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional", prof_id=awards2,PaymentType="Check", user_id=info,)
+                                            history.save()
+                                            mail_id=info.email
+                                            email=EmailMessage(
+                                            'IABC Payment Notification',
+                                            'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                            settings.EMAIL_HOST_USER,
+                                            [mail_id]
+                                            )
+                                            email.fail_silently = True
+                                            email.send()
+                                            del request.session['_submit_data']
                                             return redirect('members:home')
                                             #return HttpResponse('Prof Awards form1')
                                 elif Awards_prof is not None:
@@ -1560,14 +1749,40 @@ def check(request):
                                             awardss3 = Awards_prof.objects.get(id=awa1-1)
                                             awardss3.is_paid = False
                                             awardss3.save()
+                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional", prof_id=awardss3,PaymentType="Check", user_id=info,)
+                                            history.save()
+                                            mail_id=info.email
+                                            email=EmailMessage(
+                                            'IABC Payment Notification',
+                                            'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                            settings.EMAIL_HOST_USER,
+                                            [mail_id]
+                                            )
+                                            email.fail_silently = True
+                                            email.send()
+                                            del request.session['_submit_data']
                                             return redirect('members:home')
                                             #return HttpResponse('Prof Awards form2'
-                    except TypeError:
+                            
+
+                elif info.is_member == False:
                         mem.is_paid = False
                         info.is_member = True
                         info.is_nonmember = False
+                        history = PaymentHistory.objects.create(typeProduct="Membership",PaymentType="Check", user_id=info,)
+                        history.save()
+                        mail_id=info.email
+                        email=EmailMessage(
+                        'IABC Payment Notification',
+                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                        settings.EMAIL_HOST_USER,
+                        [mail_id]
+                        )
+                        email.fail_silently = True
+                        email.send()
                         info.save()
                         mem.save()
+                        del request.session['_submit_data']
                         return redirect('members:home')
                         #return HttpResponse('Good Job!')                 
                                 
@@ -1583,6 +1798,18 @@ def check(request):
                                 awards = Awards_student.objects.get(user_id=id)
                                 awards.is_paid = False
                                 awards.save()
+                                history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",  stud_id=awards,user_id=info,)
+                                history.save()
+                                mail_id=info.email
+                                email=EmailMessage(
+                                'IABC Payment Notification',
+                                'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                settings.EMAIL_HOST_USER,
+                                [mail_id]
+                                )
+                                email.fail_silently = True
+                                email.send()
+                                del request.session['_submit_data']
                                 return redirect('members:home')
                                 #return HttpResponse('Student Awards form1')
                                 
@@ -1594,6 +1821,18 @@ def check(request):
                                 awardss1 = Awards_student.objects.get(id=awa-1)
                                 awardss1.is_paid = False
                                 awardss1.save()
+                                history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awardss1, user_id=info,)
+                                history.save()
+                                mail_id=info.email
+                                email=EmailMessage(
+                                'IABC Payment Notification',
+                                'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                settings.EMAIL_HOST_USER,
+                                [mail_id]
+                                )
+                                email.fail_silently = True
+                                email.send()
+                                del request.session['_submit_data']
                                 return redirect('members:home')
                                 #return HttpResponse('Student Awards form2')
                                 
@@ -1605,6 +1844,18 @@ def check(request):
                                     awards2 = Awards_prof.objects.get(user_id=id)
                                     awards2.is_paid = False
                                     awards2.save()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awards2, user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Prof Awards form1')
                         elif Awards_prof is not None:
@@ -1615,16 +1866,30 @@ def check(request):
                                     awardss3 = Awards_prof.objects.get(id=awa1-1)
                                     awardss3.is_paid = False
                                     awardss3.save()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3, user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Prof Awards form2')
-
+        else:                
+            return redirect('members:login')
+            
     if request.method == 'POST':
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
             try:
                 mem = Members.objects.get(user_id=id)
-                if info.is_member == True:
+                if info.is_member and mem.is_paid == True:
                     data = request.session.get('_submit_data')
                     checks = data['Awards']
                     checks1 = data['Awards']
@@ -1635,12 +1900,23 @@ def check(request):
                                     cperson = request.POST.get('cperson')
                                     cnum = request.POST.get('cnum')
                                     address = request.POST.get('address')
-                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=None,  awards_studentid=awards)
+                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awards)
                                     awards.is_paid = False
                                         
                                     cpay.save()
-                                    
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awards, user_id=info)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
                                     awards.save()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Student Awards form1')
                                     
@@ -1653,12 +1929,23 @@ def check(request):
                                     cperson = request.POST.get('cperson')
                                     cnum = request.POST.get('cnum')
                                     address = request.POST.get('address')
-                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=None,  awards_studentid=awardss1)
+                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awardss1)
                                    
                                     awardss1.is_paid = False   
                                     cpay.save()
-                                    
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
                                     awardss1.save()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Student Awards form2')
 
@@ -1669,11 +1956,23 @@ def check(request):
                                         cperson = request.POST.get('cperson')
                                         cnum = request.POST.get('cnum')
                                         address = request.POST.get('address')
-                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=awards2,  awards_studentid=None)
+                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,   awards_profid=awards2)
                                             
                                         cpay.save()
                                         awards2.is_paid = False
                                         awards2.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awards2, user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form1')
                             elif Awards_prof is not None:
@@ -1685,18 +1984,162 @@ def check(request):
                                         cperson = request.POST.get('cperson')
                                         cnum = request.POST.get('cnum')
                                         address = request.POST.get('address')
-                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=awardss3,  awards_studentid=None)
+                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,   awards_profid=awardss3)
                                             
                                         cpay.save()
                                         awardss3.is_paid = False
                                         awardss3.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3, user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form2')
 
+                elif info.is_member == True and mem.is_paid == False:
+                    data = request.session.get('_submit_data')    
+                    checks = data['Awards']
+                    checks1 = data['Awards']
+                
+                    if checks == "student":
+                            if Awards_student is None:
+                                    awards = Awards_student.objects.get(user_id=id)
+                                    cperson = request.POST.get('cperson')
+                                    cnum = request.POST.get('cnum')
+                                    address = request.POST.get('address')
+                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awards)
+                                    awards.is_paid = False
+                                        
+                                    cpay.save()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awards,user_id=info)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    awards.save()
+                                    del request.session['_submit_data']
+                                    return redirect('members:home')
+                                    #return HttpResponse('Student Awards form1')
+                                    
+                            elif Awards_student is not None:
+                                    awards = Awards_student.objects.filter(user_id=id)
+                                    awardss = Awards_student.objects.filter(user_id=id).values_list('id', flat=True)
+                                    for awa in awardss:
+                                        awa=awa+1
+                                    awardss1 = Awards_student.objects.get(id=awa-1)
+                                    cperson = request.POST.get('cperson')
+                                    cnum = request.POST.get('cnum')
+                                    address = request.POST.get('address')
+                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awardss1)
+                                   
+                                    awardss1.is_paid = False   
+                                    cpay.save()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
+                                    awardss1.save()
+                                    del request.session['_submit_data']
+                                    return redirect('members:home')
+                                    #return HttpResponse('Student Awards form2')
+
+                    elif checks1 == "profesh" :     
+                                        
+                                if Awards_prof is None:
+                                        awards2 = Awards_prof.objects.get(user_id=id)
+                                        cperson = request.POST.get('cperson')
+                                        cnum = request.POST.get('cnum')
+                                        address = request.POST.get('address')
+                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,   awards_profid=awards2)
+                                            
+                                        cpay.save()
+                                        awards2.is_paid = False
+                                        awards2.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awards2,user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
+                                        return redirect('members:home')
+                                        #return HttpResponse('Prof Awards form1')
+                                elif Awards_prof is not None:
+                                        awards2 = Awards_prof.objects.filter(user_id=id)
+                                        awardss2 = Awards_prof.objects.filter(user_id=id).values_list('id', flat=True)
+                                        for awa1 in awardss2:
+                                            awa1=awa1+1
+                                        awardss3 = Awards_prof.objects.get(id=awa1-1)
+                                        cperson = request.POST.get('cperson')
+                                        cnum = request.POST.get('cnum')
+                                        address = request.POST.get('address')
+                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,   awards_profid=awardss3)
+                                            
+                                        cpay.save()
+                                        awardss3.is_paid = False
+                                        awardss3.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",prof_id=awardss3, PaymentType="Check", user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
+                                        return redirect('members:home')
+                                        #return HttpResponse('Prof Awards form2')
+                    
                 elif info.is_member == False:
                         info.is_pending = True
                         info.is_nonmember = False
                         info.save()
+                        history = PaymentHistory.objects.create(typeProduct="Membership",PaymentType="Check", user_id=info,)
+                        history.save()
+                        cperson = request.POST.get('cperson')
+                        cnum = request.POST.get('cnum')
+                        address = request.POST.get('address')
+                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = mem)
+                        cpay.save()
+                        mail_id=info.email
+                        email=EmailMessage(
+                        'IABC Payment Notification',
+                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                        settings.EMAIL_HOST_USER,
+                        [mail_id]
+                        )
+                        email.fail_silently = True
+                        email.send()
+                        del request.session['_submit_data']
                         return redirect('members:home')
                         #return HttpResponse('Good Job!')  
                     
@@ -1714,12 +2157,23 @@ def check(request):
                                     cperson = request.POST.get('cperson')
                                     cnum = request.POST.get('cnum')
                                     address = request.POST.get('address')
-                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=None,  awards_studentid=awards)
+                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awards)
                                     awards.is_paid = False
                                         
                                     cpay.save()
-                                    
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awards, user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
                                     awards.save()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Student Awards form1')
                                     
@@ -1732,12 +2186,24 @@ def check(request):
                                     cperson = request.POST.get('cperson')
                                     cnum = request.POST.get('cnum')
                                     address = request.POST.get('address')
-                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=None,  awards_studentid=awardss1)
+                                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awardss1)
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                    history.save()
+                                    mail_id=info.email
+                                    email=EmailMessage(
+                                    'IABC Payment Notification',
+                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    settings.EMAIL_HOST_USER,
+                                    [mail_id]
+                                    )
+                                    email.fail_silently = True
+                                    email.send()
                                    
                                     awardss1.is_paid = False   
                                     cpay.save()
                                     
                                     awardss1.save()
+                                    del request.session['_submit_data']
                                     return redirect('members:home')
                                     #return HttpResponse('Student Awards form2')
 
@@ -1748,11 +2214,23 @@ def check(request):
                                         cperson = request.POST.get('cperson')
                                         cnum = request.POST.get('cnum')
                                         address = request.POST.get('address')
-                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=awards2,  awards_studentid=None)
+                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_profid=awards2)
                                             
                                         cpay.save()
                                         awards2.is_paid = False
                                         awards2.save()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check",prof_id=awards2, user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form1')
                             elif Awards_prof is not None:
@@ -1764,13 +2242,27 @@ def check(request):
                                         cperson = request.POST.get('cperson')
                                         cnum = request.POST.get('cnum')
                                         address = request.POST.get('address')
-                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = None,  awards_profid=awardss3,  awards_studentid=None)
-                                            
+                                        cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_profid=awardss3)
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3,user_id=info,)
+                                        history.save()
+                                        mail_id=info.email
+                                        email=EmailMessage(
+                                        'IABC Payment Notification',
+                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                        settings.EMAIL_HOST_USER,
+                                        [mail_id]
+                                        )
+                                        email.fail_silently = True
+                                        email.send()
                                         cpay.save()
                                         awardss3.is_paid = False
                                         awardss3.save()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form2')
+        else:                
+            return redirect('members:login')         
+
 
 def onlinepayrenew(request):
     if request.method == 'GET':
@@ -1780,7 +2272,7 @@ def onlinepayrenew(request):
             #priceawastud = Prices.objects.get(priceName="Awards Student")
             #priceawaprofmem = Prices.objects.get(priceName="Awards Member")
             #priceawaprofnon = Prices.objects.get(priceName="Awards Non-Member")
-            #pricemem = Prices.objects.get(priceName="Membership")
+            pricemem = Prices.objects.get(priceName="Membership")
             
             mem = Members.objects.get(user_id=id)
             mem.received_email = False    
@@ -1799,13 +2291,15 @@ def onlinepayrenew(request):
             mail_id=info.email
             email=EmailMessage(
                     'IABC Payment Notification',
-                    'Your paypal account has been deducted P18,000 for renewal',
+                    F"Your paypal account has been deducted PHP{pricemem.priceVal} for renewal",
                     settings.EMAIL_HOST_USER,
                     [mail_id]
-                        )
+                    )
             email.fail_silently = True
             email.send()
             return redirect('members:home')
+        else:                
+            return redirect('members:login')
              #return HttpResponse('Good Job!')                
                                 
                                 
@@ -1835,29 +2329,60 @@ def overtcrenew(request):
             email.send()
             mem.save()
             return redirect('members:home')
-            #return HttpResponse('Good Job!')                
+            #return HttpResponse('Good Job!')
+        else:                
+            return redirect('members:login')                
                                 
             
 def checkrenew(request):
-    if request.method == 'GET':
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
             if request.method == 'GET':
-                if request.user.is_authenticated:
                     id = request.user.id
                     info = User.objects.get(id=id)
                     
                     mem = Members.objects.get(user_id=id)
                         
                     mem.for_renewal = True
+                    history = PaymentHistory.objects.create(typeProduct="Renewal",PaymentType="Check", user_id=info,)
+                    history.save()
+                    mail_id=info.email
+                    email=EmailMessage(
+                    'IABC Payment Notification',
+                    'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                    settings.EMAIL_HOST_USER,
+                    [mail_id]
+                    )
+                    email.fail_silently = True
+                    email.send()
                     #info.is_member = True
                     #info.is_nonmember = False
                     #info.save()
                     mem.save()
                     return redirect('members:home')
-                    #return HttpResponse('Good Job!')    
 
+            elif request.method == 'POST':
+                    history = PaymentHistory.objects.create(typeProduct="Renewal",PaymentType="Check", user_id=info,)
+                    history.save()
+                    cperson = request.POST.get('cperson')
+                    cnum = request.POST.get('cnum')
+                    address = request.POST.get('address')
+                    cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = mem)
+                    cpay.save()
+                    mail_id=info.email
+                    email=EmailMessage(
+                    'IABC Payment Notification',
+                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                    settings.EMAIL_HOST_USER,
+                    [mail_id]
+                    )
+                    email.fail_silently = True
+                    email.send()
+                        
+                    return redirect('members:home')
+        else:            #return HttpResponse('Good Job!')    
+            return redirect('members:login')
             #if request.method == 'POST':
                 #if request.user.is_authenticated:
                     #id = request.user.id
@@ -1984,30 +2509,46 @@ def editviewmember(request, editviewmem_id):
 
 
 def editpendmember(request, editpendmem_id):
-    if request.method == "GET":
-        editpendmember=Members.objects.get(pk=editpendmem_id)
-        return render(request, 'admin-viewpendingmembers.html', {'editpendmember':editpendmember})
-    elif request.method == "POST":
-        editpendmember=Members.objects.get(pk=editpendmem_id)
-        memid = editpendmember.user_id
-        info = User.objects.get(email=memid)
-        remarks = request.POST.get('remarks')
-        if remarks == "1":
-            editpendmember.is_paid = True
-            info.is_member = True
-            info.is_nonmember=False        
-            info.save()
-            editpendmember.save()
-            return redirect('IABC_WEB:pendmember')
-        elif remarks == "2":
-            editpendmember.is_paid = False
-            info.is_member = False        
-            info.save()
-            editpendmember.save()
-            return HttpResponseRedirect(reverse('IABC_WEB:viewpendmember', args=(editpendmem_id,)))
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == "GET":
+                editpendmember=Members.objects.get(pk=editpendmem_id)
+                return render(request, 'admin-viewpendingmembers.html', {'editpendmember':editpendmember})
+            elif request.method == "POST":
+                editpendmember=Members.objects.get(pk=editpendmem_id)
+                memid = editpendmember.user_id
+                info = User.objects.get(email=memid)
+                remarks = request.POST.get('remarks')
+                if remarks == "1":
+                    editpendmember.is_paid = True
+                    info.is_member = True
+                    info.is_nonmember=False 
+                    mail_id=editpendmember.user_id.email
+                    email=EmailMessage(
+                    'IABC Membership Approval Notification',
+                    "Your application for Membership has been approved. Congratulations, you are now a member of IABC",
+                    settings.EMAIL_HOST_USER,
+                    [mail_id]
+                    )
+                    email.fail_silently = True
+                    email.send()       
+                    info.save()
+                    editpendmember.save()
+                    return redirect('IABC_WEB:pendmember')
+                elif remarks == "2":
+                    editpendmember.is_paid = False
+                    info.is_member = False        
+                    info.save()
+                    editpendmember.save()
+                    return HttpResponseRedirect(reverse('IABC_WEB:viewpendmember', args=(editpendmem_id,)))
+                else:
+                    return HttpResponseRedirect(reverse('IABC_WEB:viewpendmember', args=(editpendmem_id,)))
         else:
-            return HttpResponseRedirect(reverse('IABC_WEB:viewpendmember', args=(editpendmem_id,)))
-
+            return redirect('members:home')
+    else:
+            return redirect('members:home')
 
 
 def member_del(request, mem_id):
@@ -2038,84 +2579,85 @@ def membersubmit(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-    try :
-        member = Members.objects.get(user_id=id)
-        if member.is_paid == True:
-            messages.success(request, "You are already a member")
-            return redirect('IABC_WEB:memberapp')
-        else:
-            messages.success(request, "You have already submitted an application")
-            return redirect('IABC_WEB:memberapp')
-    except ObjectDoesNotExist:
+        try :
+            member = Members.objects.get(user_id=id)
+            if member.is_paid == True:
+                messages.success(request, "You are already a member")
+                return redirect('IABC_WEB:memberapp')
+            else:
+                messages.success(request, "You have already submitted an application")
+                return redirect('IABC_WEB:memberapp')
+        except ObjectDoesNotExist:
 
-            nick_name = request.POST.get('Nickname')
-            desig = request.POST.get('Desig')
-            comp = request.POST.get('comp')
-            flr = request.POST.get('flr')
-            bldg = request.POST.get('bldg')
-            strt = request.POST.get('strt')
-            brgy = request.POST.get('brgy')
-            city = request.POST.get('city')
-            reg = request.POST.get('reg')
-            post = request.POST.get('post')
-            tel = request.POST.get('tel')
-            fax = request.POST.get('fax')
-            mobile = request.POST.get('mobile')
-            bday = request.POST.get('bday')
-            check = request.POST.getlist("check", None)
-            question_1 = request.POST.get('que1')
-            question_2 = request.POST.get('que2')
-            question_3 = request.POST.get('que3')
-            question_4 = request.POST.get('que4')
-            question_5 = request.POST.get('que5')
-            question_6 = request.POST.get('que6')
-            question_7 = request.POST.get('que7')
-            question_8 = request.POST.get('que8')
-            question_9 = request.POST.get('que9')
-            question_10 = request.POST.get('que10')
-            contact = request.POST.getlist("contact", None)
-            announce = request.POST.getlist("announce", None)
-            prof = request.FILES.get('profile')
+                nick_name = request.POST.get('Nickname')
+                desig = request.POST.get('Desig')
+                comp = request.POST.get('comp')
+                flr = request.POST.get('flr')
+                bldg = request.POST.get('bldg')
+                strt = request.POST.get('strt')
+                brgy = request.POST.get('brgy')
+                city = request.POST.get('city')
+                reg = request.POST.get('reg')
+                post = request.POST.get('post')
+                tel = request.POST.get('tel')
+                fax = request.POST.get('fax')
+                mobile = request.POST.get('mobile')
+                bday = request.POST.get('bday')
+                check = request.POST.getlist("check", None)
+                question_1 = request.POST.get('que1')
+                question_2 = request.POST.get('que2')
+                question_3 = request.POST.get('que3')
+                question_4 = request.POST.get('que4')
+                question_5 = request.POST.get('que5')
+                question_6 = request.POST.get('que6')
+                question_7 = request.POST.get('que7')
+                question_8 = request.POST.get('que8')
+                question_9 = request.POST.get('que9')
+                question_10 = request.POST.get('que10')
+                contact = request.POST.getlist("contact", None)
+                announce = request.POST.getlist("announce", None)
+                prof = request.FILES.get('profile')
 
-        #chart_a = Chart_A.objects.get(industry_Name=question_3)
-            #chart_b = Chart_B.objects.get(business_type=question_4)
-            #chart_c = Chart_C.objects.get(current_title=question_5)
-            #chart_d = Chart_D.objects.get(key_area=question_6)
-            #chart_e = Chart_E.objects.get(employee_no=question_7)
-            #chart_f = Chart_F.objects.get(experience=question_8)
-            #chart_f1 = Chart_F.objects.get(experience=question_9)
-            #chart_f2 = chart_f1.experience
-            #chart_g = Chart_G.objects.get(about=question_10)
-            
-
-            if request.method == 'POST':
-                members = Members.objects.create(nick_name=nick_name, designation=desig, company_name=comp,floor_no=flr,building_no=bldg,street=strt,baranggay=brgy,city=city,region=reg,postal_zip=post,telephone_no=tel,fax_no=fax,mobile_no=mobile,email_address=info.email,birthday=bday, question_1=question_1, question_2=question_2, industry_Name=question_3, business_type=question_4, current_title=question_5, key_area=question_6, employee_no=question_7,experience=question_8,interest=question_9,  about =question_10, profile_photo=prof, user_id=info)
-
-                if "Membership" in check:
-                    members.membership = True
-                if "Excel" in check:
-                    members.ceo_excel = True
-                if "Regional" in check:
-                    members.regional_conf = True
-                if "Media" in check:
-                    members.media_relations = True
-                if "Digital" in check:
-                    members.digital_comm = True
-                if "PhilQuill" in check:
-                    members.phil_quill = True
-                if "Public" in check:
-                    members.publication = True
-                if "Sponsor" in check:
-                    members.sponsorship = True
-                if "yes" in contact:
-                    members.share_contact = True
-                if "yes" in announce:
-                    members.receive_announce = True
+            #chart_a = Chart_A.objects.get(industry_Name=question_3)
+                #chart_b = Chart_B.objects.get(business_type=question_4)
+                #chart_c = Chart_C.objects.get(current_title=question_5)
+                #chart_d = Chart_D.objects.get(key_area=question_6)
+                #chart_e = Chart_E.objects.get(employee_no=question_7)
+                #chart_f = Chart_F.objects.get(experience=question_8)
+                #chart_f1 = Chart_F.objects.get(experience=question_9)
+                #chart_f2 = chart_f1.experience
+                #chart_g = Chart_G.objects.get(about=question_10)
                 
-                    
-                members.save()
-            return redirect('IABC_WEB:memberform2')
 
+                if request.method == 'POST':
+                    members = Members.objects.create(nick_name=nick_name, designation=desig, company_name=comp,floor_no=flr,building_no=bldg,street=strt,baranggay=brgy,city=city,region=reg,postal_zip=post,telephone_no=tel,fax_no=fax,mobile_no=mobile,email_address=info.email,birthday=bday, question_1=question_1, question_2=question_2, industry_Name=question_3, business_type=question_4, current_title=question_5, key_area=question_6, employee_no=question_7,experience=question_8,interest=question_9,  about =question_10, profile_photo=prof, user_id=info)
+
+                    if "Membership" in check:
+                        members.membership = True
+                    if "Excel" in check:
+                        members.ceo_excel = True
+                    if "Regional" in check:
+                        members.regional_conf = True
+                    if "Media" in check:
+                        members.media_relations = True
+                    if "Digital" in check:
+                        members.digital_comm = True
+                    if "PhilQuill" in check:
+                        members.phil_quill = True
+                    if "Public" in check:
+                        members.publication = True
+                    if "Sponsor" in check:
+                        members.sponsorship = True
+                    if "yes" in contact:
+                        members.share_contact = True
+                    if "yes" in announce:
+                        members.receive_announce = True
+                    
+                        
+                    members.save()
+                return redirect('IABC_WEB:memberform2')
+    else:
+        return redirect('members:home')
 
 
 def memberform2(request):
@@ -2123,18 +2665,22 @@ def memberform2(request):
         id = request.user.id
         info = User.objects.filter(id=id)
         return render(request, 'user-memberform.html', {'info':info,})
-
+    else:
+        return redirect('members:login')
 
 def attach2(request):
-    if request.method == 'POST':
-        if request.POST.get("attachh"):
-            request.session['_memebill_data'] = request.POST
-            messages.success(request, 'Succesfully Attached!')  
-            return redirect('IABC_WEB:memberform2')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            if request.POST.get("attachh"):
+                request.session['_memebill_data'] = request.POST
+                messages.success(request, 'Succesfully Attached!')  
+                return redirect('IABC_WEB:memberform2')
+            else:
+                return HttpResponse("There was an unexpected error")
         else:
             return HttpResponse("There was an unexpected error")
     else:
-        return HttpResponse("There was an unexpected error")
+        return redirect('members:login')
 
 
 def memebill_pdf(request):
@@ -2168,17 +2714,22 @@ def renewform(request):
         id = request.user.id
         info = User.objects.filter(id=id)
         return render(request, 'user-renewform.html', {'info':info,})
+    else:
+        return redirect('members:login')
 
 def renewattach(request):
-    if request.method == 'POST':
-        if request.POST.get("renew-attach"):
-            request.session['_renew_data'] = request.POST
-            messages.success(request, 'Succesfully Attached!')  
-            return redirect('IABC_WEB:renewform')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            if request.POST.get("renew-attach"):
+                request.session['_renew_data'] = request.POST
+                messages.success(request, 'Succesfully Attached!')  
+                return redirect('IABC_WEB:renewform')
+            else:
+                return HttpResponse("There was an unexpected error")
         else:
             return HttpResponse("There was an unexpected error")
     else:
-        return HttpResponse("There was an unexpected error")
+        return redirect('members:home')
 
 
 def renewbill_pdf(request):
@@ -2239,25 +2790,33 @@ def nonmember_view(request, non_id):
             return redirect('members:home')
 
 def nonmember_edit(request, non_id):
-    if request.method == 'GET':
-        info = User.objects.get(pk=non_id)
-        return render(request, 'admin-editviewnonmembers.html', {'info':info})
-    elif request.method == "POST":
-        try:
-            info = User.objects.get(pk=non_id)
-            firstName = request.POST.get('firstName')
-            middleName = request.POST.get('middleName')
-            lastName = request.POST.get('lastName')
-            email = request.POST.get('email')
-            info.firstName = firstName
-            info.middleName = middleName
-            info.lastName = lastName
-            info.email = email
-            info.save()
-            return HttpResponseRedirect(reverse('IABC_WEB:nonmember_view', args=(non_id,)))
-        except:
-            messages.success(request, "Email is already used by another user")
-            return HttpResponseRedirect(reverse('IABC_WEB:nonmember_view', args=(non_id,)))
+    if request.user.is_authenticated:
+        id = request.user.id
+        info1 = User.objects.get(id=id)
+        if info1.is_admin == True:
+            if request.method == 'GET':
+                info = User.objects.get(pk=non_id)
+                return render(request, 'admin-editviewnonmembers.html', {'info':info})
+            elif request.method == "POST":
+                try:
+                    info = User.objects.get(pk=non_id)
+                    firstName = request.POST.get('firstName')
+                    middleName = request.POST.get('middleName')
+                    lastName = request.POST.get('lastName')
+                    email = request.POST.get('email')
+                    info.firstName = firstName
+                    info.middleName = middleName
+                    info.lastName = lastName
+                    info.email = email
+                    info.save()
+                    return HttpResponseRedirect(reverse('IABC_WEB:nonmember_view', args=(non_id,)))
+                except:
+                    messages.success(request, "Email is already used by another user")
+                    return HttpResponseRedirect(reverse('IABC_WEB:nonmember_view', args=(non_id,)))
+        else:
+            return redirect('members:home')
+    else:
+            return redirect('members:home')
 
 def nonmember_del(request, non_id):
     non_member=User.objects.get(pk=non_id)
@@ -2327,6 +2886,7 @@ def viewproj_track(request):
                 date = request.POST.get('date')
                 event = request.POST.get('event') 
                 project=ProjectTrackerName.objects.create(event_name=event, event_date=date, user_id=info)
+                project.save()
                 messages.success(request, "Succesfully Added!")
                 return redirect('IABC_WEB:viewproj_track')
         else:
@@ -2462,14 +3022,15 @@ def checklist(request, proje_id):
                 try:
                     proj = ProjectTracker.objects.get(id=proje_id)
                     checkes=Checklist.objects.filter(proj_id=proj)
-                    context ={'proj':proj, 'checkes':checkes}
+                    context ={'proj':proj, 'checkes':checkes, 'info':info}
                     #return HttpResponse(proj)
                     return render (request, 'generalprojecttracker3.html', context)
 
                 except ObjectDoesNotExist:
                     proj = ProjectTracker.objects.get(id=proje_id)
                     #return HttpResponse("hello")
-                    return render (request, 'generalprojecttracker3.html', {'proj':proj})
+                    context ={'proj':proj, 'info':info}
+                    return render (request, 'generalprojecttracker3.html', context)
 
             if request.method == "POST":
                 if 'add' in request.POST:
@@ -2551,6 +3112,10 @@ def act_list(request):
                 actt.save()
                 messages.success(request, "Succesfully Added!")
                 return redirect('IABC_WEB:act_list')
+        else:
+            return redirect('members:home')
+    else:
+        return redirect('members:home')
 
 
 def delproj_trac(request, ent_id):
@@ -2575,29 +3140,42 @@ def delproj_trac2(request, ent_id):
     prof = ProjectTracker.objects.filter(id=ent_id).values_list('proj_id', flat=True)
     proy = list(prof)
     pot=proy[0]
+    pol=ProjectTrackerName.objects.get(id=pot)
+    if proj.act_Task == "End":
+        pol.event_end = None
+        pol.save()
+        proj.delete()
+        return HttpResponseRedirect(reverse('IABC_WEB:viewproj_track2', args=(pot,)))
+    else :
+        proj.delete()
+        return HttpResponseRedirect(reverse('IABC_WEB:viewproj_track2', args=(pot,)))
     
     # projjson=json.dumps(proj)
     # empty={"success":False, "data":projjson}
     
     # try:
-    proj.delete()
+    
     #     empty["success"]=True
         
     # except:
     #     empty["success"]=False
     #return HttpResponse(pot) 
-    return HttpResponseRedirect(reverse('IABC_WEB:viewproj_track2', args=(pot,)))
+    
     
 def bidderviewprop(request, bid_id):
     if request.user.is_authenticated:
         if request.method == 'GET':
-            
-            try:
-                bid=BidderSubmission.objects.get(user_id=bid_id)
+            id = request.user.id
+            info = User.objects.get(id=id)
+            if info.is_admin == True:
+                try:
+                    bid=BidderSubmission.objects.get(user_id=bid_id)
 
-                return render(request, 'admin-viewbiddersproposal.html', {'bid':bid})
-            except BidderSubmission.DoesNotExist:
-                return render(request, 'admin-viewbiddersproposal.html')
+                    return render(request, 'admin-viewbiddersproposal.html', {'bid':bid})
+                except BidderSubmission.DoesNotExist:
+                    return render(request, 'admin-viewbiddersproposal.html')
+            else:
+                return redirect('members:home')
     else:
             return redirect('members:home')
 
@@ -2620,6 +3198,7 @@ def view_bidders(request):
 def bidder_del(request, bid_id):
     bidder=User.objects.get(pk=bid_id)
     bidder.is_active = False
+    bidder.is_bidder = False
     bidder.date_inactive = datetime.datetime.now()
     bidder.save()
     return redirect('IABC_WEB:view_bidders')
@@ -2631,18 +3210,20 @@ def bidder_dashboard(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        try:
-            mes = BidderSubmission.objects.get(user_id=id)
-            context = {'mes':mes}
-            if info.is_bidder == True:
-                if mes.comments == '':
-                    return render(request, 'bidder-dashboard.html', context)
-                else:
-                    return render(request, 'bidder-dashboard.html', context)
-            else:
+        if info.is_bidder == True:
+            info2 = User.objects.filter(id=id).filter(is_bidder=True)
+            try: 
+                mes = BidderSubmission.objects.get(user_id=id)
+                mes2 = BidderComments.objects.filter(bid_id=mes)
+                context = {'mes2':mes2, 'mes':mes ,'info2':info2}
+                #if mes2.comments == '':
+                        #return render(request, 'bidder-dashboard.html', context)
+                #else:
+                return render(request, 'bidder-dashboard.html', context)        
+            except ObjectDoesNotExist:
+                return render(request, 'bidder-dashboard.html', {'info2':info2})
+        else:
                 return redirect('members:home')
-        except BidderSubmission.DoesNotExist:
-            return render(request, 'bidder-dashboard.html')
     else:
             return redirect('members:home')
 
@@ -2675,48 +3256,76 @@ def bidder_app(request):
 def biddersubmit(request):
     if request.user.is_authenticated:
         id = request.user.id
-        info = User.objects.get(id=id)  
-        if request.method == 'POST':
-            try:
-                check = BidderSubmission.objects.get(user_id=id)
-                if check.file:
-                    messages.success(request, "You have already submitted!")
-                    return redirect('members:home')
-                    
-                else:
+        info = User.objects.get(id=id)
+        if info.is_bidder == True:  
+            if request.method == 'POST':
+                try:
+                    check = BidderSubmission.objects.get(user_id=id)
+                    if check.file:
+                        messages.success(request, "You have already submitted!")
+                        return redirect('members:home')
+                        
+                    else:
+                        file = request.FILES.get('file')
+                        desc = request.POST.get ('description')
+                        check.file = file
+                        check.description = desc
+                        check.save()
+                        bid = User.objects.get(id=id)
+                        mail_id=bid.email
+                        email=EmailMessage(
+                        'IABC Proposal Notification',
+                        'Your Proposal has been Submitted, Please Wait!',
+                        settings.EMAIL_HOST_USER,
+                        [mail_id]
+                        )
+                        email.fail_silently = True
+                        email.send()
+                        messages.success(request, "Succesfully Submitted!")
+                        return redirect('members:home')
+                        
+                
+                except ObjectDoesNotExist:
                     file = request.FILES.get('file')
                     desc = request.POST.get ('description')
-                    check.file = file
-                    check.description = desc
-                    check.save()
-                    messages.success(request, "Succesfully Submitted!")
-                    return redirect('members:home')
-                    
-            
-            except ObjectDoesNotExist:
-                file = request.FILES.get('file')
-                desc = request.POST.get ('description')
 
-                bidadd = BidderSubmission.objects.create(file=file, description=desc, user_id=info)
-                bidadd.save()
-                messages.success(request, "Succesfully Submitted!")
-                return redirect('members:home')
-   
+                    bidadd = BidderSubmission.objects.create(file=file, description=desc, user_id=info)
+                    bid = User.objects.get(id=id)
+                    mail_id=bid.email
+                    email=EmailMessage(
+                    'IABC Proposal Notification',
+                    'Your Proposal has been Submitted, Please Wait!',
+                    settings.EMAIL_HOST_USER,
+                    [mail_id]
+                    )
+                    email.fail_silently = True
+                    email.send()
+                    bidadd.save()
+                    messages.success(request, "Succesfully Submitted!")
+                    #return HttpResponse(bid.email)
+                    return redirect('members:home')
+        else:
+            return redirect('members:home')
     else:
             return redirect('members:home')
 
 def bidderremark(request, bid_id):
     if request.user.is_authenticated:
         id = request.user.id
-        info = User.objects.get(id=id)  
-        if request.method == 'POST':
-            remark = request.POST.get('remarks')
-            
-            bidadd = BidderSubmission.objects.get(user_id=bid_id)
-            bidadd.comments = remark
-            bidadd.save()
-            messages.success(request, "Succesfully Added!")
-            return HttpResponseRedirect(reverse('IABC_WEB:bidderviewprop', args=(bid_id,)))
+        info = User.objects.get(id=id)
+        if info.is_admin == True:    
+            if request.method == 'POST':
+                remark = request.POST.get('remarks')
+                
+                bidadd = BidderSubmission.objects.get(user_id=bid_id)
+                d1 = datetime.datetime.today()
+                bidcom = BidderComments.objects.create(bid_id=bidadd, comments=remark, commDate=d1)
+
+                bidcom.save()
+                messages.success(request, "Succesfully Added!")
+                return HttpResponseRedirect(reverse('IABC_WEB:bidderviewprop', args=(bid_id,)))
+        else:
+            return redirect('members:home')
    
     else:
             return redirect('members:home')
@@ -2725,24 +3334,26 @@ def bidderstatus(request, bid_id):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)  
-        if request.method == 'POST':
-            stat = request.POST.get('stat')
-            bidadd = BidderSubmission.objects.get(user_id=bid_id)
-            bid = User.objects.filter(id=bid_id).filter(is_bidder=True)
-            mail_id=bid.email
-            email=EmailMessage(
-            'IABC Approval Notification',
-            'Your Proposal has been approved!',
-            settings.EMAIL_HOST_USER,
-            [mail_id]
-                    )
-            email.fail_silently = True
-            email.send()
-            bidadd.status = stat
-            bidadd.save()
-            messages.success(request, "Succesfully Changed!")
-            return HttpResponseRedirect(reverse('IABC_WEB:bidderviewprop', args=(bid_id,)))
-   
+        if info.is_admin == True: 
+            if request.method == 'POST':
+                stat = request.POST.get('stat')
+                bidadd = BidderSubmission.objects.get(user_id=bid_id)
+                bid = User.objects.get(id=bid_id)
+                mail_id=bid.email
+                email=EmailMessage(
+                'IABC Approval Notification',
+                'Your Proposal has been approved!',
+                settings.EMAIL_HOST_USER,
+                [mail_id]
+                        )
+                email.fail_silently = True
+                email.send()
+                bidadd.status = stat
+                bidadd.save()
+                messages.success(request, "Succesfully Changed!")
+                return HttpResponseRedirect(reverse('IABC_WEB:bidderviewprop', args=(bid_id,)))
+        else:
+            return redirect('members:home')
     else:
             return redirect('members:home') 
     
@@ -2977,6 +3588,10 @@ def awardscrud(request):
                     add.save()
                     messages.success(request, "Succesfully Added!")
                     return redirect('IABC_WEB:awardscrud')
+        else:
+            return redirect('members:home')
+    else:
+            return redirect('members:home')
 
 
 def category(request):
@@ -3037,46 +3652,56 @@ def cert_del(request, cht_id):
 #winners table
 def winnersCat(request):
     if request.user.is_authenticated:
-        if request.method == 'GET':
-            cat = Category.objects.all()
-            context = {'cat':cat}
-            return render(request, 'admin-studwinnerscrud.html', context)
-        elif request.method == 'POST':
-            categ = request.POST.get('categ')
-            if categ == "None":
-                messages.success(request, "Please Choose a Category")
-                return redirect('IABC_WEB:winnersCat')
-            else:
-                request.session['_category_data'] = request.POST
-                return redirect('IABC_WEB:winners')
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'GET':
+                cat = Category.objects.all()
+                context = {'cat':cat}
+                return render(request, 'admin-studwinnerscrud.html', context)
+            elif request.method == 'POST':
+                categ = request.POST.get('categ')
+                if categ == "None":
+                    messages.success(request, "Please Choose a Category")
+                    return redirect('IABC_WEB:winnersCat')
+                else:
+                    request.session['_category_data'] = request.POST
+                    return redirect('IABC_WEB:winners')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
 
 def winners(request):
     if request.user.is_authenticated:
-        if request.method == 'GET':
-            data = request.session.get('_category_data')
-            checks = data['categ']
-            win = Winners.objects.filter(entryCat=checks)
-            awa = Awards_student.objects.filter(is_paid=True).filter(category=checks).filter(judged=False)
-            cat = Category.objects.all()
-            context = {'win':win, 'awa':awa, 'cat':cat}
-            return render(request, 'admin-studwinnerscrud2.html', context)
-        elif request.method == 'POST':
-            ent = request.POST.get('ent')
-            awa = Awards_student.objects.get(pk=ent)
-            entnum=awa.id
-            entname=awa.entry_title
-            entcat=awa.category
-            entrant=awa.entrant_name
-            entcomp = awa.entrant_school
-            entryDiv = awa.division
-            entryDate = awa.entry_date
-            make = Winners.objects.create(entryNo=entnum,entryName=entname,entryCat=entcat,entrantName=entrant,entryComp=entcomp,entryDiv=entryDiv,entryDate=entryDate)
-            awa.judged = True
-            awa.save()
-            return redirect('IABC_WEB:winners')
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'GET':
+                data = request.session.get('_category_data')
+                checks = data['categ']
+                win = Winners.objects.filter(entryCat=checks)
+                awa = Awards_student.objects.filter(is_paid=True).filter(category=checks).filter(judged=False)
+                cat = Category.objects.all()
+                context = {'win':win, 'awa':awa, 'cat':cat}
+                return render(request, 'admin-studwinnerscrud2.html', context)
+            elif request.method == 'POST':
+                ent = request.POST.get('ent')
+                awa = Awards_student.objects.get(pk=ent)
+                entnum=awa.id
+                entname=awa.entry_title
+                entcat=awa.category
+                entrant=awa.entrant_name
+                entcomp = awa.entrant_school
+                entryDiv = awa.division
+                entryDate = awa.entry_date
+                make = Winners.objects.create(entryNo=entnum,entryName=entname,entryCat=entcat,entrantName=entrant,entryComp=entcomp,entryDiv=entryDiv,entryDate=entryDate)
+                awa.judged = True
+                awa.save()
+                return redirect('IABC_WEB:winners')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
@@ -3090,49 +3715,59 @@ def winnersdel(request, del_id):
 #winners table 2
 def winnersCat2(request):
     if request.user.is_authenticated:
-        if request.method == 'GET':
-            cat = Category.objects.all()
-            context = {'cat':cat}
-            return render(request, 'admin-profwinnerscrud.html', context)
-        elif request.method == 'POST':
-            categ = request.POST.get('categ')
-            if categ == "None":
-                messages.success(request, "Please Choose a Category")
-                return redirect('IABC_WEB:winnersCat2')
-            else:
-                request.session['_category2_data'] = request.POST
-                return redirect('IABC_WEB:winners2')
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'GET':
+                cat = Category.objects.all()
+                context = {'cat':cat}
+                return render(request, 'admin-profwinnerscrud.html', context)
+            elif request.method == 'POST':
+                categ = request.POST.get('categ')
+                if categ == "None":
+                    messages.success(request, "Please Choose a Category")
+                    return redirect('IABC_WEB:winnersCat2')
+                else:
+                    request.session['_category2_data'] = request.POST
+                    return redirect('IABC_WEB:winners2')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')    
 
 def winners2(request):
     if request.user.is_authenticated:
-        if request.method == 'GET':
-            data = request.session.get('_category2_data')
-            checks = data['categ']
-            win = Winners2.objects.filter(entryCat=checks)
-            awa = Awards_prof.objects.filter(is_paid=True).filter(category=checks).filter(judged=False)
-            cat = Category.objects.all()
-            context = {'win':win, 'awa':awa, 'cat':cat}
-            return render(request, 'admin-profwinnerscrud2.html', context)
-        elif request.method == 'POST':
-            ent = request.POST.get('ent')
-            if ent == "None":
-                messages.success(request, "Choose an Entry!")
-                return redirect('IABC_WEB:winners2')
-            else:
-                awa = Awards_prof.objects.get(pk=ent)
-                entnum=awa.id
-                entname=awa.entry_title
-                entcat=awa.category
-                entrant=awa.entrant_name
-                entcomp = awa.entrant_org
-                entryDiv = awa.division
-                entryDate = awa.entry_date
-                make = Winners.objects.create(entryNo=entnum,entryName=entname,entryCat=entcat,entrantName=entrant,entryComp=entcomp,entryDiv=entryDiv,entryDate=entryDate)
-                awa.judged = True
-                awa.save()
-                return redirect('IABC_WEB:winners2')
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'GET':
+                data = request.session.get('_category2_data')
+                checks = data['categ']
+                win = Winners2.objects.filter(entryCat=checks)
+                awa = Awards_prof.objects.filter(is_paid=True).filter(category=checks).filter(judged=False)
+                cat = Category.objects.all()
+                context = {'win':win, 'awa':awa, 'cat':cat}
+                return render(request, 'admin-profwinnerscrud2.html', context)
+            elif request.method == 'POST':
+                ent = request.POST.get('ent')
+                if ent == "None":
+                    messages.success(request, "Choose an Entry!")
+                    return redirect('IABC_WEB:winners2')
+                else:
+                    awa = Awards_prof.objects.get(pk=ent)
+                    entnum=awa.id
+                    entname=awa.entry_title
+                    entcat=awa.category
+                    entrant=awa.entrant_name
+                    entcomp = awa.entrant_org
+                    entryDiv = awa.division
+                    entryDate = awa.entry_date
+                    make = Winners.objects.create(entryNo=entnum,entryName=entname,entryCat=entcat,entrantName=entrant,entryComp=entcomp,entryDiv=entryDiv,entryDate=entryDate)
+                    awa.judged = True
+                    awa.save()
+                    return redirect('IABC_WEB:winners2')
+        else:
+            return redirect('members:home')            
     else:
         return redirect('members:home')
 
@@ -3148,15 +3783,20 @@ def winnersdel2(request, del_id):
 
 def price(request):
     if request.user.is_authenticated:
-        if request.method == 'GET':
-            price = Prices.objects.all()
-            context = {'price':price}
-            return render(request, 'admin-moneycrud.html', context)
-        elif request.method == 'POST':
-            val = request.POST.get('price')
-            name = request.POST.get('name')
-            price = Prices.objects.create(priceVal=val,priceName=name)
-            return redirect('IABC_WEB:price')
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'GET':
+                price = Prices.objects.all()
+                context = {'price':price}
+                return render(request, 'admin-moneycrud.html', context)
+            elif request.method == 'POST':
+                val = request.POST.get('price')
+                name = request.POST.get('name')
+                price = Prices.objects.create(priceVal=val,priceName=name)
+                return redirect('IABC_WEB:price')
+        else:
+            return redirect('members:home')
     else:
         return redirect('members:home')
 
@@ -3170,6 +3810,80 @@ def pricedel(request, del_id):
         except:
             return HttpResponse("Invalid Deletion")
 
+def awardspaid_pdf(request):
+    if request.user.is_authenticated:
+        id = request.user.id
+        info=User.objects.get(pk=id)
+        checker = request.POST.get('filt')
+        if checker == "All":
+            text = Awards_student.objects.filter(is_paid=True) 
+            text2 = Awards_prof.objects.filter(is_paid=True) 
+        elif checker == "Today":
+                    d1 = datetime.date.today()
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=d1)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=d1)
+        elif checker == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=seven)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=seven)
+        elif checker == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
+        template = get_template('form-awardspaid.html')
+        context = {'text':text, 'text2':text2}
+
+        html = template.render(context)
+        pdf = render_to_pdf('form-awardspaid.html', context)
+
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Paid Awards-%s.pdf" %info.lastName
+            content = "inline; filename=%s" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+
+def awardspending_pdf(request):
+    if request.user.is_authenticated:
+        id = request.user.id
+        info=User.objects.get(pk=id)
+        checker = request.POST.get('filt')
+        if checker == "All":
+            text = Awards_student.objects.filter(is_paid=False) 
+            text2 = Awards_prof.objects.filter(is_paid=False) 
+        elif checker == "Today":
+                    d1 = datetime.date.today()
+                    text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=d1)
+                    text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=d1)
+        elif checker == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=seven)
+                    text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=seven)
+        elif checker == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = Awards_student.objects.filter(is_paid=False).filter(entry_date__gte=thirty)
+                    text2 = Awards_prof.objects.filter(is_paid=False).filter(entry_date__gte=thirty)
+        template = get_template('form-awardspending.html')
+        context = {'text':text, 'text2':text2}
+
+        html = template.render(context)
+        pdf = render_to_pdf('form-awardspending.html', context)
+
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Pending Awards-%s.pdf" %info.lastName
+            content = "inline; filename=%s" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
 
 
 def studwinners_pdf(request):
@@ -3182,10 +3896,10 @@ def studwinners_pdf(request):
         elif checker == "Today":
             text = Winners.objects.filter(windate=date.today())
         elif checker == "7":
-            seven = date.today() - relativedelta(7)
+            seven = date.today() - relativedelta(days=7)
             text = Winners.objects.filter(windate__gte=seven)
         elif checker == "30":
-            thirty = date.today() - relativedelta(30)
+            thirty = date.today() - relativedelta(days=30)
             text = Winners.objects.filter(windate__gte=thirty)
         template = get_template('form-winners.html')
         context = {'text':text}
@@ -3247,16 +3961,35 @@ def memreport(request):
         try:
             mem=Members.objects.all()
             if request.method == 'POST':
-                filt = request.POST.get('filt')
-                if filt == "Today":
-                    d1 = datetime.date.today()
-                    mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=d1) 
-                    template = get_template('form-non-members.html')
+                filt = request.POST.get('filtt')
+                if filt == "All":
+                    mem1=Members.objects.filter(is_paid=True) 
+                    template = get_template('form-members.html')
                     context={
                          'mem1':mem1,
                     }
                     html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    pdf = render_to_pdf('form-members.html', context)
+
+                    if pdf:
+                        response = HttpResponse(pdf, content_type='application/pdf')
+                        filename = "Members Report-%s.pdf" %info.lastName
+                        content = "inline; filename=%s" %(filename)
+                        download = request.GET.get("download")
+                        if download:
+                            content = "attachment; filename='%s'" %(filename)
+                        response['Content-Disposition'] = content
+                        return response
+                    return HttpResponse("Not found")
+                elif filt == "Today":
+                    d1 = datetime.date.today()
+                    mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=d1) 
+                    template = get_template('form-members.html')
+                    context={
+                         'mem1':mem1,
+                    }
+                    html = template.render(context)
+                    pdf = render_to_pdf('form-members.html', context)
 
                     if pdf:
                         response = HttpResponse(pdf, content_type='application/pdf')
@@ -3272,12 +4005,12 @@ def memreport(request):
                     d1 = datetime.date.today()
                     last7 = date.today() - relativedelta(days=7)
                     mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=last7)
-                    template = get_template('form-non-members.html')
+                    template = get_template('form-members.html')
                     context={
                          'mem1':mem1,
                     }
                     html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    pdf = render_to_pdf('form-members.html', context)
 
                     if pdf:
                         response = HttpResponse(pdf, content_type='application/pdf')
@@ -3294,12 +4027,12 @@ def memreport(request):
                     d1 = datetime.date.today()
                     last30 = date.today() - relativedelta(days=30)
                     mem1=Members.objects.filter(is_paid=True).filter(join_date__gte=last30)
-                    template = get_template('form-non-members.html')
+                    template = get_template('form-members.html')
                     context={
                          'mem1':mem1,
                     }
                     html = template.render(context)
-                    pdf = render_to_pdf('form-non-members.html', context)
+                    pdf = render_to_pdf('form-members.html', context)
 
                     if pdf:
                         response = HttpResponse(pdf, content_type='application/pdf')
@@ -3331,7 +4064,26 @@ def pendmemreport(request):
             mem=Members.objects.all()
             if request.method == 'POST':
                 filt = request.POST.get('filt')
-                if filt == "Today":
+                if filt == "All":
+                    mem1=Members.objects.filter(is_paid=False) 
+                    template = get_template('form-non-members.html')
+                    context={
+                         'mem1':mem1,
+                    }
+                    html = template.render(context)
+                    pdf = render_to_pdf('form-non-members.html', context)
+
+                    if pdf:
+                        response = HttpResponse(pdf, content_type='application/pdf')
+                        filename = "Pending Members Report-%s.pdf" %info.lastName
+                        content = "inline; filename=%s" %(filename)
+                        download = request.GET.get("download")
+                        if download:
+                            content = "attachment; filename='%s'" %(filename)
+                        response['Content-Disposition'] = content
+                        return response
+                    return HttpResponse("Not found")
+                elif filt == "Today":
                     d1 = datetime.date.today()
                     mem1=Members.objects.filter(is_paid=False).filter(join_date__gte=d1) 
                     template = get_template('form-non-members.html')
@@ -3343,7 +4095,7 @@ def pendmemreport(request):
 
                     if pdf:
                         response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Members Report-%s.pdf" %info.lastName
+                        filename = "Pending Members Report-%s.pdf" %info.lastName
                         content = "inline; filename=%s" %(filename)
                         download = request.GET.get("download")
                         if download:
@@ -3364,7 +4116,7 @@ def pendmemreport(request):
 
                     if pdf:
                         response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Members Report-%s.pdf" %info.lastName
+                        filename = "Pending Members Report-%s.pdf" %info.lastName
                         content = "inline; filename=%s" %(filename)
                         download = request.GET.get("download")
                         if download:
@@ -3386,7 +4138,7 @@ def pendmemreport(request):
 
                     if pdf:
                         response = HttpResponse(pdf, content_type='application/pdf')
-                        filename = "Members Report-%s.pdf" %info.lastName
+                        filename = "Pending Members Report-%s.pdf" %info.lastName
                         content = "inline; filename=%s" %(filename)
                         download = request.GET.get("download")
                         if download:
@@ -3505,251 +4257,281 @@ def whyiabc(request):
 
 
 def membersgen(request):
-    if request.method == 'POST':
-        gen = request.POST.getlist("checkk", None)
-        mem = Members.objects.filter(is_paid=True)
-        chc = request.POST.get("prop")
-        if chc == "All":
-            text = Members.objects.filter(is_paid=True)
-        elif chc == "Today":
-            d1 = datetime.date.today()
-            text = Members.objects.filter(is_paid=True).filter(join_date__gte=d1)
-        elif chc == "Last 7 Days":
-            seven = date.today() - relativedelta(days=7)
-            text = Members.objects.filter(is_paid=True).filter(join_date__gte=seven)
-        elif chc == "Last 30 Days":
-            thirty = date.today() - relativedelta(days=30)
-            text = Members.objects.filter(is_paid=True).filter(join_date__gte=thirty)
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'POST':
+                gen = request.POST.getlist("checkk", None)
+                mem = Members.objects.filter(is_paid=True)
+                chc = request.POST.get("prop")
+                if chc == "All":
+                    text = Members.objects.filter(is_paid=True)
+                elif chc == "Today":
+                    d1 = datetime.date.today()
+                    text = Members.objects.filter(is_paid=True).filter(join_date__gte=d1)
+                elif chc == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = Members.objects.filter(is_paid=True).filter(join_date__gte=seven)
+                elif chc == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = Members.objects.filter(is_paid=True).filter(join_date__gte=thirty)
 
-        memn=False
-        meme=False
-        memc=False
-        mema=False
-        memx=False
-        memp=False
-        memd=False
-        if "Name" in gen:
-            memn=True
-        if "Email" in gen:
-            meme=True
-        if "Contact" in gen:
-            memc=True
-        if "Apply" in gen:
-            mema=True
-        if "Expiry" in gen:
-            memx=True
-        if "Comp" in gen:
-            memp=True
-        if "Compadd" in gen:
-            memd=True
-            
-            #return HttpResponse(memn)      
+                memn=False
+                meme=False
+                memc=False
+                mema=False
+                memx=False
+                memp=False
+                memd=False
+                if "Name" in gen:
+                    memn=True
+                if "Email" in gen:
+                    meme=True
+                if "Contact" in gen:
+                    memc=True
+                if "Apply" in gen:
+                    mema=True
+                if "Expiry" in gen:
+                    memx=True
+                if "Comp" in gen:
+                    memp=True
+                if "Compadd" in gen:
+                    memd=True
+                    
+                    #return HttpResponse(memn)      
 
-        context={"text":text, "memn":memn , "meme":meme , "memc":memc , "mema":mema,  "memx":memx , "memp":memp, "memd":memd}
-        #return HttpResponse(text)
-        return render (request, "admin-membersgen.html" ,context)
+                context={"text":text, "memn":memn , "meme":meme , "memc":memc , "mema":mema,  "memx":memx , "memp":memp, "memd":memd}
+                #return HttpResponse(text)
+                return render (request, "admin-membersgen.html" ,context)
+        else:
+            return redirect('members:home')
+    else:
+        return redirect('members:home')
 
 
 def awardspaidgen(request):
-    if request.method == 'POST':
-        gen = request.POST.getlist("checkk", None)
-        chc = request.POST.get("prop")
-        if chc == "All":
-            text = Awards_student.objects.filter(is_paid=True)
-            text2 = Awards_prof.objects.filter(is_paid=True)
-        elif chc == "Today":
-            d1 = datetime.date.today()
-            text = Awards_student.objects.filter(is_paid=True).filter(join_date__gte=d1)
-            text2 = Awards_prof.objects.filter(is_paid=True).filter(join_date__gte=d1)
-        elif chc == "Last 7 Days":
-            seven = date.today() - relativedelta(days=7)
-            text = Awards_student.objects.filter(is_paid=True).filter(join_date__gte=seven)
-            text2 = Awards_prof.objects.filter(is_paid=True).filter(join_date__gte=seven)
-        elif chc == "Last 30 Days":
-            thirty = date.today() - relativedelta(days=30)
-            text = Awards_student.objects.filter(is_paid=True).filter(join_date__gte=thirty)
-            text2 = Awards_prof.objects.filter(is_paid=True).filter(join_date__gte=thirty)
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'POST':
+                gen = request.POST.getlist("checkk", None)
+                chc = request.POST.get("prop")
+                if chc == "All":
+                    text = Awards_student.objects.filter(is_paid=True)
+                    text2 = Awards_prof.objects.filter(is_paid=True)
+                elif chc == "Today":
+                    d1 = datetime.date.today()
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=d1)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=d1)
+                elif chc == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=seven)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=seven)
+                elif chc == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
 
-        awn=False
-        awd=False
-        awc=False
-        awdt=False
-        awcm=False
-        awe=False
-        awf=False
-        if "Name" in gen:
-            awn=True
-        if "Division" in gen:
-            awd=True
-        if "Category" in gen:
-            awc=True
-        if "Entry Date" in gen:
-            awdt=True
-        if "Comp" in gen:
-            awcm=True
-        if "Entry Type" in gen:
-            awe=True
-        if "If Member" in gen:
-            awf=True
-            
-            #return HttpResponse(memn)      
+                awn=False
+                awd=False
+                awc=False
+                awdt=False
+                awcm=False
+                awe=False
+                awf=False
+                if "Name" in gen:
+                    awn=True
+                if "Division" in gen:
+                    awd=True
+                if "Category" in gen:
+                    awc=True
+                if "Entry Date" in gen:
+                    awdt=True
+                if "Comp" in gen:
+                    awcm=True
+                if "Entry Type" in gen:
+                    awe=True
+                if "If Member" in gen:
+                    awf=True
+                    
+                    #return HttpResponse(memn)      
 
-        context={"text":text, "text2":text2,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
-        #return HttpResponse(text)
-        return render (request, "admin-awardspaidgen.html" ,context)
-
+                context={"text":text, "text2":text2,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
+                #return HttpResponse(text)
+                return render (request, "admin-awardspaidgen.html" ,context)
+        else:
+            return redirect('members:home')
+    else:
+        return redirect('members:home')
 
 
 def winnersprofgen(request):
-    if request.method == 'POST':
-        gen = request.POST.getlist("checkk", None)
-        chc = request.POST.get("prop")
-        if chc == "All":
-            text = Winners2.objects.all()
-        elif chc == "Today":
-            d1 = datetime.date.today()
-            text = Winners2.objects.filter(windate__gte=d1)
-         
-        elif chc == "Last 7 Days":
-            seven = date.today() - relativedelta(days=7)
-            text = Winners2.objects.filter(windate__gte=seven)
-            
-        elif chc == "Last 30 Days":
-            thirty = date.today() - relativedelta(days=30)
-            text = Winners2.objects.filter(windate__gte=thirty)
-            
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'POST':
+                gen = request.POST.getlist("checkk", None)
+                chc = request.POST.get("prop")
+                if chc == "All":
+                    text = Winners2.objects.all()
+                elif chc == "Today":
+                    d1 = datetime.date.today()
+                    text = Winners2.objects.filter(windate__gte=d1)
+                
+                elif chc == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = Winners2.objects.filter(windate__gte=seven)
+                    
+                elif chc == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = Winners2.objects.filter(windate__gte=thirty)
+                    
 
-        awn=False
-        awd=False
-        awc=False
-        awdt=False
-        awcm=False
-        awe=False
-        aww=False
-        awf=False
-        if "Name" in gen:
-            awn=True
-        if "Division" in gen:
-            awd=True
-        if "Category" in gen:
-            awc=True
-        if "Entry Date" in gen:
-            awdt=True
-        if "Win Date" in gen:
-            aww=True
-        if "Comp" in gen:
-            awcm=True
-        if "Entry Type" in gen:
-            awe=True
-        if "If Member" in gen:
-            awf=True
-            
-            #return HttpResponse(memn)      
+                awn=False
+                awd=False
+                awc=False
+                awdt=False
+                awcm=False
+                awe=False
+                aww=False
+                awf=False
+                if "Name" in gen:
+                    awn=True
+                if "Division" in gen:
+                    awd=True
+                if "Category" in gen:
+                    awc=True
+                if "Entry Date" in gen:
+                    awdt=True
+                if "Win Date" in gen:
+                    aww=True
+                if "Comp" in gen:
+                    awcm=True
+                if "Entry Type" in gen:
+                    awe=True
+                if "If Member" in gen:
+                    awf=True
+                    
+                    #return HttpResponse(memn)      
 
-        context={"text":text,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
-        #return HttpResponse(text)
-        return render (request, "admin-profwinnerscrud2gen.html" ,context)
+                context={"text":text,"awn":awn, "awd":awd , "awc":awc, "aww":aww,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
+                #return HttpResponse(text)
+                return render (request, "admin-profwinnerscrud2gen.html" ,context)
+        else:
+            return redirect('members:home')
+    else:
+        return redirect('members:home')
 
 def winnersstudgen(request):
-    if request.method == 'POST':
-        gen = request.POST.getlist("checkk", None)
-        chc = request.POST.get("prop")
-        if chc == "All":
-            text = Winners.objects.all()
-        elif chc == "Today":
-            d1 = datetime.date.today()
-            text = Winners.objects.filter(windate__gte=d1)
-         
-        elif chc == "Last 7 Days":
-            seven = date.today() - relativedelta(days=7)
-            text = Winners.objects.filter(windate__gte=seven)
-            
-        elif chc == "Last 30 Days":
-            thirty = date.today() - relativedelta(days=30)
-            text = Winners.objects.filter(windate__gte=thirty)
-            
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'POST':
+                gen = request.POST.getlist("checkk", None)
+                chc = request.POST.get("prop")
+                if chc == "All":
+                    text = Winners.objects.all()
+                elif chc == "Today":
+                    d1 = datetime.date.today()
+                    text = Winners.objects.filter(windate__gte=d1)
+                
+                elif chc == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = Winners.objects.filter(windate__gte=seven)
+                    
+                elif chc == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = Winners.objects.filter(windate__gte=thirty)
+                    
 
-        awn=False
-        awd=False
-        awc=False
-        awdt=False
-        awcm=False
-        awe=False
-        aww=False
-        awf=False
-        if "Name" in gen:
-            awn=True
-        if "Division" in gen:
-            awd=True
-        if "Category" in gen:
-            awc=True
-        if "Entry Date" in gen:
-            awdt=True
-        if "Win Date" in gen:
-            aww=True
-        if "Comp" in gen:
-            awcm=True
-        if "Entry Type" in gen:
-            awe=True
-        if "If Member" in gen:
-            awf=True
-            
-            #return HttpResponse(memn)      
+                awn=False
+                awd=False
+                awc=False
+                awdt=False
+                awcm=False
+                awe=False
+                aww=False
+                awf=False
+                if "Name" in gen:
+                    awn=True
+                if "Division" in gen:
+                    awd=True
+                if "Category" in gen:
+                    awc=True
+                if "Entry Date" in gen:
+                    awdt=True
+                if "Win Date" in gen:
+                    aww=True
+                if "Comp" in gen:
+                    awcm=True
+                if "Entry Type" in gen:
+                    awe=True
+                if "If Member" in gen:
+                    awf=True
+                    
+                    #return HttpResponse(memn)      
 
-        context={"text":text,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
-        #return HttpResponse(text)
-        return render (request, "admin-studwinnerscrud2gen.html" ,context)
-
+                context={"text":text,"awn":awn, "awd":awd , "awc":awc, "aww":aww, "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
+                #return HttpResponse(text)
+                return render (request, "admin-studwinnerscrud2gen.html" ,context)
+        else:
+            return redirect('members:home')
+    else:
+        return redirect('members:home')
 
 def transacgen(request):
-    if request.method == 'POST':
-        gen = request.POST.getlist("checkk", None)
-        chc = request.POST.get("prop")
-        if chc == "All":
-            text = Winners.objects.all()
-        elif chc == "Today":
-            d1 = datetime.date.today()
-            text = Winners.objects.filter(windate__gte=d1)
-         
-        elif chc == "Last 7 Days":
-            seven = date.today() - relativedelta(days=7)
-            text = Winners.objects.filter(windate__gte=seven)
-            
-        elif chc == "Last 30 Days":
-            thirty = date.today() - relativedelta(days=30)
-            text = Winners.objects.filter(windate__gte=thirty)
-            
+    if request.user.is_authenticated:
+        id = request.user.id
+        info = User.objects.get(id=id)
+        if info.is_admin == True:
+            if request.method == 'POST':
+                gen = request.POST.getlist("checkk", None)
+                chc = request.POST.get("prop")
+                if chc == "All":
+                    text = PaymentHistory.objects.all()
+                elif chc == "Today":
+                    d1 = datetime.date.today()
+                    text = PaymentHistory.objects.filter(date__gte=d1)
+                
+                elif chc == "Last 7 Days":
+                    seven = date.today() - relativedelta(days=7)
+                    text = PaymentHistory.objects.filter(date_gte=seven)
+                    
+                elif chc == "Last 30 Days":
+                    thirty = date.today() - relativedelta(days=30)
+                    text = PaymentHistory.objects.filter(date__gte=thirty)
+                    
 
-        awn=False
-        awd=False
-        awc=False
-        awdt=False
-        awcm=False
-        awe=False
-        aww=False
-        awf=False
-        if "Name" in gen:
-            awn=True
-        if "Division" in gen:
-            awd=True
-        if "Category" in gen:
-            awc=True
-        if "Entry Date" in gen:
-            awdt=True
-        if "Win Date" in gen:
-            aww=True
-        if "Comp" in gen:
-            awcm=True
-        if "Entry Type" in gen:
-            awe=True
-        if "If Member" in gen:
-            awf=True
-            
-            #return HttpResponse(memn)      
+                awt=False
+                awad=False
+                awp=False
+                awpt=False
+                awpp=False
 
-        context={"text":text,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
-        #return HttpResponse(text)
-        return render (request, "admin-studwinnerscrud2gen.html" ,context)
+                if "1" in gen:
+                    awt=True
+                if "2" in gen:
+                    awad=True
+                if "3" in gen:
+                    awp=True
+                if "4" in gen:
+                    awpt=True
+                if "5" in gen:
+                    awpp=True
+                    
+                    #return HttpResponse(memn)      
+
+                context={"text":text,"awt":awt, "awad":awad , "awp":awp,  "awpt":awpt , "awpp":awpp}
+                #return HttpResponse(text)
+                return render (request, "admin-transacthistorygen.html" ,context)
+        else:
+            return redirect('members:home')
+    else:
+        return redirect('members:home')
 
 
 def membcom(request):
@@ -3760,6 +4542,9 @@ def membcom(request):
         if request.method == 'POST':
             chc = request.POST.get("memcom")
             if info.is_member == True:
-                comment = MemberComments.objects.create(mem_id=mem, comments=chc)
+                d1 = datetime.datetime.today()
+                comment = MemberComments.objects.create(mem_id=mem, comments=chc, commDate=d1)
                 comment.save()
                 return redirect('members:home')
+    else:
+        return redirect('members:home')

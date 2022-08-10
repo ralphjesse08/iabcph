@@ -11,27 +11,32 @@
     <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{%static 'css/bidders.css' %}">
-    <script src="js/tracker.js"></script>
+    <script src="{% static 'js/tracker.js' %}"></script>
 
     <title>IABC PHILIPPINES</title>
     <link rel = "icon" href="{%static 'img/logo.png' %}" type = "image/x-icon">
+
+    <style>
+        i{
+            font-size: 90px;
+            color: #2a7221;
+        }
+    </style>
 </head>
 <body>
     <nav class="nav justify-content-end">
         <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
-        <font color="white">&nbsp;|&nbsp;</font>
-        <a class="nav-link" href="registration.html">MY ACCOUNT</a>
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand " style="margin-left: 120px;" href="index.html">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
                 <img src="{%static 'img/logo1.png' %}" height="80" width="300">
             </a>
             <nav class="stroke" style="margin-right: 120px;">
                 <ul>
                     <li><a href="{% url 'IABC_WEB:bidder_dashboard'%}">Home</a></li>
                     <li><a href="{% url 'IABC_WEB:bidder_app'%}">Application Form</a></li>
-                    {%if check.status == "Accepted" %}
+                    {%if mes.status == "Accepted" %}
                         <li><a href="{% url 'IABC_WEB:viewproj_track'%}" >Project Tracker</a></li>
                     {% else %}
                         <li><a class="nav-link disabled" href="generalprojecttracker.html" >Project Tracker</a></li>
@@ -48,18 +53,22 @@
             <div class="col-md-2">
                 <i class="fa-solid fa-circle-user py-3"></i>
             </div>
+        {% if info2 %}
+            {%for i in info2 %}
             <div class="col-md-8">
+            
                 <div class="py-4">
-                    <h3><b>Welcome Juan!</b></h3>
-                    <p class="bel">juandelacruz@gmail.com</p>
-                    <p class="bel">09123456879 | 8523-6429</p>
-                    <p class="bel">ABC Company</p>
+                    <h3><b>Welcome {{i.firstName}}!</b></h3>
+                    <p class="bel">{{i.firstName}} {{i.middleName}} {{i.lastName}}</p>
+                    <p class="bel">{{i.email}}</p>
                 </div>
             </div>
+            {%endfor%}
             <div class="col-md-2"></div>
             <hr>
             <div>
-                {%if mes%}
+                {%if mes2%}
+                
                 <button type="button" class="notif position-relative">
                     <b>Notifications</b>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger red">
@@ -67,6 +76,7 @@
                         <span class="visually-hidden">unread messages</span>
                     </span>
                 </button>
+                
                 {%else%}
                 <button type="button" class="notif position-relative">
                     <b>Notifications</b>
@@ -78,12 +88,28 @@
                 {%endif%}
 
                 <br>
-
+    {%endif%}
                 <!--Has Message-->
-                {%if mes%}
-                <button type="button" class="btnmsg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                {%if mes2%}
+                {%for m in mes2 %}
+                    
+                <button type="button" class="btnmsg" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{m.id}}">
                         View message
                 </button>
+                <div class="modal fade" id="staticBackdrop{{m.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"><b>{{m.commDate}}</b></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{m.comments}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
                 {%else%}
                 <!--No Message-->
                 <div style="text-align: center; color: #2a7221; font-size: 14px;">
@@ -93,21 +119,6 @@
                 {%endif%}
 
                   <!-- Modal -->
-                {%if mes%}
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel"><b>July 20, 2022</b></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                {{mes.comments}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {%endif%}
             </div>
         </div>
         

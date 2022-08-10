@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'IABC.wsgi.application'
 #DATABASES = {
     #'default': {
         #'ENGINE': 'django.db.backends.mysql',
-        #'NAME': 'iabc17',
+        #'NAME': 'iabc20',
         #'USER': 'root',
         #'PASSWORD': '',
         #'PORT': '',

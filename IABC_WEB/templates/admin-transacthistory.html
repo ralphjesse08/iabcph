@@ -9,25 +9,88 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/admindata.css' %}">
     <script src="{% static 'js/admin.js' %}"></script>
 
     <title>IABC PHILIPPINES</title>
     <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
+
+    <style>
+      #remarks2 {
+          width: 120px;
+          height: 20px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          color:#6e6e6e;
+          text-indent: 2px;
+          font-size: 14px;
+      }
+
+      #remarks2:focus {
+          -moz-box-shadow: none !important;
+          -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+          border: 1px solid  #2a7221;
+          outline-width: 0;
+      }
+
+      .gen {
+          width: 70px;
+          height: 28px;
+          border: 1px solid #2a7221;
+          background: #2a7221;
+          text-align: center;
+          color: #fff;
+          border-radius: 10px;
+          cursor: pointer;
+          font-size: 13px;
+      }
+
+      .gen1 {
+          width: 80px;
+          height: 22px;
+          border: 1px solid #2a7221;
+          background: #2a7221;
+          text-align: center;
+          color: #fff;
+          border-radius: 10px;
+          cursor: pointer;
+          font-size: 13px;
+      }
+
+      .chk{
+          width: 13px;
+          height: 13px;
+      }
+
+      .chk:checked{
+          background-color: #2a7221;
+          border-color: #2a7221;
+          box-shadow: none;
+      }
+
+      .chk:focus {
+          -moz-box-shadow: none !important;
+          -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+          border: 1px solid  #2a7221;
+          outline-width: 0;
+      }
+    </style>
 </head>
 <body>
-  <nav class="nav justify-content-end">
+    <!--<nav class="nav justify-content-end">
     <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
-  </nav>
+  </nav>-->
   <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-      <div class="container-fluid">
-          <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
-              <img src="{%static 'img/logo1.png' %}" height="80" width="300">
-          </a>
-          <nav class="stroke" style="margin-right: 120px;">
-            <ul>
-              <li><a href="{% url 'IABC_WEB:admember' %}">Members</a></li>
+    <div class="container-fluid">
+        <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
+            <img src="{%static 'img/logo1.png' %}" height="80" width="300">
+        </a>
+        <nav class="stroke" style="margin-right: 120px;">
+          <ul>
+            <li><a href="{% url 'IABC_WEB:admember' %}">Members</a></li>
             <li><a href="{% url 'IABC_WEB:awardspaid' %}">PhilQuill Entries</a></li>
             <li><a href="{%url 'IABC_WEB:admintransachistory' %}">Transaction History</a></li>
             <li class="dropdown"><a href="#">Events<ion-icon name="caret-down-outline"></ion-icon></a>
@@ -36,18 +99,19 @@
                   <li><a href="{% url 'IABC_WEB:viewproj_track' %}">Project Tracker</a></li>
                 </ul>
             </li>
-              <li class="dropdown"><a href="#"><img src="{%static 'img/gear-solid.svg' %}" height="20" width="20"></a>
-                <ul class="dropdown-content2" style="right: 0px; width: 200px;">
-                  <li><a href="{% url 'IABC_WEB:act_list' %}">Activity CRUD</a></li>
-                  <li><a href="{% url 'IABC_WEB:awardscrud' %}">Awards CRUD</a></li>
-                  <li><a href="{% url 'IABC_WEB:chartA' %}">Charts CRUD</a></li>
-                  <li><a href="{% url 'IABC_WEB:price' %}">Product Prices CRUD</a></li>
-                  <li><a href="{% url 'bidder_register' %}">Create Bidders Account</a></li>
-                </ul>
-              </li>
-            </ul>
-          </nav>
-      </div>
+            <li class="dropdown"><a href="#"><img src="{%static 'img/gear-solid.svg' %}" height="20" width="20"></a>
+              <ul class="dropdown-content2" style="right: 0px; width: 200px;">
+                <li><a href="{% url 'IABC_WEB:act_list' %}">Activity CRUD</a></li>
+                <li><a href="{% url 'IABC_WEB:awardscrud' %}">Awards CRUD</a></li>
+                <li><a href="{% url 'IABC_WEB:chartA' %}">Charts CRUD</a></li>
+                <li><a href="{% url 'IABC_WEB:price' %}">Product Prices CRUD</a></li>
+                <li><a href="{% url 'bidder_register' %}">Create Bidders Account</a></li>
+              </ul>
+            </li>
+            <li class="dropdown"><a href="{% url 'members:logout' %}"><img src="{%static 'img/logout.svg' %}" height="20" width="20"></a></li>
+          </ul>
+        </nav>
+    </div>
   </nav>
     
     <div class="container-fluid1 justify-content-end">
@@ -58,6 +122,35 @@
         
         <div class="row home justify-content-between mt-2">
             <div class="col-sm-12 col-md-12 col-lg-12 align-self-end">
+              <b>Filtering </b><div class="fst-italic" style="display: inline-block; font-size: 12px;">(For displaying only)</div>
+              <form method="POST" action="{% url 'IABC_WEB:transacgen' %}">{%csrf_token%}
+                <select id="remarks2" name="prop" >
+                  <option value="All">All</option>
+                  <option value="Today">Today</option>
+                  <option value="Last 7 Days">Last 7 Days</option>
+                  <option value="Last 30 Days">Last 30 Days</option>
+                </select>
+                
+                <input class="form-check-input chk"  type="checkbox" value="1" name="checkk" id="flexCheckDefault">
+                <label class="form-check-label fs-6" for="flexCheckDefault">Transaction Date</label>&ensp;
+             
+                <input class="form-check-input chk"  type="checkbox" value="2" name="checkk" id="flexCheckDefault">
+                <label class="form-check-label fs-6" for="flexCheckDefault">Approval Date</label>&ensp;
+            
+                <input class="form-check-input chk"  type="checkbox" value="3" name="checkk" id="flexCheckDefault">
+                <label class="form-check-label fs-6" for="flexCheckDefault">Payment Date</label>&ensp;
+             
+                <input class="form-check-input chk"  type="checkbox" value="4" name="checkk" id="flexCheckDefault">
+                <label class="form-check-label fs-6" for="flexCheckDefault">Product Type </label>&ensp;
+      
+                <input class="form-check-input chk"  type="checkbox" value="5" name="checkk" id="flexCheckDefault">
+                <label class="form-check-label fs-6" for="flexCheckDefault">Payment Type</label>&ensp;
+
+                <button type="submit" class="gen1">
+                  <i class="fa fa-file-lines"></i>&emsp;Filter
+                </button>
+              </form>
+
                 <div class="wrap" style="padding-left: 420px;">
                     <div class="search" >
                         <input type="text" class="searchTerm" placeholder="Search">
@@ -72,12 +165,12 @@
                           <table cellpadding="0" cellspacing="0" border="0">
                             <thead>
                               <tr>
-                                  <th width="15%" class="thheading">Payment Date</th>
-                                  <th width="15%" class="thheading">Transaction Date</th>
-                                  <th width="15%" class="thheading">Approval Date</th>
-                                  <th width="30%" class="thheading">Product Type</th>
-                                  <th width="10%" class="thheading">Email</th>
-                                  <th width="5%" class="thheading">Payment Type</td>
+                                  <th width="16%" class="thheading">Payment Date</th>
+                                  <th width="16%" class="thheading">Transaction Date</th>
+                                  <th width="16%" class="thheading">Approval Date</th>
+                                  <th width="16%" class="thheading">Product Type</th>
+                                  <th width="20%" class="thheading">Email</th>
+                                  <th width="16%" class="thheading">Payment Type</td>
                               </tr>
                             </thead>
                           </table>
@@ -88,20 +181,20 @@
                               {%if info%}
                               {%for i in info%}
                               <tr>
-                                <td width="15%">{{i.date}}</td>
+                                <td width="16%">{{i.date}}</td>
                                 {%if i.PaymentType == "Online Payment" %}
-                                <td width="30%">Online Payment</td>
+                                <td width="16%">Online Payment</td>
                                 {% else %}
-                                <td width="30%">{{i.transaction_date}}</td>
+                                <td width="16%">{{i.transaction_date}}</td>
                                 {%endif%}
                                 {%if i.PaymentType == "Online Payment" %}
-                                <td width="30%">Online Payment</td>
+                                <td width="16%">Online Payment</td>
                                 {% else %}
-                                <td width="30%">{{i.approval_date}}</td>
+                                <td width="16%">{{i.approval_date}}</td>
                                 {%endif%}
-                                <td width="30%">{{i.typeProduct}}</td>
-                                <td width="10%">{{i.user_id.email}}</td>
-                                <td width="5%">{{i.PaymentType}}</i></button></td>
+                                <td width="16%">{{i.typeProduct}}</td>
+                                <td width="20%">{{i.user_id.email}}</td>
+                                <td width="16%">{{i.PaymentType}}</i></button></td>
                               </tr>
                               {%endfor%}
                               {%endif%}

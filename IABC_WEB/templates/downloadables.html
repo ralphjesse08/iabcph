@@ -25,6 +25,11 @@
         a:hover{
             color: #2a7221;
         }
+
+        .foot{
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
     </style>
 </head>
 <body>
@@ -34,44 +39,62 @@
         <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
         <font color="white">&nbsp;|&nbsp;</font>
         <div class="dropdown">
-            <a class="nav-link" href="{% url 'IABC_WEB:my_account' info.id %}">MY ACCOUNT<ion-icon name="caret-down-outline"></ion-icon></a>
-            <!--<ul class="dropdown-content">
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Payment Transaction</a></li>
-            </ul>-->
+            <a class="nav-link" href="{% url 'IABC_WEB:my_account' info.id%}">MY ACCOUNT</a>
         </div>
         {%endif%}
         {%else%}
         <a class="nav-link" href="{% url 'members:login' %}">LOGIN</a>
         <font color="white">&nbsp;|&nbsp;</font>
         <a class="nav-link" href="{% url 'register' %}">REGISTER</a>
-        {% endif %}
+        {% endif %}  
     </nav>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand " style="margin-left: 120px;" href="index.html">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{%url 'members:home' %}">
                 <img src="{% static 'img/logo1.png' %}" height="80" width="300">
             </a>
             <nav class="stroke" style="margin-right: 120px;">
                 <ul>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Events</a></li>
+                    <li><a href="{%url 'members:home' %}">Home</a></li>
+                    <li><a href="{% url 'IABC_WEB:eventsview' %}">Events</a></li>
                     <li class="dropdown"><a href="#">Membership<ion-icon name="caret-down-outline"></ion-icon></a>
                         <ul class="dropdown-content">
-                            <li><a href="#">Why IABC</a></li>
-                            <li><a href="#">Membership Benefits</a></li>
-                            <li><a href="#">Renew Membership</a></li>
+                            <li><a href="{% url 'IABC_WEB:whyiabc' %}">Why IABC</a></li>
+                            <li><a href="{% url 'IABC_WEB:membenefits' %}">Membership Benefits</a></li>
+                            {% if mem.received_email == True %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}">Renew Membership</a></li>
+                            {% else %}
+                            <li><a href="{% url 'IABC_WEB:renewform' %}" class="nav-link disabled">Renew Membership</a></li>
+                            {%endif%}
                         </ul>
                     </li>
                     <li class="dropdown"><a href="#">PhilQuill<ion-icon name="caret-down-outline"></ion-icon></a>
+                        {% if user.is_authenticated %}
+                        {%if info %}
                         <ul class="dropdown-content">
-                            <li><a href="#" class="nav-link disabled">Join Now</a></li>
-                            <li><a href="#">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
                             <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
                             <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
                         </ul>
+                        {%endif%}
+                        {%else%}
+                        <ul class="dropdown-content">
+                            <li><a href="{% url 'IABC_WEB:awardsform' %}" class="nav-link disabled">Join Now</a></li>
+                            <li><a href="{% url 'IABC_WEB:awardsabout1' %}">About</a></li>
+                            <li><a href="{% url 'IABC_WEB:viewwinners' %}">Awards</a></li>
+                            <li><a href="{%url 'IABC_WEB:downloadables' %}">Downloadables</a></li>
+                        </ul>
+                        {% endif %}
                     </li>
-                    <li><a class="btn btn-success" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a></li>
+                    {% if user.is_authenticated %}
+                    {%if info %}
+                    <a class="btn btn-success" href="{% url 'IABC_WEB:memberapp' %}" role="button">JOIN</a>
+                    {%endif%}
+                    {%else%}
+                    <a class="btn btn-success" href="{% url 'members:login' %}" role="button">JOIN</a>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
@@ -79,7 +102,7 @@
 
     <br><br>
     <div class="container-fluid">
-        <center><h1> DOWNLOADABLES </h1></center>
+        <center><h1><b>DOWNLOADABLES</b></h1></center>
         <center><p style="border-style: solid; height:4px; width: 200px; color: #2a7221;"></center>
         <br> 
         <div class="row">
@@ -205,34 +228,35 @@
                 </a>
             </div>   
         </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+    </div>       
 </div>
+
+<br><br>
+
+<nav class="navbar bottom navbar-light bg-light foot">
+    <div class="container-fluid row">
+        <div class="col-md-2"></div>
+
+        <div class="col-md-4">
+            <a class="navbar-brand " style="text-align: left;" href="{%url 'members:home' %}">
+                <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+            </a>
+            <br><br>
+            <small class="ml-4 ml-sm-5 mb-2" style="text-align: left;">Copyright &copy; 2022 | Interntional Association of <br>Business Communicators Philippines Chapter</small>
+        </div>
+
+        <div class="col-md-4" style="text-align: right;">
+            <b>Contact Us:</b><br>
+            G/F Burgundy Tower, 252 Sen. Gil J. Puyat Avenue<br>Makati, 1200 Metro Manila<br>
+            Email: iabcphilippinesat30@gmail.com<br><br>
+
+            <a href="https://www.facebook.com/iabcph"><img src="{% static 'img/square-facebook-brands.svg' %}" height="30" width="30"></a>
+            <a href="https://twitter.com/IABCPH?s=20&t=Ahced7TTZAIxSXggct_gIA"><img src="{% static 'img/square-twitter-brands.svg' %}" height="30" width="30"></a>
+            <a href="https://www.instagram.com/iabcph/"><img src="{% static 'img/square-instagram-brands.svg' %}" height="30" width="30"></a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</nav>
 
 
     

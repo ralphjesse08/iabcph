@@ -150,13 +150,13 @@
                 </div>
                 <div class="row col-md-4 px-o mb-4" style="font-size: 14px;">
                   <div class="mb-3" style="text-align:end;">
-                    <a class="btn btn2" href="{% url 'IABC_WEB:edit_profile' info.id %}">Edit</a>
+                    <a class="btn btn4" href="{% url 'members:password_change' %}">Change Password</a>
                   </div>
                 </div>
 
-                <div class="col-md-6 px-o mb-4" style="font-size: 14px;">
+                <!--<div class="col-md-6 px-o mb-4" style="font-size: 14px;">
                     <div style="text-align:start;">
-                      <a class="btn btn4" href="{% url 'members:password_change' %}">Change Password</a>
+                        <a class="btn btn2" href="{% url 'IABC_WEB:edit_profile' info.id %}">Edit</a>
                     </div>
                 </div>
                 <div class="col-md-6 mb-4"></div>
@@ -165,13 +165,14 @@
                     <div style="text-align:start;">
                       <a class="btn btn4" href="{% url 'IABC_WEB:user_del' info.id %}">Delete Account</a>
                     </div>
-                </div>
+                </div>-->
                 <div class="col-md-6 mb-0"></div>
             </div>
             {%endif%}
         </div>
         </div>
       </div>
+
 
 
     

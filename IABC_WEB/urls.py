@@ -145,7 +145,8 @@ urlpatterns = [
     path('pricedel/<del_id>$/', views.pricedel, name='pricedel'),
     path('admintransachistory/', views.admintransachistory, name='admintransachistory'),
 
-
+    path('awardspaid_pdf/', views.awardspaid_pdf, name='awardspaid_pdf' ),
+    path('awardspending_pdf/', views.awardspending_pdf, name='awardspending_pdf' ),
 
     path('memreport/', views.memreport, name='memreport'),
     path('pendmemreport/', views.pendmemreport, name='pendmemreport'),
@@ -153,7 +154,7 @@ urlpatterns = [
     path('awardspaidgen/', views.awardspaidgen, name='awardspaidgen'),
     path('winnersprofgen/', views.winnersprofgen, name='winnersprofgen'),
     path('winnersstudgen/', views.winnersstudgen, name='winnersstudgen'),
-    
+    path('transacgen/', views.transacgen, name='transacgen'),
 
 
 

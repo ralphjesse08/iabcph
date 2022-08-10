@@ -1,43 +1,44 @@
 from unicodedata import category
 from django.db import models
 from members.models import User
+from django_cryptography.fields import encrypt
         
 
 
 class Chart_A(models.Model):
-    industry_Name = models.CharField(max_length=100, verbose_name='Industry Name')
+    industry_Name = models.CharField(max_length=255, verbose_name='Industry Name')
     
     def __str__(self) :
         return self.industry_Name
 
 class Chart_B(models.Model):
-    business_type = models.CharField(max_length=100, verbose_name='Business Type')
+    business_type = models.CharField(max_length=255, verbose_name='Business Type')
     
     def __str__(self) :
         return self.business_type
 
 class Chart_C(models.Model):
-    current_title = models.CharField(max_length=100, verbose_name='Current Title')
+    current_title = models.CharField(max_length=255, verbose_name='Current Title')
     
     def __str__(self) :
         return self.current_title
 
 class Chart_D(models.Model):
-    key_area =  models.CharField(max_length=100, verbose_name='Key Area')
+    key_area =  models.CharField(max_length=255, verbose_name='Key Area')
    
     def __str__(self) :
         return self.key_area
 
 
 class Chart_E(models.Model):
-    employee_no =  models.CharField(max_length=100, verbose_name='Employee Number')
+    employee_no =  models.CharField(max_length=255, verbose_name='Employee Number')
     
     def __str__(self) :
         return self.employee_no
 
 
 class Chart_F(models.Model):
-    experience =  models.CharField(max_length=100, verbose_name='Experience')
+    experience =  models.CharField(max_length=255, verbose_name='Experience')
 
 
     
@@ -47,7 +48,7 @@ class Chart_F(models.Model):
 
 
 class Chart_G(models.Model):
-    about =  models.CharField(max_length=100, verbose_name='About IABC')
+    about =  models.CharField(max_length=255, verbose_name='About IABC')
 
 
     def __str__(self) :
@@ -55,21 +56,21 @@ class Chart_G(models.Model):
 
 
 class Division(models.Model):
-    division =  models.CharField(max_length=100, verbose_name='Division')
+    division =  models.CharField(max_length=255, verbose_name='Division')
 
     def __str__(self) :
         return self.division
 
 
 class Category(models.Model):
-    category =  models.CharField(max_length=100, verbose_name='Category')
+    category =  models.CharField(max_length=255, verbose_name='Category')
 
     def __str__(self) :
         return self.category
 
 
 class Certification(models.Model):
-    certification =  models.CharField(max_length=100, verbose_name='Certification')
+    certification =  models.CharField(max_length=255, verbose_name='Certification')
 
     def __str__(self) :
         return self.certification
@@ -88,19 +89,19 @@ class Members (models.Model):
     about = models.CharField(max_length=200, verbose_name='About')
     nick_name =  models.CharField(max_length=200, verbose_name='NickName')
     designation =  models.CharField(max_length=200, verbose_name='Designation')
-    company_name =  models.CharField(max_length=200, verbose_name='Company Name')
-    floor_no =  models.CharField(max_length=200, verbose_name='Floor No')
-    building_no =  models.CharField(max_length=200, verbose_name='Building No')
-    street =  models.CharField(max_length=200, verbose_name='Street')
-    baranggay =  models.CharField(max_length=200, verbose_name='Baranggay')
-    city =  models.CharField(max_length=200, verbose_name='City')
-    region =  models.CharField(max_length=200, verbose_name='Region')
-    postal_zip =  models.CharField(max_length=4, verbose_name='Postal Zip')
-    telephone_no =  models.CharField(max_length=200, verbose_name='Telephone No')
-    fax_no =  models.CharField(max_length=200, verbose_name='Fax No')
-    mobile_no =  models.CharField(max_length=200, verbose_name='Mobile No')
+    company_name =  encrypt(models.CharField(max_length=200, verbose_name='Company Name'))
+    floor_no =  encrypt(models.CharField(max_length=200, verbose_name='Floor No'))
+    building_no =  encrypt(models.CharField(max_length=200, verbose_name='Building No'))
+    street =  encrypt(models.CharField(max_length=200, verbose_name='Street'))
+    baranggay =  encrypt(models.CharField(max_length=200, verbose_name='Baranggay'))
+    city =  encrypt(models.CharField(max_length=200, verbose_name='City'))
+    region =  encrypt(models.CharField(max_length=200, verbose_name='Region'))
+    postal_zip =  encrypt(models.CharField(max_length=4, verbose_name='Postal Zip'))
+    telephone_no =  encrypt(models.CharField(max_length=200, verbose_name='Telephone No'))
+    fax_no =  encrypt(models.CharField(max_length=200, verbose_name='Fax No'))
+    mobile_no =  encrypt(models.CharField(max_length=200, verbose_name='Mobile No'))
     email_address =  models.CharField(max_length=200, verbose_name='Email')
-    birthday =  models.CharField(max_length=200, verbose_name='Birthday')
+    birthday =  encrypt(models.CharField(max_length=200, verbose_name='Birthday'))
     membership = models.BooleanField(default=False)
     ceo_excel = models.BooleanField(default=False)
     regional_conf = models.BooleanField(default=False)
@@ -113,8 +114,8 @@ class Members (models.Model):
     question_2 = models.CharField(max_length=4)
     share_contact = models.BooleanField(default=False)
     receive_announce = models.BooleanField(default=False)
-    profile_photo =  models.FileField(upload_to='MembersSubmissions/', blank=True, null=True)
-    expiry_date =  models.CharField(max_length=50, verbose_name='Expiry Date', blank=True, null=True)
+    profile_photo =  encrypt(models.FileField(upload_to='MembersSubmissions/', blank=True, null=True))
+    expiry_date =  models.CharField(max_length=100, verbose_name='Expiry Date', blank=True, null=True)
     is_paid = models.BooleanField(default=False)
     file = models.FileField(upload_to='MembersSubmissions/', blank=True, null=True)
     received_email =models.BooleanField(default=False)
@@ -129,7 +130,7 @@ class Members (models.Model):
 
 class ProjectTrackerName(models.Model):
     user_id = models.ForeignKey(User, verbose_name='user_id', on_delete=models.CASCADE )
-    event_name =models.CharField(max_length=255, verbose_name='Event Name')
+    event_name =encrypt(models.CharField(max_length=255, verbose_name='Event Name'))
     event_date =models.CharField(max_length=255, verbose_name='Event Date')
     event_end = models.DateTimeField(max_length=255, verbose_name='Event End',blank=True, null=True)
     def __int__(self) :
@@ -144,7 +145,7 @@ class ProjectTracker(models.Model):
     date_input = models.DateTimeField(verbose_name='Input Date', auto_now_add=True)
     date_dur= models.CharField(max_length=255, verbose_name='Date_duration')
     deadline= models.DateField(max_length=255, verbose_name='Deadline')
-    act_Task = models.CharField(max_length=255, verbose_name='Activity Task')
+    act_Task = encrypt(models.CharField(max_length=255, verbose_name='Activity Task'))
     remarks = models.CharField(max_length=255, verbose_name='Remarks')
     status = models.CharField(max_length=255, verbose_name='Status',blank=True, null=True)
     percent = models.CharField(max_length=255, verbose_name='Percent',blank=True, null=True)
@@ -157,25 +158,25 @@ class Checklist(models.Model):
     proj_id = models.ForeignKey(ProjectTracker, verbose_name='proj_id', on_delete=models.CASCADE )
     start_date = models.DateTimeField(verbose_name='Start Date', auto_now_add=True)
     end_date= models.DateTimeField(max_length=255, verbose_name='End Date' ,blank=True, null=True)
-    checks = models.CharField(max_length=255, verbose_name='Checks')
+    checks = encrypt(models.CharField(max_length=255, verbose_name='Checks'))
     listcheck =  models.BooleanField(default=False)
 
     def __int__(self) :
         return self.proj_id
 
 class Activity(models.Model):
-    activity =  models.CharField(max_length=100, verbose_name='Activity')
+    activity =  models.CharField(max_length=255, verbose_name='Activity')
 
     def __str__(self) :
         return self.activity
 
 class Awards_student(models.Model):
     user_id = models.ForeignKey(User,  verbose_name='user_id', on_delete=models.CASCADE )
-    entrant_name =  models.CharField(max_length=200, verbose_name='Entrant name')
-    mobile_num = models.CharField(max_length=10, verbose_name='Mobile number')
+    entrant_name =  encrypt(models.CharField(max_length=200, verbose_name='Entrant name'))
+    mobile_num = encrypt(models.CharField(max_length=20, verbose_name='Mobile number'))
     email_add = models.CharField(unique=True, max_length=200, verbose_name='Email')
-    entrant_school =  models.CharField(max_length=200, verbose_name='Entrant school')
-    entrant_degree =  models.CharField(max_length=200, verbose_name='Entrant degree')
+    entrant_school =  encrypt(models.CharField(max_length=200, verbose_name='Entrant school'))
+    entrant_degree =  encrypt(models.CharField(max_length=200, verbose_name='Entrant degree'))
     entry_title =  models.CharField(max_length=200, verbose_name='Entry title')
     entered_before =  models.BooleanField(default=False)
     year = models.CharField(max_length=200, verbose_name='Year', blank=True, null=True)
@@ -202,15 +203,15 @@ class Awards_student(models.Model):
 class Awards_prof(models.Model):
     user_id = models.ForeignKey(User,  verbose_name='user_id', on_delete=models.CASCADE )
     membership_id = models.ForeignKey(Members, verbose_name='membership_id', on_delete=models.CASCADE , null=True)
-    entrant_name =  models.CharField(max_length=200, verbose_name='Entrant name')
-    mobile_num = models.CharField(max_length=200, verbose_name='Mobile number')
-    email_add = models.CharField(unique=True, max_length=50, verbose_name='Email')
-    entrant_org = models.CharField(max_length=200, verbose_name='Entrant Organization')
-    client_org = models.CharField(max_length=200, verbose_name='Client Organization')
-    entrant_title = models.CharField(max_length=200, verbose_name='Entrant Title')
-    entry_title =  models.CharField(max_length=200, verbose_name='Entry title')
+    entrant_name =  encrypt(models.CharField(max_length=200, verbose_name='Entrant name'))
+    mobile_num = encrypt(models.CharField(max_length=200, verbose_name='Mobile number'))
+    email_add = models.CharField(unique=True, max_length=100, verbose_name='Email')
+    entrant_org = encrypt(models.CharField(max_length=200, verbose_name='Entrant Organization'))
+    client_org = encrypt(models.CharField(max_length=200, verbose_name='Client Organization'))
+    entrant_title = encrypt(models.CharField(max_length=200, verbose_name='Entrant Title'))
+    entry_title =  encrypt(models.CharField(max_length=200, verbose_name='Entry title'))
     if_member =  models.BooleanField(default=False)
-    entrant_membershipnum =  models.CharField(max_length=200, verbose_name='Entrant Membership No.')
+    entrant_membershipnum =  encrypt(models.CharField(max_length=200, verbose_name='Entrant Membership No.'))
     entered_before =  models.BooleanField(default=False)
     year = models.CharField(max_length=200, verbose_name='Year', blank=True, null=True)
     division =  models.CharField(max_length=200, verbose_name='Division')
@@ -234,15 +235,15 @@ class Awards_prof(models.Model):
 
 
 class Checkpayment(models.Model):
-    user_id = models.ForeignKey(User, unique=True, verbose_name='user_id', on_delete=models.CASCADE )
-    membership_id = models.ForeignKey(Members, unique=True, verbose_name='membership_id', on_delete=models.CASCADE , null=True)
-    awards_studentid = models.ForeignKey(Awards_student, verbose_name='awards_studentid', on_delete=models.CASCADE , null=True) 
-    awards_profid = models.ForeignKey(Awards_prof, verbose_name='awards_profid', on_delete=models.CASCADE , null=True)      
-    cperson =  models.CharField(max_length=50, verbose_name='Contact Person')
-    cnum =  models.CharField(max_length=50, verbose_name='Contact Number')
-    address =  models.CharField(max_length=50, verbose_name='Address')
-
-
+    user_id = models.ForeignKey(User, verbose_name='user_id', on_delete=models.CASCADE )
+    membership_id = models.ForeignKey(Members, unique=True, verbose_name='membership_id', on_delete=models.CASCADE,blank=True, null=True)
+    awards_studentid = models.ForeignKey(Awards_student, verbose_name='awards_studentid', on_delete=models.CASCADE,blank=True, null=True) 
+    awards_profid = models.ForeignKey(Awards_prof, verbose_name='awards_profid', on_delete=models.CASCADE ,blank=True, null=True)      
+    cperson =  encrypt(models.CharField(max_length=100, verbose_name='Contact Person'))
+    cnum =  encrypt(models.CharField(max_length=50, verbose_name='Contact Number'))
+    address =  encrypt(models.CharField(max_length=255, verbose_name='Address'))
+    #mem_date= models.DateTimeField(max_length=255, verbose_name='Transaction Date' ,blank=True, null=True)
+    #transaction_date= models.DateTimeField(max_length=255, verbose_name='Transaction Date' ,blank=True, null=True)
 
     def __int__(self) :
         return self.user_id
@@ -250,37 +251,46 @@ class Checkpayment(models.Model):
 class BidderSubmission (models.Model):
     user_id = models.ForeignKey(User, verbose_name='user_id', on_delete=models.CASCADE )
     file = models.FileField(upload_to='BidderSubmissions/', blank=True, null=True)
-    description =  models.CharField(max_length=50, verbose_name='Description')
-    comments =  models.CharField(max_length=50, verbose_name='Comments')
+    description =  models.CharField(max_length=255, verbose_name='Description')
     status =  models.CharField(max_length=50, verbose_name='Status', default="Pending")
 
     def __int__(self) :
         return self.user_id
 
 
+class BidderComments (models.Model):
+    bid_id = models.ForeignKey(BidderSubmission, verbose_name='bid_id', on_delete=models.CASCADE )
+    comments =  models.CharField(max_length=255, verbose_name='Comments')
+    commDate =  models.DateTimeField(max_length=255, verbose_name='Comment Date')
+    
+
+    def __int__(self) :
+        return self.user_id
+
+
 class Prices(models.Model):
-    priceName =  models.CharField(max_length=50, verbose_name='Name')
-    priceVal =  models.CharField(max_length=50, verbose_name='Value')
+    priceName =  models.CharField(max_length=100, verbose_name='Name')
+    priceVal =  encrypt(models.CharField(max_length=50, verbose_name='Value'))
 
 
 
 class Winners(models.Model):
     entryNo =  models.CharField(max_length=100, verbose_name='No.')
-    entryName =  models.CharField(max_length=100, verbose_name='Entry Name')
-    entryCat =  models.CharField(max_length=100, verbose_name='Category')
-    entryDiv =  models.CharField(max_length=100, verbose_name='Division')
-    entrantName =  models.CharField(max_length=100, verbose_name='Entrant Name')
-    entryComp =  models.CharField(max_length=100, verbose_name='School')
+    entryName =  encrypt(models.CharField(max_length=255, verbose_name='Entry Name'))
+    entryCat =  models.CharField(max_length=255, verbose_name='Category')
+    entryDiv =  models.CharField(max_length=255, verbose_name='Division')
+    entrantName =  encrypt(models.CharField(max_length=255, verbose_name='Entrant Name'))
+    entryComp =  models.CharField(max_length=255, verbose_name='School')
     entryDate =  models.DateTimeField(verbose_name='Entry Date')
     windate = models.DateTimeField(verbose_name='Winner Date', auto_now_add=True)
 
 class Winners2(models.Model):
     entryNo =  models.CharField(max_length=100, verbose_name='No.')
-    entryName =  models.CharField(max_length=100, verbose_name='Entry Name')
-    entryCat =  models.CharField(max_length=100, verbose_name='Category')
-    entryDiv =  models.CharField(max_length=100, verbose_name='Division')
-    entrantName =  models.CharField(max_length=100, verbose_name='Entrant Name')
-    entryComp =  models.CharField(max_length=100, verbose_name='Company')
+    entryName =  encrypt(models.CharField(max_length=255, verbose_name='Entry Name'))
+    entryCat =  models.CharField(max_length=255, verbose_name='Category')
+    entryDiv =  models.CharField(max_length=255, verbose_name='Division')
+    entrantName =  encrypt(models.CharField(max_length=255, verbose_name='Entrant Name'))
+    entryComp =  models.CharField(max_length=255, verbose_name='Company')
     entryDate =  models.DateTimeField(verbose_name='Entry Date')
     windate = models.DateTimeField(verbose_name='Winner Date', auto_now_add=True)
 
@@ -292,13 +302,14 @@ class PaymentHistory(models.Model):
     date = models.DateTimeField(verbose_name='Payment Date',blank=True, null=True)
     approval_date= models.DateTimeField(max_length=255, verbose_name='Approval Date' ,blank=True, null=True)
     transaction_date= models.DateTimeField(max_length=255, verbose_name='Transaction Date' ,blank=True, null=True)
-    typeProduct = models.CharField(max_length=50, verbose_name='Product Type')
-    PaymentType = models.CharField(max_length=50, verbose_name='Payment Type')
+    typeProduct = models.CharField(max_length=100, verbose_name='Product Type')
+    PaymentType = models.CharField(max_length=100, verbose_name='Payment Type')
 
     
 class MemberComments (models.Model):
     mem_id = models.ForeignKey(Members, verbose_name='user_id', on_delete=models.CASCADE )
     comments =  models.CharField(max_length=255, verbose_name='Comments')
+    commDate = models.DateTimeField(max_length=255, verbose_name='Comment Date')
     
 
     def __int__(self) :

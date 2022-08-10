@@ -19,12 +19,10 @@
 <body>
     <nav class="nav justify-content-end">
         <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
-        <font color="white">&nbsp;|&nbsp;</font>
-        <a class="nav-link" href="registration.html">MY ACCOUNT</a>
     </nav>
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand " style="margin-left: 120px;" href="index.html">
+            <a class="navbar-brand " style="margin-left: 120px;" href="{% url 'members:home' %}">
                 <img src="{%static 'img/logo1.png' %}" height="80" width="300">
             </a>
             <nav class="stroke" style="margin-right: 120px;">
@@ -32,7 +30,7 @@
                     <li><a href="{% url 'IABC_WEB:bidder_dashboard'%}">Home</a></li>
                     <li><a href="{% url 'IABC_WEB:bidder_app'%}">Application Form</a></li>
                     {%if check.status == "Accepted" %}
-                        <li><a href="{% url 'IABC_WEB:proj_trac'%}" >Project Tracker</a></li>
+                        <li><a href="{% url 'IABC_WEB:viewproj_track'%}" >Project Tracker</a></li>
                     {% else %}
                         <li><a class="nav-link disabled" href="generalprojecttracker.html" >Project Tracker</a></li>
                     {% endif %}
@@ -59,7 +57,7 @@
             {%if var == "True" %}
             <div class="col-md-6">
                 <div class="input-group">
-                    <input type="file" class="form-control upload" id="inputGroupFile02" name="file">
+                    <input type="file" class="form-control upload" id="inputGroupFile02" name="file"  accept=".pdf">
                 </div>
                 
             </div>

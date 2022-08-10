@@ -35,6 +35,11 @@
             min-width: 135%;
             font-size: 17px;
         }
+
+        .foot{
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
     </style>
 </head>
 <body>
@@ -156,6 +161,33 @@
             </div>
         </div>
     </div>
+
+    <br><br>
+
+    <nav class="navbar bottom navbar-light bg-light foot">
+        <div class="container-fluid row">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-4">
+                <a class="navbar-brand " style="text-align: left;" href="{%url 'members:home' %}">
+                    <img src="{% static 'img/logo1.png' %}" height="80" width="300">
+                </a>
+                <br><br>
+                <small class="ml-4 ml-sm-5 mb-2" style="text-align: left;">Copyright &copy; 2022 | Interntional Association of <br>Business Communicators Philippines Chapter</small>
+            </div>
+
+            <div class="col-md-4" style="text-align: right;">
+                <b>Contact Us:</b><br>
+                G/F Burgundy Tower, 252 Sen. Gil J. Puyat Avenue<br>Makati, 1200 Metro Manila<br>
+                Email: iabcphilippinesat30@gmail.com<br><br>
+
+                <a href="https://www.facebook.com/iabcph"><img src="{% static 'img/square-facebook-brands.svg' %}" height="30" width="30"></a>
+                <a href="https://twitter.com/IABCPH?s=20&t=Ahced7TTZAIxSXggct_gIA"><img src="{% static 'img/square-twitter-brands.svg' %}" height="30" width="30"></a>
+                <a href="https://www.instagram.com/iabcph/"><img src="{% static 'img/square-instagram-brands.svg' %}" height="30" width="30"></a>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </nav>
 
     <script>
         function deleteRow(r) {
