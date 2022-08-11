@@ -261,9 +261,9 @@
                                         <td style="width: 5%; text-align: center;"><button type=submit id="addbtn" name="add" value="add"><i class="fa fa-plus"></i></button></td>
                                     </tr>
                                 </table>
-                                
+                            </form> 
                                 <br>
-                                
+                    <form action="{% url 'IABC_WEB:checklist' proj.id %}" method="POST">{%csrf_token%}         
                                 <table class="borderless" id="myList">
                                     <tr class="tbl-header">
                                         <th id="head3" style="width: 4%;"><b>Start</b></th>
