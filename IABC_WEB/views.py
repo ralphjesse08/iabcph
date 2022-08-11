@@ -499,7 +499,9 @@ def awardspending_details(request, ent_id):
         if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_student.objects.get(pk=ent_id)
-                return render(request, 'admin-viewawardspending.html', {'award':award})
+                check=Checkpayment.objects.filter(awards_studentid=ent_id)
+                context={'award':award,'check':check}
+                return render(request, 'admin-viewawardspending.html', context)
             except:
                 return render(request, 'admin-viewawardspending.html')
         else:
@@ -515,7 +517,9 @@ def awardspending_details2(request, ent_id):
         if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_prof.objects.get(pk=ent_id)
-                return render(request, 'admin-viewawardspending2.html', {'award':award})
+                check=Checkpayment.objects.filter(awards_profid=ent_id)
+                context={'award':award,'check':check}
+                return render(request, 'admin-viewawardspending2.html', context)
             except:
                 return render(request, 'admin-viewawardspending2.html')
         else:

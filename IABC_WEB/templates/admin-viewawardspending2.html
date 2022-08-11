@@ -110,7 +110,22 @@
                         <td style="text-align: right; font-size: 16px; padding-top: 2px; padding-bottom: 2px;"><br></td>
                         <td style="text-align: left; font-size: 16px; padding-top: 2px; padding-bottom: 2px;"><br></td>
                       </tr>
-
+                      {% if check %}
+                      <tr >
+                        {% for c in check %}
+                        <td style="text-align: right; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">Contact Person</td>
+                        <td style="text-align: left; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">{{c.cperson}}</a></td>
+                      </tr>
+                      <tr >
+                        <td style="text-align: right; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">Contact Number</td>
+                        <td style="text-align: left; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">{{c.cnum}}</a></td>
+                      </tr>
+                      <tr >
+                        <td style="text-align: right; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">Pick-up Location</td>
+                        <td style="text-align: left; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">{{c.address}}</a></td>
+                      </tr>
+                      {% endfor %}
+                      {%else%}
                       <tr >
                         <td style="text-align: right; width: 180px; font-size: 16px; padding-top: 2px; padding-bottom: 2px;">Proof of Payment</td>
                         {%if award.file%}
@@ -119,6 +134,7 @@
                         <td style="text-align: left; font-size: 16px; padding-top: 2px; padding-bottom: 2px;"><a class="btn btn2" ><i class="fa fa-file-arrow-down"></i> No File </a></td>
                         {%endif%}
                       </tr>
+                      {%endif%}
 
                         <tr>
                           <td style="text-align: right; font-size: 16px; padding-top: 2px; padding-bottom: 2px;"><br></td>
