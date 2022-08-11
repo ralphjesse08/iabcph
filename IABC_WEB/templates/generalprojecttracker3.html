@@ -229,7 +229,7 @@
         <div style="padding-left: 370px; padding-bottom: 0px;">
             {% if proj %} 
             <form action="{% url 'IABC_WEB:checklist' proj.id %}" method="POST">{%csrf_token%}  
-            <button class="btnback px-0 mb-0" type="submit" name="back" value="back"><i class="fa fa-caret-left"></i>&nbsp;&nbsp;Back</button>
+            <button class="btnback px-0 mb-0" type="submit" name="back" value="back" style="text-decoration: none;"><i class="fa fa-caret-left"></i>&nbsp;&nbsp;Back</button>
             </form>
         </div>
             
