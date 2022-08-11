@@ -37,14 +37,7 @@ def home(request):
             'com':com 
         }
         return render(request, 'index.html', context)
-    elif request.user.is_authenticated and type_obj.is_pending:
-        info = User.objects.get(pk=request.user.id)
-        com = MemberComments.objects.all()
-        context = {
-            'info':info,
-            'com':com
-        }
-        return render(request, 'index.html', context)
+   
     else:
         com = MemberComments.objects.all()
         return render(request, 'index.html', {'com':com})

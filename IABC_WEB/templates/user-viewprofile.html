@@ -136,10 +136,15 @@
                 <div class="col-md-7 px-o">
                     <b>{{info.firstName}} {{info.middleName}} {{info.lastName}}</b><br>
                     {{info.email}}<br>
-                    {% if info.is_member == True %}
+                    {% if info.is_member and mem.is_paid == True %}
                     <div class="mb-3" style="font-size: 14px;">
                         
-                    Membership Expiry:<b> 12/25/2023</b>
+                    Membership Expiry:<b> {{mem.expiry_date}}</b>
+                    </div> 
+                    {% elif info.is_member == True and mem.is_paid == False %}
+                    <div class="mb-3" style="font-size: 14px;">
+                        
+                    Pending Member
                     </div> 
                     {% else %}
                     <div class="mb-3" style="font-size: 14px;">

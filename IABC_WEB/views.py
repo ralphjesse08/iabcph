@@ -357,6 +357,17 @@ def adminrenewalproof(request, mem_id):
             d1=datetime.datetime.today()
             online.approval_date=d1
             online.save()
+            mail_id=mem.user_id.email
+            email=EmailMessage(
+                        'IABC Awards Approval Notification',
+                    F"Greetings {mem.user_id.firstName}, it’s IABC PH. \n" + 
+                    "Your application for Awards Application has been approved! \n" +
+                    "Thank you for trusting IABC! Have a nice day!",
+            settings.EMAIL_HOST_USER,
+            [mail_id]
+            )
+            email.fail_silently = True
+            email.send()
             mer = datetime.datetime.strptime(mem.expiry_date, "%Y-%m-%d").date()
             newexpiry = mer + relativedelta(years=1)
             mem.expiry_date = newexpiry
@@ -530,7 +541,9 @@ def awardspending_edit(request, ent_id):
                         mail_id=award.user_id.email
                         email=EmailMessage(
                         'IABC Awards Approval Notification',
-                        "Your application for PhilQuill Student Awards has been approved. Goodluck!",
+                    F"Greetings {award.user_id.firstName}, it’s IABC PH. \n" + 
+                    "Your application for Awards Application has been approved! \n" +
+                    "Thank you for trusting IABC! Have a nice day!",
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
@@ -567,7 +580,9 @@ def awardspending_edit2(request, ent_id):
                         mail_id=award.user_id.email
                         email=EmailMessage(
                         'IABC Awards Approval Notification',
-                        "Your application for PhilQuill Professional Awards has been approved. Goodluck!",
+                    F"Greetings {award.user_id.firstName}, it’s IABC PH. \n" + 
+                    "Your application for Awards Application has been approved! \n" +
+                    "Thank you for trusting IABC! Have a nice day!",
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
@@ -948,7 +963,10 @@ def onlinepay(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    F"Greetings {info.firstName}! \n" +
+                                    F"We’ve confirmed your PHP{priceawastud.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -972,7 +990,10 @@ def onlinepay(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    F"Greetings {info.firstName}! \n" +
+                                    F"We’ve confirmed your PHP{priceawastud.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -996,7 +1017,10 @@ def onlinepay(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        F"Your paypal account has been deducted PHP{priceawaprofmem.priceVal}",
+                                        F"Greetings {info.firstName}! \n" +
+                                        F"We’ve confirmed your PHP{priceawaprofmem.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                        "Thank you and have a nice day! \n" +
+                                        "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1019,7 +1043,10 @@ def onlinepay(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        F"Your paypal account has been deducted PHP{priceawaprofmem.priceVal}",
+                                        F"Greetings {info.firstName}! \n" +
+                                        F"We’ve confirmed your PHP{priceawaprofmem.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                        "Thank you and have a nice day! \n" +
+                                        "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1048,7 +1075,10 @@ def onlinepay(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    F"Greetings {info.firstName}! \n" +
+                                    F"We’ve confirmed your PHP{priceawastud.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1072,7 +1102,10 @@ def onlinepay(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    F"Your paypal account has been deducted  PHP{priceawastud.priceVal}",
+                                    F"Greetings {info.firstName}! \n" +
+                                    F"We’ve confirmed your PHP{priceawastud.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1096,7 +1129,10 @@ def onlinepay(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                        F"Greetings {info.firstName}! \n" +
+                                        F"We’ve confirmed your PHP{priceawaprofnon.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                        "Thank you and have a nice day! \n" +
+                                        "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1119,7 +1155,10 @@ def onlinepay(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                        F"Greetings {info.firstName}! \n" +
+                                        F"We’ve confirmed your PHP{priceawaprofnon.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                        "Thank you and have a nice day! \n" +
+                                        "IABC Philippines. ",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1142,7 +1181,10 @@ def onlinepay(request):
                         mail_id=info.email
                         email=EmailMessage(
                         'IABC Payment Notification',
-                        F"Your paypal account has been deducted PHP{pricemem.priceVal}",
+                        F"Greetings {info.firstName}! \n" +
+                        F"We’ve confirmed your PHP{pricemem.priceVal} payment for Membership Application through PayPal Transaction. \n" +
+                        "Thank you and have a nice day! \n" +
+                        "IABC Philippines",
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
@@ -1167,7 +1209,10 @@ def onlinepay(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                     'IABC Payment Notification',
-                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    F"Greetings {info.firstName}! \n" +
+                                    F"We’ve confirmed your PHP{priceawastud.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1191,7 +1236,10 @@ def onlinepay(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                     'IABC Payment Notification',
-                                    F"Your paypal account has been deducted PHP{priceawastud.priceVal}",
+                                    F"Greetings {info.firstName}! \n" +
+                                    F"We’ve confirmed your PHP{priceawastud.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day!\n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1215,7 +1263,10 @@ def onlinepay(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                             'IABC Payment Notification',
-                                            F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                            F"Greetings {info.firstName}! \n" +
+                                        F"We’ve confirmed your PHP{priceawaprofnon.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                             )
@@ -1238,7 +1289,10 @@ def onlinepay(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                             'IABC Payment Notification',
-                                            F"Your paypal account has been deducted PHP{priceawaprofnon.priceVal}",
+                                            F"Greetings {info.firstName}! \n" +
+                                        F"We’ve confirmed your PHP{priceawaprofnon.priceVal} payment for Awards Application through PayPal Transaction. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                             )
@@ -1261,6 +1315,10 @@ def overtc(request):
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
+            priceawastud = Prices.objects.get(priceName="Awards Student")
+            priceawaprofmem = Prices.objects.get(priceName="Awards Member")
+            priceawaprofnon = Prices.objects.get(priceName="Awards Non-Member")
+            pricemem = Prices.objects.get(priceName="Membership")
             try :
                 mem = Members.objects.get(user_id=id)
                 if info.is_member and mem.is_paid == True:
@@ -1281,7 +1339,10 @@ def overtc(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                         )
@@ -1305,7 +1366,10 @@ def overtc(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                         )
@@ -1328,7 +1392,10 @@ def overtc(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawaprofmem.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                         )
@@ -1350,7 +1417,10 @@ def overtc(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawaprofmem.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                         )
@@ -1375,7 +1445,10 @@ def overtc(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                         )
@@ -1398,7 +1471,10 @@ def overtc(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                         )
@@ -1421,7 +1497,10 @@ def overtc(request):
                                             mail_id=info.email
                                             email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                             )
@@ -1443,7 +1522,10 @@ def overtc(request):
                                             mail_id=info.email
                                             email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                             )
@@ -1464,7 +1546,10 @@ def overtc(request):
                         mail_id=info.email
                         email=EmailMessage(
                         'IABC Payment Notification',
-                        'You have chosen over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Membership Application. Please pay a total amount of {pricemem.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
@@ -1491,7 +1576,10 @@ def overtc(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                 'IABC Payment Notification',
-                                'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                 settings.EMAIL_HOST_USER,
                                 [mail_id]
                                 )
@@ -1514,7 +1602,10 @@ def overtc(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                 'IABC Payment Notification',
-                                'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
                                 settings.EMAIL_HOST_USER,
                                 [mail_id]
                                 )
@@ -1537,7 +1628,10 @@ def overtc(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have chosen over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',                                        
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",                                       
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1559,7 +1653,11 @@ def overtc(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have chosen over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',                                        settings.EMAIL_HOST_USER,
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",                                      
+                                    settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
                                     email.fail_silently = True
@@ -1575,6 +1673,10 @@ def check(request):
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
+            priceawastud = Prices.objects.get(priceName="Awards Student")
+            priceawaprofmem = Prices.objects.get(priceName="Awards Member")
+            priceawaprofnon = Prices.objects.get(priceName="Awards Non-Member")
+            pricemem = Prices.objects.get(priceName="Membership")
             try :
                 mem = Members.objects.get(user_id=id)
                 if info.is_member and mem.is_paid == True:
@@ -1595,7 +1697,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1618,7 +1723,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1642,7 +1750,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofmem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1663,7 +1774,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofmem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1688,7 +1802,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1711,7 +1828,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1734,7 +1854,10 @@ def check(request):
                                             mail_id=info.email
                                             email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                             )
@@ -1756,7 +1879,10 @@ def check(request):
                                             mail_id=info.email
                                             email=EmailMessage(
                                             'IABC Payment Notification',
-                                            'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                             settings.EMAIL_HOST_USER,
                                             [mail_id]
                                             )
@@ -1776,7 +1902,10 @@ def check(request):
                         mail_id=info.email
                         email=EmailMessage(
                         'IABC Payment Notification',
-                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                    F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Membership Application. Please pay a total amount of {pricemem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
@@ -1784,7 +1913,6 @@ def check(request):
                         email.send()
                         info.save()
                         mem.save()
-                        del request.session['_submit_data']
                         return redirect('members:home')
                         #return HttpResponse('Good Job!')                 
                                 
@@ -1805,7 +1933,10 @@ def check(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                 'IABC Payment Notification',
-                                'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                 settings.EMAIL_HOST_USER,
                                 [mail_id]
                                 )
@@ -1828,7 +1959,10 @@ def check(request):
                                 mail_id=info.email
                                 email=EmailMessage(
                                 'IABC Payment Notification',
-                                'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                 settings.EMAIL_HOST_USER,
                                 [mail_id]
                                 )
@@ -1851,7 +1985,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1873,7 +2010,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1889,6 +2029,10 @@ def check(request):
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
+            priceawastud = Prices.objects.get(priceName="Awards Student")
+            priceawaprofmem = Prices.objects.get(priceName="Awards Member")
+            priceawaprofnon = Prices.objects.get(priceName="Awards Non-Member")
+            pricemem = Prices.objects.get(priceName="Membership")
             try:
                 mem = Members.objects.get(user_id=id)
                 if info.is_member and mem.is_paid == True:
@@ -1911,7 +2055,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1939,8 +2086,11 @@ def check(request):
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
-                                    'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                   'IABC Payment Notification',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -1968,7 +2118,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofmem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -1996,7 +2149,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofmem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -2026,7 +2182,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -2054,8 +2213,11 @@ def check(request):
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
-                                    'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                   'IABC Payment Notification',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -2083,7 +2245,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -2111,7 +2276,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -2135,13 +2303,15 @@ def check(request):
                         mail_id=info.email
                         email=EmailMessage(
                         'IABC Payment Notification',
-                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Membership Application. Please pay a total amount of {pricemem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
                         email.fail_silently = True
                         email.send()
-                        del request.session['_submit_data']
                         return redirect('members:home')
                         #return HttpResponse('Good Job!')  
                     
@@ -2168,7 +2338,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -2194,7 +2367,10 @@ def check(request):
                                     mail_id=info.email
                                     email=EmailMessage(
                                     'IABC Payment Notification',
-                                    'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawastud.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                     settings.EMAIL_HOST_USER,
                                     [mail_id]
                                     )
@@ -2226,7 +2402,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -2250,7 +2429,10 @@ def check(request):
                                         mail_id=info.email
                                         email=EmailMessage(
                                         'IABC Payment Notification',
-                                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Awards Application. Please pay a total amount of {priceawaprofnon.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                                         settings.EMAIL_HOST_USER,
                                         [mail_id]
                                         )
@@ -2293,7 +2475,10 @@ def onlinepayrenew(request):
             mail_id=info.email
             email=EmailMessage(
                     'IABC Payment Notification',
-                    F"Your paypal account has been deducted PHP{pricemem.priceVal} for renewal",
+                    F"Greetings {info.firstName}!\n" +
+                    F"We’ve confirmed your PHP{pricemem.priceVal} payment for Renewal Application through PayPal Transaction.\n" +
+                    "Thank you.\n" +
+                    "IABC Philippines",
                     settings.EMAIL_HOST_USER,
                     [mail_id]
                     )
@@ -2311,6 +2496,7 @@ def overtcrenew(request):
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
+            pricemem = Prices.objects.get(priceName="Membership")
             
             mem = Members.objects.get(user_id=id)
                 
@@ -2323,7 +2509,10 @@ def overtcrenew(request):
             mail_id=info.email
             email=EmailMessage(
             'IABC Payment Notification',
-            'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                            F"Greetings {info.firstName}, it’s IABC PH. \n" + 
+                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {pricemem.priceVal}. \n" +
+                                            "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
+                                            "IABC Philippines",
             settings.EMAIL_HOST_USER,
             [mail_id]
                 )
@@ -2340,6 +2529,7 @@ def checkrenew(request):
         if request.user.is_authenticated:
             id = request.user.id
             info = User.objects.get(id=id)
+            pricemem = Prices.objects.get(priceName="Membership")
             if request.method == 'GET':
                     id = request.user.id
                     info = User.objects.get(id=id)
@@ -2352,7 +2542,10 @@ def checkrenew(request):
                     mail_id=info.email
                     email=EmailMessage(
                     'IABC Payment Notification',
-                    'You have chosen, over-the-counter method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Renewal Application. Please pay a total amount of {pricemem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                     settings.EMAIL_HOST_USER,
                     [mail_id]
                     )
@@ -2375,7 +2568,10 @@ def checkrenew(request):
                     mail_id=info.email
                     email=EmailMessage(
                     'IABC Payment Notification',
-                        'You have choosen check method. Please submit your proof of payment in my-account -> pending transactions',
+                                F"Greetings {info.firstName}, it’s IABC PH. \n" +
+                                    F"You have chosen the Cheque Payment for Renewal Application. Please pay a total amount of {pricemem.priceVal} and wait for the approval of your application once your payment is received. \n" +
+                                    "Thank you and have a nice day! \n" +
+                                    "IABC Philippines.",
                     settings.EMAIL_HOST_USER,
                     [mail_id]
                     )
@@ -2463,7 +2659,10 @@ def viewpendmember(request, viewpendmem_id):
         info = User.objects.get(id=id)
         if info.is_admin == True:
             viewpendmember=Members.objects.get(pk=viewpendmem_id)
-            context = {'viewpendmember':viewpendmember}
+            check=Checkpayment.objects.filter(membership_id=viewpendmem_id)
+                
+           
+            context = {'viewpendmember':viewpendmember, 'check':check}
             return render(request, 'admin-viewpendingmembers.html', context)
         else:
             return redirect('members:home')
@@ -2530,7 +2729,9 @@ def editpendmember(request, editpendmem_id):
                     mail_id=editpendmember.user_id.email
                     email=EmailMessage(
                     'IABC Membership Approval Notification',
-                    "Your application for Membership has been approved. Congratulations, you are now a member of IABC",
+                    F"Greetings {editpendmember.user_id.firstName}, it’s IABC PH. \n" + 
+                    "Your application for Membership Application has been approved! \n" +
+                    "Thank you for trusting IABC! Have a nice day!",
                     settings.EMAIL_HOST_USER,
                     [mail_id]
                     )
@@ -2556,6 +2757,8 @@ def editpendmember(request, editpendmem_id):
 def member_del(request, mem_id):
     member=Members.objects.get(pk=mem_id)
     memid = member.user_id
+    member.is_paid =False
+    member.save()
     info = User.objects.get(email=memid)
     info.is_member = False
     info.is_nonmember = True
@@ -2569,7 +2772,7 @@ def pendmember_del(request, pendmem_id):
     member=Members.objects.get(pk=pendmem_id)
     pendmemid = member.user_id
     info = User.objects.get(email=pendmemid)
-    info.is_pending = False
+    info.is_member= False
     info.is_nonmember = True
     #info.is_active = False
     #info.date_inactive = datetime.datetime.now()
@@ -3278,7 +3481,7 @@ def biddersubmit(request):
                         mail_id=bid.email
                         email=EmailMessage(
                         'IABC Proposal Notification',
-                        'Your Proposal has been Submitted, Please Wait!',
+                        'Your Proposal has been Submitted, Please Wait for approval.',
                         settings.EMAIL_HOST_USER,
                         [mail_id]
                         )
@@ -3297,7 +3500,7 @@ def biddersubmit(request):
                     mail_id=bid.email
                     email=EmailMessage(
                     'IABC Proposal Notification',
-                    'Your Proposal has been Submitted, Please Wait!',
+                    'Your Proposal has been Submitted, Please Wait for approval.',
                     settings.EMAIL_HOST_USER,
                     [mail_id]
                     )
@@ -3344,11 +3547,13 @@ def bidderstatus(request, bid_id):
                 bid = User.objects.get(id=bid_id)
                 mail_id=bid.email
                 email=EmailMessage(
-                'IABC Approval Notification',
-                'Your Proposal has been approved!',
+                        'IABC Propsal Approval Notification',
+                    F"Greetings {bid.firstName}, it’s IABC PH. \n" + 
+                    "Your proposal for IABC events has been approved! \n" +
+                    "Thank you for trusting IABC! Have a nice day!",
                 settings.EMAIL_HOST_USER,
                 [mail_id]
-                        )
+                )
                 email.fail_silently = True
                 email.send()
                 bidadd.status = stat
