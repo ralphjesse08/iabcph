@@ -95,10 +95,10 @@ WSGI_APPLICATION = 'IABC.wsgi.application'
 DATABASES={
    'default':{
       'ENGINE':'django.db.backends.postgresql_psycopg2',
-      'NAME':'d2hisnk404aarc',
-      'USER':'qpgoxtwfqlsbql',
-      'PASSWORD':'c0de4afbc6c6398376bb366d69fddd3ac1308c242c514f85b4c86bdf70b49cef',
-      'HOST':'ec2-100-26-39-41.compute-1.amazonaws.com',
+      'NAME':'d3h3r0nvjq4s28',
+      'USER':'hagbdssgwdkucp',
+      'PASSWORD':'426b00ce291e6a291feb6efd05ef397a6e64457f10c0ae7ba958dc772af939a4',
+      'HOST':'ec2-54-204-241-136.compute-1.amazonaws.com',
       'PORT':'5432',
    }
 }
