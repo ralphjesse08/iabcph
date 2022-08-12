@@ -119,8 +119,8 @@ def userawards_proof(request, acc_id):
             info = Awards_student.objects.filter(user_id=id).filter(is_paid=False)
             info2 = Awards_prof.objects.filter(user_id=id).filter(is_paid=False)
             info3 = User.objects.get(pk=acc_id)
-            history=PaymentHistory.all()
-            context = {'info':info, 'info2':info2, 'info3':info3, 'history':history}
+            #history=PaymentHistory.all()
+            context = {'info':info, 'info2':info2, 'info3':info3}
             return render(request, 'user-proofofpaymentawards.html', context)
         except:
             return render(request, 'user-proofofpaymentawards.html')
