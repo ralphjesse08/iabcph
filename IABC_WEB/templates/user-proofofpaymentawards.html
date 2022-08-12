@@ -487,7 +487,7 @@
 
                                 {%if info2%}
                                 {%for i in info2%}
-                                {% if history %}
+                              
                                            
                                     <tr>
                                         <form method="POST" action="{% url 'IABC_WEB:userawards_proofdel2' i.id %}">{%csrf_token%}
