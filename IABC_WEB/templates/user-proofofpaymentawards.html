@@ -429,62 +429,80 @@
                                     
                                     {%if info%}
                                     {%for i in info%}
-                                    <tr>
-                                        <form method="POST" action="{% url 'IABC_WEB:userawards_proofdel' i.id %}">{%csrf_token%}
-                                        <td width="5%"><button type="submit" class="btndelete"><i class="fa fa-trash"></i></button></td>
-                                        </form>
-                                        <td width="7%">{{i.id}}</td>
-                                        <td width="30%">{{i.entry_title}}</td>
-                                        <td width="13%">{{i.division}}</td>
-                                        <td width="7%">Pending</td>
-                                        <td width="7%">Student</td>
-                                        
-                                        <td width="8%"><button type="submit" id="uploadbtn" data-bs-toggle="modal" data-bs-target="#staticBackdropp{{i.id}}"><i class="fa fa-upload"></i></button></td>
-                                    </tr>
-                                    
-                                </tbody>
+                                        {% if history %}
+                                            {%for h in history %}
+                                                {% if i.id == h.stud_id %}
+                                                    {% if h.PaymentType == Check %}
 
-                                <div class="modal fade" id="staticBackdropp{{i.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="staticBackdropLabel"><b>Upload Proof of Payment</b></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="file-upload">                                      
-                                                    <div class="image-upload-wrap">
-                                                        <form method="POST" action="{% url 'IABC_WEB:userawards_proofupload' i.id %}" enctype="multipart/form-data">{%csrf_token%}
-                                                            <input class="file-upload-input" type='file' name="proof" onchange="readURL(this);" accept="image/*" />
-                                                        <div class="drag-text">
-                                                            <br>
-                                                            <img src="{%static 'img/upload.gif' %}" width="180px" height="160px">
-                                                            <br><br>
-                                                        </div>     
-                                                    </div>
                                                     
-                                                    <div class="file-upload-content">
-                                                        <img class="file-upload-image" src="#" alt="your image" />
-                                                            <div class="image-title-wrap" >
-                                                                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                    {% else %}
+                                                    <tr>
+                                                        <form method="POST" action="{% url 'IABC_WEB:userawards_proofdel' i.id %}">{%csrf_token%}
+                                                        <td width="5%"><button type="submit" class="btndelete"><i class="fa fa-trash"></i></button></td>
+                                                        </form>
+                                                        <td width="7%">{{i.id}}</td>
+                                                        <td width="30%">{{i.entry_title}}</td>
+                                                        <td width="13%">{{i.division}}</td>
+                                                        <td width="7%">Pending</td>
+                                                        <td width="7%">Student</td>
+                                                        
+                                                        <td width="8%"><button type="submit" id="uploadbtn" data-bs-toggle="modal" data-bs-target="#staticBackdropp{{i.id}}"><i class="fa fa-upload"></i></button></td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                
+                                                <div class="modal fade" id="staticBackdropp{{i.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="staticBackdropLabel"><b>Upload Proof of Payment</b></h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
+                                                            <div class="modal-body">
+                                                                <div class="file-upload">                                      
+                                                                    <div class="image-upload-wrap">
+                                                                        <form method="POST" action="{% url 'IABC_WEB:userawards_proofupload' i.id %}" enctype="multipart/form-data">{%csrf_token%}
+                                                                            <input class="file-upload-input" type='file' name="proof" onchange="readURL(this);" accept="image/*" />
+                                                                        <div class="drag-text">
+                                                                            <br>
+                                                                            <img src="{%static 'img/upload.gif' %}" width="180px" height="160px">
+                                                                            <br><br>
+                                                                        </div>     
+                                                                    </div>
+                                                                    
+                                                                    <div class="file-upload-content">
+                                                                        <img class="file-upload-image" src="#" alt="your image" />
+                                                                            <div class="image-title-wrap" >
+                                                                                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>                                        
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btnsave">Save Changes</button>
+                                                            </form>
+                                                            
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>                                        
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btnsave">Save Changes</button>
-                                            </form>
-                                            
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                </div>
+                                {%endif%}
+                                {%endif%}
+                                {%endfor%}
+                                {%endif%}
                                 {%endfor%}
                                 {%endif%}
                                
 
                                 {%if info2%}
                                 {%for i in info2%}
+                                {% if history %}
+                                            {%for h in history %}
+                                                {% if i.id == h.prof_id %}
+                                                    {% if h.PaymentType == Check %}
+
+                                                    
+                                                    {% else %}
                                     <tr>
                                         <form method="POST" action="{% url 'IABC_WEB:userawards_proofdel2' i.id %}">{%csrf_token%}
                                         <td width="5%"><button type="submit" class="btndelete"><i class="fa fa-trash"></i></button></td>
@@ -533,6 +551,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                {%endif%}
+                                {%endif%}
+                                {%endfor%}
+                                {%endif%}
                                 {%endfor%}
                                 {%endif%}
                             </table>

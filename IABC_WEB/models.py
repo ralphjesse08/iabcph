@@ -236,7 +236,7 @@ class Awards_prof(models.Model):
 
 class Checkpayment(models.Model):
     user_id = models.ForeignKey(User, verbose_name='user_id', on_delete=models.CASCADE )
-    membership_id = models.ForeignKey(Members, unique=True, verbose_name='membership_id', on_delete=models.CASCADE,blank=True, null=True)
+    membership_id = models.ForeignKey(Members, verbose_name='membership_id', on_delete=models.CASCADE,blank=True, null=True)
     awards_studentid = models.ForeignKey(Awards_student, verbose_name='awards_studentid', on_delete=models.CASCADE,blank=True, null=True) 
     awards_profid = models.ForeignKey(Awards_prof, verbose_name='awards_profid', on_delete=models.CASCADE ,blank=True, null=True)      
     cperson =  encrypt(models.CharField(max_length=100, verbose_name='Contact Person'))

@@ -119,7 +119,8 @@ def userawards_proof(request, acc_id):
             info = Awards_student.objects.filter(user_id=id).filter(is_paid=False)
             info2 = Awards_prof.objects.filter(user_id=id).filter(is_paid=False)
             info3 = User.objects.get(pk=acc_id)
-            context = {'info':info, 'info2':info2, 'info3':info3}
+            history=PaymentHistory.all()
+            context = {'info':info, 'info2':info2, 'info3':info3, 'history':history}
             return render(request, 'user-proofofpaymentawards.html', context)
         except:
             return render(request, 'user-proofofpaymentawards.html')
@@ -221,18 +222,23 @@ def usermembers_proofupload(request, acc_id):
         if request.method == 'POST':
             id = request.user.id
             file = request.FILES.get('proof')
+            info = Members.objects.get(pk=acc_id)
             try:
                 info = Members.objects.get(pk=acc_id)
-                online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Membership")
+                online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Membership").values_list('id', flat=True)
+                pit = list(online)
+                pot = pit[0]
+                online1= PaymentHistory.objects.get(id=pot)
                 d1=datetime.datetime.today()
-                online.transaction_date=d1
-                online.save()
+                online1.transaction_date=d1
+                online1.save()
                 info.file = file
                 info.save()
                 messages.success(request, "Succesfully Attached!")
+                #return HttpResponse("succ")
                 return HttpResponseRedirect(reverse('IABC_WEB:usermembers_proof', args=(id,)))
             except:
-                
+                #return HttpResponse(online)
                 return HttpResponseRedirect(reverse('IABC_WEB:usermembers_proof', args=(id,)))
     else:
         return redirect('members:login')
@@ -291,10 +297,13 @@ def renewalproofupload(request, acc_id):
             try:
                 info = Members.objects.get(pk=acc_id)
                 info.renewalfile = file
-                online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Renewal")
+                online = PaymentHistory.objects.filter(user_id=id).filter(typeProduct="Renewal").values_list('id', flat=True)
+                pit = list(online)
+                pot = pit[0]
+                online1= PaymentHistory.objects.get(id=pot)
                 d1=datetime.datetime.today()
-                online.transaction_date=d1
-                online.save()
+                online1.transaction_date=d1
+                online1.save()
                 info.save()
                 messages.success(request, "Succesfully Attached!")
                 return HttpResponseRedirect(reverse('IABC_WEB:renewalproof', args=(id,)))
@@ -353,15 +362,19 @@ def adminrenewalproof(request, mem_id):
             mem = Members.objects.get(pk=mem_id)
             mem.for_renewal = False
             mem.received_email = False
-            online = PaymentHistory.objects.filter(user_id__in=mem).filter(typeProduct="Renewal")
+            online = PaymentHistory.objects.filter(user_id=mem.user_id).filter(typeProduct="Renewal").values_list('id', flat=True)
+            pit = list(online)
+            pot = pit[0]
+            online1= PaymentHistory.objects.get(id=pot)
             d1=datetime.datetime.today()
-            online.approval_date=d1
-            online.save()
+            online1.approval_date=d1
+            online1.date=d1
+            online1.save()
             mail_id=mem.user_id.email
             email=EmailMessage(
-                        'IABC Awards Approval Notification',
+                        'IABC Renewal Approval Notification',
                     F"Greetings {mem.user_id.firstName}, it’s IABC PH. \n" + 
-                    "Your application for Awards Application has been approved! \n" +
+                    "Your application for Renewal Application has been approved! \n" +
                     "Thank you for trusting IABC! Have a nice day!",
             settings.EMAIL_HOST_USER,
             [mail_id]
@@ -542,6 +555,7 @@ def awardspending_edit(request, ent_id):
                         online = PaymentHistory.objects.get(stud_id=award)
                         d1=datetime.datetime.today()
                         online.approval_date=d1
+                        online.date=d1
                         mail_id=award.user_id.email
                         email=EmailMessage(
                         'IABC Awards Approval Notification',
@@ -581,6 +595,7 @@ def awardspending_edit2(request, ent_id):
                         online = PaymentHistory.objects.get(prof_id=award)
                         d1=datetime.datetime.today()
                         online.approval_date=d1
+                        online.date=d1
                         mail_id=award.user_id.email
                         email=EmailMessage(
                         'IABC Awards Approval Notification',
@@ -1195,7 +1210,7 @@ def onlinepay(request):
                         email.fail_silently = True
                         email.send()
                         return redirect('members:home')
-                        #return HttpResponse('Good Job!')                
+                        #return HttpResponse(info.email)                
                                 
             except ObjectDoesNotExist:
                 data = request.session.get('_submit_data')   
@@ -1696,7 +1711,8 @@ def check(request):
                                     awards = Awards_student.objects.get(user_id=id)
                                     awards.is_paid = False
                                     awards.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awards,user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check", stud_id=awards,user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -1722,7 +1738,8 @@ def check(request):
                                     awardss1 = Awards_student.objects.get(id=awa-1)
                                     awardss1.is_paid = False
                                     awardss1.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check", stud_id=awardss1,user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -1748,8 +1765,8 @@ def check(request):
                                         awards2 = Awards_prof.objects.get(user_id=id)
                                         awards2.is_paid = False
                                         awards2.save()
-                                        del request.session['_submit_data']
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check",prof_id=awards2, user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,PaymentType="Check",prof_id=awards2, user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -1763,6 +1780,7 @@ def check(request):
                                         )
                                         email.fail_silently = True
                                         email.send()
+                                        del request.session['_submit_data']
                                         return redirect('members:home')
                                         #return HttpResponse('Prof Awards form1')
                             elif Awards_prof is not None:
@@ -1773,7 +1791,8 @@ def check(request):
                                         awardss3 = Awards_prof.objects.get(id=awa1-1)
                                         awardss3.is_paid = False
                                         awardss3.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3, user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,PaymentType="Check", prof_id=awardss3, user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -1801,7 +1820,8 @@ def check(request):
                                         awards = Awards_student.objects.get(user_id=id)
                                         awards.is_paid = False
                                         awards.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awards, user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",transaction_date=d1,stud_id=awards, user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -1827,7 +1847,8 @@ def check(request):
                                         awardss1 = Awards_student.objects.get(id=awa-1)
                                         awardss1.is_paid = False
                                         awardss1.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check", stud_id=awardss1,user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -1853,7 +1874,8 @@ def check(request):
                                             awards2 = Awards_prof.objects.get(user_id=id)
                                             awards2.is_paid = False
                                             awards2.save()
-                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional", prof_id=awards2,PaymentType="Check", user_id=info,)
+                                            d1=datetime.datetime.today()
+                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional", prof_id=awards2,transaction_date=d1,PaymentType="Check", user_id=info,)
                                             history.save()
                                             mail_id=info.email
                                             email=EmailMessage(
@@ -1878,7 +1900,8 @@ def check(request):
                                             awardss3 = Awards_prof.objects.get(id=awa1-1)
                                             awardss3.is_paid = False
                                             awardss3.save()
-                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional", prof_id=awardss3,PaymentType="Check", user_id=info,)
+                                            d1=datetime.datetime.today()
+                                            history = PaymentHistory.objects.create(typeProduct="Awards Professional", transaction_date=d1,prof_id=awardss3,PaymentType="Check", user_id=info,)
                                             history.save()
                                             mail_id=info.email
                                             email=EmailMessage(
@@ -1901,7 +1924,8 @@ def check(request):
                         mem.is_paid = False
                         info.is_member = True
                         info.is_nonmember = False
-                        history = PaymentHistory.objects.create(typeProduct="Membership",PaymentType="Check", user_id=info,)
+                        d1=datetime.datetime.today()
+                        history = PaymentHistory.objects.create(typeProduct="Membership",PaymentType="Check",transaction_date=d1, user_id=info,)
                         history.save()
                         mail_id=info.email
                         email=EmailMessage(
@@ -1932,7 +1956,8 @@ def check(request):
                                 awards = Awards_student.objects.get(user_id=id)
                                 awards.is_paid = False
                                 awards.save()
-                                history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",  stud_id=awards,user_id=info,)
+                                d1=datetime.datetime.today()
+                                history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", transaction_date=d1, stud_id=awards,user_id=info,)
                                 history.save()
                                 mail_id=info.email
                                 email=EmailMessage(
@@ -1958,7 +1983,8 @@ def check(request):
                                 awardss1 = Awards_student.objects.get(id=awa-1)
                                 awardss1.is_paid = False
                                 awardss1.save()
-                                history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awardss1, user_id=info,)
+                                d1=datetime.datetime.today()
+                                history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check",stud_id=awardss1, user_id=info,)
                                 history.save()
                                 mail_id=info.email
                                 email=EmailMessage(
@@ -1984,7 +2010,8 @@ def check(request):
                                     awards2 = Awards_prof.objects.get(user_id=id)
                                     awards2.is_paid = False
                                     awards2.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awards2, user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,PaymentType="Check", prof_id=awards2, user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2009,7 +2036,8 @@ def check(request):
                                     awardss3 = Awards_prof.objects.get(id=awa1-1)
                                     awardss3.is_paid = False
                                     awardss3.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3, user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,PaymentType="Check", prof_id=awardss3, user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2054,7 +2082,8 @@ def check(request):
                                     awards.is_paid = False
                                         
                                     cpay.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awards, user_id=info)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check",stud_id=awards, user_id=info)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2086,7 +2115,8 @@ def check(request):
                                    
                                     awardss1.is_paid = False   
                                     cpay.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check", stud_id=awardss1,user_id=info)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2117,7 +2147,8 @@ def check(request):
                                         cpay.save()
                                         awards2.is_paid = False
                                         awards2.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awards2, user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", transaction_date=d1,prof_id=awards2, user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -2148,7 +2179,8 @@ def check(request):
                                         cpay.save()
                                         awardss3.is_paid = False
                                         awardss3.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3, user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,PaymentType="Check", prof_id=awardss3, user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -2181,7 +2213,8 @@ def check(request):
                                     awards.is_paid = False
                                         
                                     cpay.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awards,user_id=info)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check", stud_id=awards,user_id=info)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2213,7 +2246,8 @@ def check(request):
                                    
                                     awardss1.is_paid = False   
                                     cpay.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", transaction_date=d1,stud_id=awardss1,user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2244,7 +2278,8 @@ def check(request):
                                         cpay.save()
                                         awards2.is_paid = False
                                         awards2.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awards2,user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,PaymentType="Check", prof_id=awards2,user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -2270,12 +2305,14 @@ def check(request):
                                         cperson = request.POST.get('cperson')
                                         cnum = request.POST.get('cnum')
                                         address = request.POST.get('address')
+                                        
                                         cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,   awards_profid=awardss3)
                                             
                                         cpay.save()
                                         awardss3.is_paid = False
                                         awardss3.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",prof_id=awardss3, PaymentType="Check", user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",transaction_date=d1,prof_id=awardss3, PaymentType="Check", user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -2297,7 +2334,8 @@ def check(request):
                         info.is_pending = True
                         info.is_nonmember = False
                         info.save()
-                        history = PaymentHistory.objects.create(typeProduct="Membership",PaymentType="Check", user_id=info,)
+                        d1=datetime.datetime.today()
+                        history = PaymentHistory.objects.create(typeProduct="Membership",transaction_date=d1,PaymentType="Check", user_id=info)
                         history.save()
                         cperson = request.POST.get('cperson')
                         cnum = request.POST.get('cnum')
@@ -2337,7 +2375,8 @@ def check(request):
                                     awards.is_paid = False
                                         
                                     cpay.save()
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",stud_id=awards, user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check",transaction_date=d1,stud_id=awards, user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2366,7 +2405,8 @@ def check(request):
                                     cnum = request.POST.get('cnum')
                                     address = request.POST.get('address')
                                     cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_studentid=awardss1)
-                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",PaymentType="Check", stud_id=awardss1,user_id=info,)
+                                    d1=datetime.datetime.today()
+                                    history = PaymentHistory.objects.create(typeProduct="Awards Student",transaction_date=d1,PaymentType="Check", stud_id=awardss1,user_id=info,)
                                     history.save()
                                     mail_id=info.email
                                     email=EmailMessage(
@@ -2401,7 +2441,8 @@ def check(request):
                                         cpay.save()
                                         awards2.is_paid = False
                                         awards2.save()
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check",prof_id=awards2, user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check",transaction_date=d1,prof_id=awards2, user_id=info,)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -2428,7 +2469,8 @@ def check(request):
                                         cnum = request.POST.get('cnum')
                                         address = request.POST.get('address')
                                         cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info,  awards_profid=awardss3)
-                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3,user_id=info,)
+                                        d1=datetime.datetime.today()
+                                        history = PaymentHistory.objects.create(typeProduct="Awards Professional",PaymentType="Check", prof_id=awardss3,user_id=info,transaction_date=d1)
                                         history.save()
                                         mail_id=info.email
                                         email=EmailMessage(
@@ -2514,7 +2556,7 @@ def overtcrenew(request):
             email=EmailMessage(
             'IABC Payment Notification',
                                             F"Greetings {info.firstName}, it’s IABC PH. \n" + 
-                                            F"You have chosen the Over-the Counter Payment for Awards Application. Please pay a total amount of {pricemem.priceVal}. \n" +
+                                            F"You have chosen the Over-the Counter Payment for Renewal Application. Please pay a total amount of {pricemem.priceVal}. \n" +
                                             "Please submit your proof of payment in My Account > Pending Transaction. Thank you and have a nice day! \n" +
                                             "IABC Philippines",
             settings.EMAIL_HOST_USER,
@@ -2539,9 +2581,9 @@ def checkrenew(request):
                     info = User.objects.get(id=id)
                     
                     mem = Members.objects.get(user_id=id)
-                        
+                    d1=datetime.datetime.today()
                     mem.for_renewal = True
-                    history = PaymentHistory.objects.create(typeProduct="Renewal",PaymentType="Check", user_id=info,)
+                    history = PaymentHistory.objects.create(typeProduct="Renewal",transaction_date=d1,PaymentType="Check", user_id=info,)
                     history.save()
                     mail_id=info.email
                     email=EmailMessage(
@@ -2562,7 +2604,8 @@ def checkrenew(request):
                     return redirect('members:home')
 
             elif request.method == 'POST':
-                    history = PaymentHistory.objects.create(typeProduct="Renewal",PaymentType="Check", user_id=info,)
+                    d1=datetime.datetime.today()
+                    history = PaymentHistory.objects.create(typeProduct="Renewal",transaction_date=d1,PaymentType="Check", user_id=info,)
                     history.save()
                     cperson = request.POST.get('cperson')
                     cnum = request.POST.get('cnum')
@@ -2716,8 +2759,8 @@ def editviewmember(request, editviewmem_id):
 def editpendmember(request, editpendmem_id):
     if request.user.is_authenticated:
         id = request.user.id
-        info = User.objects.get(id=id)
-        if info.is_admin == True:
+        info1 = User.objects.get(id=id)
+        if info1.is_admin == True:
             if request.method == "GET":
                 editpendmember=Members.objects.get(pk=editpendmem_id)
                 return render(request, 'admin-viewpendingmembers.html', {'editpendmember':editpendmember})
@@ -2731,6 +2774,14 @@ def editpendmember(request, editpendmem_id):
                     info.is_member = True
                     info.is_nonmember=False 
                     mail_id=editpendmember.user_id.email
+                    online = PaymentHistory.objects.filter(user_id=info).filter(typeProduct="Membership").values_list('id', flat=True)
+                    pit = list(online)
+                    pot = pit[0]
+                    online1= PaymentHistory.objects.get(id=pot)
+                    d1=datetime.datetime.today()
+                    online1.approval_date=d1
+                    online1.date=d1
+                    online1.save()
                     email=EmailMessage(
                     'IABC Membership Approval Notification',
                     F"Greetings {editpendmember.user_id.firstName}, it’s IABC PH. \n" + 
@@ -3984,7 +4035,7 @@ def winners2(request):
                     entcomp = awa.entrant_org
                     entryDiv = awa.division
                     entryDate = awa.entry_date
-                    make = Winners.objects.create(entryNo=entnum,entryName=entname,entryCat=entcat,entrantName=entrant,entryComp=entcomp,entryDiv=entryDiv,entryDate=entryDate)
+                    make = Winners2.objects.create(entryNo=entnum,entryName=entname,entryCat=entcat,entrantName=entrant,entryComp=entcomp,entryDiv=entryDiv,entryDate=entryDate)
                     awa.judged = True
                     awa.save()
                     return redirect('IABC_WEB:winners2')
