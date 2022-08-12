@@ -429,13 +429,7 @@
                                     
                                     {%if info%}
                                     {%for i in info%}
-                                        {% if history %}
-                                            {%for h in history %}
-                                                {% if i.id == h.stud_id %}
-                                                    {% if h.PaymentType == Check %}
-
-                                                    
-                                                    {% else %}
+                                       
                                                     <tr>
                                                         <form method="POST" action="{% url 'IABC_WEB:userawards_proofdel' i.id %}">{%csrf_token%}
                                                         <td width="5%"><button type="submit" class="btndelete"><i class="fa fa-trash"></i></button></td>
@@ -486,10 +480,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                {%endif%}
-                                {%endif%}
-                                {%endfor%}
-                                {%endif%}
+                                
                                 {%endfor%}
                                 {%endif%}
                                
@@ -497,12 +488,7 @@
                                 {%if info2%}
                                 {%for i in info2%}
                                 {% if history %}
-                                            {%for h in history %}
-                                                {% if i.id == h.prof_id %}
-                                                    {% if h.PaymentType == Check %}
-
-                                                    
-                                                    {% else %}
+                                           
                                     <tr>
                                         <form method="POST" action="{% url 'IABC_WEB:userawards_proofdel2' i.id %}">{%csrf_token%}
                                         <td width="5%"><button type="submit" class="btndelete"><i class="fa fa-trash"></i></button></td>
@@ -551,10 +537,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {%endif%}
-                                {%endif%}
-                                {%endfor%}
-                                {%endif%}
+                               
                                 {%endfor%}
                                 {%endif%}
                             </table>
