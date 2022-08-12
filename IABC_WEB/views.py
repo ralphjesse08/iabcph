@@ -4462,21 +4462,22 @@ def pendmemreport(request):
 
 
 def viewwinners(request):
+    stud=Winners.objects.all()
+    prof=Winners2.objects.all()
     if request.user.is_authenticated:
         id = request.user.id
         info=User.objects.get(pk=id)
-        try:
-            stud=Winners.objects.all()
-            prof=Winners2.objects.all()
-            context={
+        stud=Winners.objects.all()
+        prof=Winners2.objects.all()
+        context={
                 'stud':stud, 'prof':prof, 'info':info
             }
-            return render(request, 'user-viewwinners.html', context)
-        except ObjectDoesNotExist:
-            return render(request, 'user-viewwinners.html', {'info':info})
-            
+        return render(request, 'user-viewwinners.html', context)            
     else:
-        return render(request, 'user-viewwinners.html')
+        context={
+                'stud':stud, 'prof':prof
+            }
+        return render(request, 'user-viewwinners.html', context)
 
 
 
