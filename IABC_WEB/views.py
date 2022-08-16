@@ -429,7 +429,7 @@ def awardspaid(request):
         if info.is_admin | info.is_staff  == True:
             awardsstudentpaid = Awards_student.objects.filter(is_paid=True)
             awardsprofpaid = Awards_prof.objects.filter(is_paid=True)
-            context={'awardsprofpaid':awardsprofpaid,'awardsstudentpaid':awardsstudentpaid, info:'info'}
+            context={'awardsprofpaid':awardsprofpaid,'awardsstudentpaid':awardsstudentpaid, 'info':info}
             return render(request, 'admin-awardspaid.html',context)
         else:
             return redirect('members:home')
@@ -444,7 +444,7 @@ def awardspaid_details(request, ent_id):
         if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_student.objects.get(pk=ent_id)
-                return render(request, 'admin-viewawardspaid.html', {'award':award, info:'info'})
+                return render(request, 'admin-viewawardspaid.html', {'award':award, 'info':info})
             except:
                 return render(request, 'admin-viewawardspaid.html')
         else:
@@ -499,7 +499,7 @@ def awardspending(request):
         if info.is_admin | info.is_staff == True:
             awardsstudentpending = Awards_student.objects.filter(is_paid=False)
             awardsprofpending = Awards_prof.objects.filter(is_paid=False)
-            context={'awardsprofpending':awardsprofpending, 'awardsstudentpending':awardsstudentpending, info:'info'}
+            context={'awardsprofpending':awardsprofpending, 'awardsstudentpending':awardsstudentpending, 'info':info}
             return render(request, 'admin-awardspending.html', context)
         else:
             return redirect('members:home')

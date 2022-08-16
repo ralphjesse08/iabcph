@@ -137,8 +137,8 @@
                       <div class="tbl-content">
                         <table id="myTable" cellpadding="0" cellspacing="0" border="0">
                           <tbody>
-                            {% if info %}
-                            {%for i in info%}
+                            {% if info1 %}
+                            {%for i in info1%}
                             <tr>
                               <form method="POST" action="{% url 'IABC_WEB:chartC_del' i.id %}">
                                 {%csrf_token%}
