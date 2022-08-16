@@ -2333,6 +2333,7 @@ def check(request):
                 elif info.is_member == False:
                         info.is_pending = True
                         info.is_nonmember = False
+                        mem.is_paid = False
                         info.save()
                         d1=datetime.datetime.today()
                         history = PaymentHistory.objects.create(typeProduct="Membership",transaction_date=d1,PaymentType="Check", user_id=info)
@@ -2354,6 +2355,7 @@ def check(request):
                         )
                         email.fail_silently = True
                         email.send()
+                        mem.save()
                         return redirect('members:home')
                         #return HttpResponse('Good Job!')  
                     

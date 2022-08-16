@@ -152,7 +152,7 @@
             {% else %}
                 <li></li>
                 {% endif %}
-            {% if info.is_admin == True %}
+            {% if info.is_admin or info.is_staff == True %}
             <li><a href="{% url 'IABC_WEB:awardspaid' %}">PhilQuill Entries</a></li>
             {% else %}
                 <li></li>
