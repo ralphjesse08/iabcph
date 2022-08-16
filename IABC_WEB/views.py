@@ -429,7 +429,8 @@ def awardspaid(request):
         if info.is_admin | info.is_staff  == True:
             awardsstudentpaid = Awards_student.objects.filter(is_paid=True)
             awardsprofpaid = Awards_prof.objects.filter(is_paid=True)
-            return render(request, 'admin-awardspaid.html', {'awardsprofpaid':awardsprofpaid,'awardsstudentpaid':awardsstudentpaid})
+            context={'awardsprofpaid':awardsprofpaid,'awardsstudentpaid':awardsstudentpaid, info:'info'}
+            return render(request, 'admin-awardspaid.html',context)
         else:
             return redirect('members:home')
     else:
@@ -443,7 +444,7 @@ def awardspaid_details(request, ent_id):
         if info.is_admin | info.is_staff == True:
             try:
                 award = Awards_student.objects.get(pk=ent_id)
-                return render(request, 'admin-viewawardspaid.html', {'award':award})
+                return render(request, 'admin-viewawardspaid.html', {'award':award, info:'info'})
             except:
                 return render(request, 'admin-viewawardspaid.html')
         else:
@@ -459,7 +460,7 @@ def awardspaid_details2(request, ent_id):
         if info.is_admin | info.is_staff  == True:
             try:
                 award = Awards_prof.objects.get(pk=ent_id)
-                return render(request, 'admin-viewawardspaid.html', {'award':award})
+                return render(request, 'admin-viewawardspaid.html', {'award':award, 'info':info})
             except:
                 return render(request, 'admin-viewawardspaid.html')
         else:
@@ -498,7 +499,8 @@ def awardspending(request):
         if info.is_admin | info.is_staff == True:
             awardsstudentpending = Awards_student.objects.filter(is_paid=False)
             awardsprofpending = Awards_prof.objects.filter(is_paid=False)
-            return render(request, 'admin-awardspending.html', {'awardsprofpending':awardsprofpending, 'awardsstudentpending':awardsstudentpending})
+            context={'awardsprofpending':awardsprofpending, 'awardsstudentpending':awardsstudentpending, info:'info'}
+            return render(request, 'admin-awardspending.html', context)
         else:
             return redirect('members:home')
     else:
@@ -513,7 +515,7 @@ def awardspending_details(request, ent_id):
             try:
                 award = Awards_student.objects.get(pk=ent_id)
                 check=Checkpayment.objects.filter(awards_studentid=ent_id)
-                context={'award':award,'check':check}
+                context={'award':award,'check':check,'info':info}
                 return render(request, 'admin-viewawardspending.html', context)
             except:
                 return render(request, 'admin-viewawardspending.html')
@@ -531,7 +533,7 @@ def awardspending_details2(request, ent_id):
             try:
                 award = Awards_prof.objects.get(pk=ent_id)
                 check=Checkpayment.objects.filter(awards_profid=ent_id)
-                context={'award':award,'check':check}
+                context={'award':award,'check':check, 'info':info}
                 return render(request, 'admin-viewawardspending2.html', context)
             except:
                 return render(request, 'admin-viewawardspending2.html')
@@ -2606,6 +2608,10 @@ def checkrenew(request):
                     return redirect('members:home')
 
             elif request.method == 'POST':
+                    id = request.user.id
+                    info = User.objects.get(id=id)
+                    
+                    mem = Members.objects.get(user_id=id)
                     d1=datetime.datetime.today()
                     history = PaymentHistory.objects.create(typeProduct="Renewal",transaction_date=d1,PaymentType="Check", user_id=info,)
                     history.save()
@@ -2614,6 +2620,7 @@ def checkrenew(request):
                     address = request.POST.get('address')
                     cpay = Checkpayment.objects.create(cperson=cperson, cnum=cnum, address=address, user_id =info, membership_id = mem)
                     cpay.save()
+                    mem.for_renewal = True
                     mail_id=info.email
                     email=EmailMessage(
                     'IABC Payment Notification',
@@ -2626,7 +2633,7 @@ def checkrenew(request):
                     )
                     email.fail_silently = True
                     email.send()
-                        
+                    mem.save()
                     return redirect('members:home')
         else:            #return HttpResponse('Good Job!')    
             return redirect('members:login')
@@ -3366,7 +3373,7 @@ def act_list(request):
             if request.method == 'GET':
                 try:
                     act = Activity.objects.all()
-                    return render(request,'admin-activitycrud.html', {'act':act})
+                    return render(request,'admin-activitycrud.html', {'act':act, 'info':info})
                 except ObjectDoesNotExist:
                     return render(request,'admin-activitycrud.html')
             if request.method == 'POST':
@@ -3649,8 +3656,8 @@ def chartA(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
-            info = Chart_A.objects.all()
-            return render(request, 'admin-chartA.html', {'info':info})
+            info1 = Chart_A.objects.all()
+            return render(request, 'admin-chartA.html', {'info':info, 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3661,8 +3668,8 @@ def chartB(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
-            info = Chart_B.objects.all()
-            return render(request, 'admin-chartB.html', {'info':info})
+            info1 = Chart_B.objects.all()
+            return render(request, 'admin-chartB.html', {'info':info, 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3673,8 +3680,8 @@ def chartC(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
-            info = Chart_C.objects.all()
-            return render(request, 'admin-chartC.html', {'info':info})
+            info1 = Chart_C.objects.all()
+            return render(request, 'admin-chartC.html', {'info':info, 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3685,8 +3692,8 @@ def chartD(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
-            info = Chart_D.objects.all()
-            return render(request, 'admin-chartD.html', {'info':info})
+            info1 = Chart_D.objects.all()
+            return render(request, 'admin-chartD.html', {'info':info, 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3697,8 +3704,8 @@ def chartE(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin == True:
-            info = Chart_E.objects.all()
-            return render(request, 'admin-chartE.html', {'info':info})
+            info1 = Chart_E.objects.all()
+            return render(request, 'admin-chartE.html', {'info':info, 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3709,8 +3716,8 @@ def chartF(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin  | info.is_staff == True:
-            info = Chart_F.objects.all()
-            return render(request, 'admin-chartF.html', {'info':info})
+            info1 = Chart_F.objects.all()
+            return render(request, 'admin-chartF.html', {'info':info , 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3721,8 +3728,8 @@ def chartG(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
-            info = Chart_G.objects.all()
-            return render(request, 'admin-chartG.html', {'info':info})
+            info1 = Chart_G.objects.all()
+            return render(request, 'admin-chartG.html', {'info':info , 'info1':info1})
         else:
             return redirect('members:home')
     else:
@@ -3829,7 +3836,7 @@ def awardscrud(request):
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
-                return render(request, 'admin-awardscrud.html')
+                return render(request, 'admin-awardscrud.html', {'info':info})
             elif request.method == "POST":
                 selected = request.POST.get('chart')
                 if selected == None:
@@ -3865,7 +3872,7 @@ def category(request):
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
             categ = Category.objects.all()
-            return render(request, 'admin-awardscategory.html', {'categ':categ})
+            return render(request, 'admin-awardscategory.html', {'categ':categ, 'info':info})
         else:
             return redirect('members:home')
     else:
@@ -3877,7 +3884,7 @@ def certification(request):
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
             cert = Certification.objects.all()
-            return render(request, 'admin-awardscertificate.html', {'cert':cert})
+            return render(request, 'admin-awardscertificate.html', {'cert':cert, 'info':info})
         else:
             return redirect('members:home')
     else:
@@ -3889,7 +3896,7 @@ def division(request):
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff == True:
             div = Division.objects.all()
-            return render(request, 'admin-awardsdivision.html', {'div':div})
+            return render(request, 'admin-awardsdivision.html', {'div':div, 'info':info})
         else:
             return redirect('members:home')
     else:
@@ -3930,7 +3937,7 @@ def winnersCat(request):
         if info.is_admin| info.is_staff  == True:
             if request.method == 'GET':
                 cat = Category.objects.all()
-                context = {'cat':cat}
+                context = {'cat':cat, 'info':info}
                 return render(request, 'admin-studwinnerscrud.html', context)
             elif request.method == 'POST':
                 categ = request.POST.get('categ')
@@ -3957,7 +3964,7 @@ def winners(request):
                 win = Winners.objects.filter(entryCat=checks)
                 awa = Awards_student.objects.filter(is_paid=True).filter(category=checks).filter(judged=False)
                 cat = Category.objects.all()
-                context = {'win':win, 'awa':awa, 'cat':cat}
+                context = {'win':win, 'awa':awa, 'cat':cat,  'info':info}
                 return render(request, 'admin-studwinnerscrud2.html', context)
             elif request.method == 'POST':
                 ent = request.POST.get('ent')
@@ -3995,7 +4002,7 @@ def winnersCat2(request):
         if info.is_admin | info.is_staff == True:
             if request.method == 'GET':
                 cat = Category.objects.all()
-                context = {'cat':cat}
+                context = {'cat':cat, 'info':info}
                 return render(request, 'admin-profwinnerscrud.html', context)
             elif request.method == 'POST':
                 categ = request.POST.get('categ')
@@ -4021,7 +4028,7 @@ def winners2(request):
                 win = Winners2.objects.filter(entryCat=checks)
                 awa = Awards_prof.objects.filter(is_paid=True).filter(category=checks).filter(judged=False)
                 cat = Category.objects.all()
-                context = {'win':win, 'awa':awa, 'cat':cat}
+                context = {'win':win, 'awa':awa, 'cat':cat , 'info':info}
                 return render(request, 'admin-profwinnerscrud2.html', context)
             elif request.method == 'POST':
                 ent = request.POST.get('ent')
