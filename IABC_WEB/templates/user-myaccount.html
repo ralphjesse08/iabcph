@@ -1,6 +1,7 @@
 {%load static%}
 <!doctype html>
 <html lang="en">
+    {% block content %}
     <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -35,7 +36,7 @@
     </style>
 </head>
 <body>
-    {% block content %}
+    
     <nav class="nav justify-content-end">
         {% if user.is_authenticated %}
         {%if info %}
