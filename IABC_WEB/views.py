@@ -4626,7 +4626,7 @@ def awardspaidgen(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff  == True:
             if request.method == 'POST':
                 gen = request.POST.getlist("checkk", None)
                 chc = request.POST.get("prop")
@@ -4670,7 +4670,7 @@ def awardspaidgen(request):
                     
                     #return HttpResponse(memn)      
 
-                context={"text":text, "text2":text2,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
+                context={"text":text, "text2":text2,"awn":awn, "awd":awd , "awc":awc,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf ,'info':info}
                 #return HttpResponse(text)
                 return render (request, "admin-awardspaidgen.html" ,context)
         else:
@@ -4683,7 +4683,7 @@ def winnersprofgen(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'POST':
                 gen = request.POST.getlist("checkk", None)
                 chc = request.POST.get("prop")
@@ -4729,7 +4729,7 @@ def winnersprofgen(request):
                     
                     #return HttpResponse(memn)      
 
-                context={"text":text,"awn":awn, "awd":awd , "awc":awc, "aww":aww,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
+                context={"text":text,"awn":awn, "awd":awd , "awc":awc, "aww":aww,  "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf, 'info':info}
                 #return HttpResponse(text)
                 return render (request, "admin-profwinnerscrud2gen.html" ,context)
         else:
@@ -4741,7 +4741,7 @@ def winnersstudgen(request):
     if request.user.is_authenticated:
         id = request.user.id
         info = User.objects.get(id=id)
-        if info.is_admin == True:
+        if info.is_admin | info.is_staff == True:
             if request.method == 'POST':
                 gen = request.POST.getlist("checkk", None)
                 chc = request.POST.get("prop")
@@ -4787,7 +4787,7 @@ def winnersstudgen(request):
                     
                     #return HttpResponse(memn)      
 
-                context={"text":text,"awn":awn, "awd":awd , "awc":awc, "aww":aww, "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf}
+                context={"text":text,"awn":awn, "awd":awd , "awc":awc, "aww":aww, "awdt":awdt , "awcm":awcm, "awe":awe, "awf":awf , 'info':info}
                 #return HttpResponse(text)
                 return render (request, "admin-studwinnerscrud2gen.html" ,context)
         else:
