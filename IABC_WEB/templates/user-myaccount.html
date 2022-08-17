@@ -1,7 +1,6 @@
 {%load static%}
 <!doctype html>
 <html lang="en">
-    
     <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -12,10 +11,9 @@
     <link href='https://fonts.googleapis.com/css?family=Josefin Sans' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/adminview.css' %}">
-    {% block head %}
+
     <title>IABC PHILIPPINES</title>
     <link rel = "icon" href="{% static 'img/logo.png' %}" type = "image/x-icon">
-    {% endblock %}
     <style>
         .btnjoin{
             background:  #2a7221;
@@ -37,9 +35,7 @@
     </style>
 </head>
 <body>
-   
     <nav class="nav justify-content-end">
-        {% block nav %}
         {% if user.is_authenticated %}
         {%if info %}
         <a class="nav-link" href="{% url 'members:logout' %}">LOGOUT</a>
@@ -108,10 +104,9 @@
                 </ul>
             </nav>
         </div>
-        {% endblock %}
     </nav>
     
-{% block acc %}
+
     <div class="container-fluid1 justify-content-end">
         <div>
           <h2><strong>MY ACCOUNT</strong></h2>
@@ -128,8 +123,8 @@
         </div>
     </div>
 
-{% endblock %}
- </body>   
+
+    
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

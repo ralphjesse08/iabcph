@@ -427,8 +427,8 @@ def awardspaid(request):
         id = request.user.id
         info = User.objects.get(id=id)
         if info.is_admin | info.is_staff  == True:
-            awardsstudentpaid = Awards_student.objects.filter(is_paid=True)
-            awardsprofpaid = Awards_prof.objects.filter(is_paid=True)
+            awardsstudentpaid = Awards_student.objects.filter(is_paid=True).filter(judged=False)
+            awardsprofpaid = Awards_prof.objects.filter(is_paid=True).filter(judged=False)
             context={'awardsprofpaid':awardsprofpaid,'awardsstudentpaid':awardsstudentpaid, 'info':info}
             return render(request, 'admin-awardspaid.html',context)
         else:
