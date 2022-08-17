@@ -4101,20 +4101,20 @@ def awardspaid_pdf(request):
     try:
         checker = request.POST.get('filt')
         if checker == "All":
-            text = Awards_student.objects.filter(is_paid=True) 
-            text2 = Awards_prof.objects.filter(is_paid=True) 
+            text = Awards_student.objects.filter(is_paid=True).filter(judged=False) 
+            text2 = Awards_prof.objects.filter(is_paid=True).filter(judged=False) 
         elif checker == "Today":
                     d1 = datetime.date.today()
-                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=d1)
-                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=d1)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=d1).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=d1).filter(judged=False)
         elif checker == "Last 7 Days":
                     seven = date.today() - relativedelta(days=7)
-                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=seven)
-                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=seven)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=seven).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=seven).filter(judged=False)
         elif checker == "Last 30 Days":
                     thirty = date.today() - relativedelta(days=30)
-                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
-                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=thirty).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=thirty).filter(judged=False)
         template = get_template('form-awardspaid.html')
         context = {'text':text, 'text2':text2}
 
@@ -4631,20 +4631,20 @@ def awardspaidgen(request):
                 gen = request.POST.getlist("checkk", None)
                 chc = request.POST.get("prop")
                 if chc == "All":
-                    text = Awards_student.objects.filter(is_paid=True)
-                    text2 = Awards_prof.objects.filter(is_paid=True)
+                    text = Awards_student.objects.filter(is_paid=True).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(judged=False)
                 elif chc == "Today":
                     d1 = datetime.date.today()
-                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=d1)
-                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=d1)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=d1).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=d1).filter(judged=False)
                 elif chc == "Last 7 Days":
                     seven = date.today() - relativedelta(days=7)
-                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=seven)
-                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=seven)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=seven).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=seven).filter(judged=False)
                 elif chc == "Last 30 Days":
                     thirty = date.today() - relativedelta(days=30)
-                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
-                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=thirty)
+                    text = Awards_student.objects.filter(is_paid=True).filter(entry_date__gte=thirty).filter(judged=False)
+                    text2 = Awards_prof.objects.filter(is_paid=True).filter(entry_date__gte=thirty).filter(judged=False)
 
                 awn=False
                 awd=False
