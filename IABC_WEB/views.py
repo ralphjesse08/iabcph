@@ -4187,7 +4187,8 @@ def studwinners_pdf(request):
             if checker == "All":
                 text = Winners.objects.all() 
             elif checker == "Today":
-                text = Winners.objects.filter(windate=date.today())
+                d1=datetime.datetime.today()
+                text = Winners.objects.filter(windate=d1)
             elif checker == "7":
                 seven = date.today() - relativedelta(days=7)
                 text = Winners.objects.filter(windate__gte=seven)
@@ -4225,7 +4226,8 @@ def profwinners_pdf(request):
             if checker == "All":
                 text = Winners2.objects.all() 
             elif checker == "Today":
-                text = Winners2.objects.filter(windate=date.today())
+                d1=datetime.datetime.today()
+                text = Winners2.objects.filter(windate=d1)
             elif checker == "7":
                 seven = date.today() - relativedelta(days=7)
                 text = Winners2.objects.filter(windate__gte=seven)
